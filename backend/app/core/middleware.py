@@ -6,7 +6,7 @@ import re
 from fastapi import HTTPException, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
-from app.core.exceptions import UNSException, http_exception_from_uns
+from app.core.app_exceptions import handle_exception
 from app.core.logging import app_logger, log_performance_metric, log_security_event
 from app.core.audit import clear_audit_context, update_audit_context
 
@@ -81,17 +81,12 @@ class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         try:
             return await call_next(request)
-        except UNSException as exc:
-            app_logger.bind(route=request.url.path, type="uns").error(exc.message)
-            raise http_exception_from_uns(exc)
         except HTTPException:
             raise
-        except Exception as exc:  # pragma: no cover - defensive programming
-            app_logger.bind(route=request.url.path, type="unhandled").exception("Unhandled exception")
-            raise HTTPException(
-                status_code=500,
-                detail={"message": "Internal server error", "details": str(exc)}
-            )
+        except Exception as exc:
+            # Convert all exceptions to appropriate HTTP responses using centralized handler
+            app_logger.bind(route=request.url.path).exception("Application exception")
+            raise handle_exception(exc)
 
 
 __all__ = [
