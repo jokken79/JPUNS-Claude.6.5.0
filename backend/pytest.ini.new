@@ -1,0 +1,71 @@
+[pytest]
+# Pytest Configuration for UNS-ClaudeJP Backend Tests
+# ====================================================
+
+# Test discovery
+testpaths = tests
+python_files = test_*.py
+python_classes = Test*
+python_functions = test_*
+
+# Output and reporting
+addopts =
+    -v
+    --strict-markers
+    --tb=short
+    --disable-warnings
+    -p no:cacheprovider
+    # Coverage options (uncomment when ready)
+    # --cov=app
+    # --cov-report=html:coverage_html
+    # --cov-report=term-missing
+    # --cov-report=json:coverage.json
+    # --cov-fail-under=80
+
+# Markers for test categorization
+markers =
+    slow: marks tests as slow (deselect with '-m "not slow"')
+    integration: marks tests as integration tests (interact with real services)
+    unit: marks tests as unit tests (isolated, fast)
+    api: marks tests as API endpoint tests
+    service: marks tests as service layer tests
+    db: marks tests that require database
+    asyncio: marks tests as async
+    critical: marks critical business logic tests (auth, payroll)
+
+# Asyncio configuration
+asyncio_mode = auto
+
+# Coverage configuration (activate when needed)
+[coverage:run]
+source = app
+omit =
+    */tests/*
+    */migrations/*
+    */__pycache__/*
+    */venv/*
+    */site-packages/*
+    app/main.py
+
+[coverage:report]
+precision = 2
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    @abstractmethod
+
+# Logging
+log_cli = false
+log_cli_level = INFO
+log_cli_format = %(asctime)s [%(levelname)8s] %(message)s
+log_cli_date_format = %Y-%m-%d %H:%M:%S
+
+# Timeout for tests (requires pytest-timeout)
+# timeout = 300
+
+# Parallel execution (requires pytest-xdist)
+# Run with: pytest -n auto

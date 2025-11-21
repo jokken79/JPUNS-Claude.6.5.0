@@ -1,0 +1,50 @@
+{
+  "exported_at": "2025-11-13T10:30:00.000Z",
+  "exported_by": "admin",
+  "pages": [
+    {
+      "page_key": "dashboard",
+      "page_name": "Dashboard",
+      "is_enabled": true,
+      "disabled_message": null
+    },
+    {
+      "page_key": "candidates",
+      "page_name": "Candidates",
+      "is_enabled": true,
+      "disabled_message": null
+    },
+    {
+      "page_key": "employees",
+      "page_name": "Employees",
+      "is_enabled": true,
+      "disabled_message": null
+    },
+    {
+      "page_key": "factories",
+      "page_name": "Factories",
+      "is_enabled": false,
+      "disabled_message": "Under maintenance"
+    },
+    {
+      "page_key": "apartments",
+      "page_name": "Apartments",
+      "is_enabled": true,
+      "disabled_message": null
+    }
+  ],
+  "settings": [
+    {
+      "key": "maintenance_mode",
+      "value": "false"
+    },
+    {
+      "key": "app_name",
+      "value": "UNS-ClaudeJP"
+    },
+    {
+      "key": "max_upload_size",
+      "value": "10485760"
+    }
+  ]
+}

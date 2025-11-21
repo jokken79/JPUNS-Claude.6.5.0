@@ -1,0 +1,261 @@
+groups:
+  - name: service_availability
+    interval: 30s
+    rules:
+      # Alert when a service is down
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "Service {{ $labels.job }} has been down for more than 1 minute."
+
+      # Alert when backend is unreachable
+      - alert: BackendDown
+        expr: up{job="backend"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Backend service is down"
+          description: "Backend FastAPI service has been unreachable for 30 seconds."
+
+  - name: error_rates
+    interval: 30s
+    rules:
+      # Alert when HTTP error rate is high
+      - alert: HighErrorRate
+        expr: |
+          (
+            sum(rate(http_requests_total{status=~"5.."}[5m])) by (job)
+            /
+            sum(rate(http_requests_total[5m])) by (job)
+          ) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate on {{ $labels.job }}"
+          description: "Error rate is {{ $value | humanizePercentage }} on {{ $labels.job }}."
+
+      # Alert when HTTP 500 errors are occurring
+      - alert: HTTP500Errors
+        expr: rate(http_requests_total{status="500"}[5m]) > 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "HTTP 500 errors detected on {{ $labels.job }}"
+          description: "Service {{ $labels.job }} is returning HTTP 500 errors."
+
+  - name: performance
+    interval: 30s
+    rules:
+      # Alert when response time is high (p95 > 1s)
+      - alert: HighResponseTime
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (job, le)
+          ) > 1.0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High response time on {{ $labels.job }}"
+          description: "P95 response time is {{ $value }}s on {{ $labels.job }}."
+
+      # Alert when request rate is unusually high
+      - alert: HighRequestRate
+        expr: |
+          sum(rate(http_requests_total[5m])) by (job) > 1000
+        for: 5m
+        labels:
+          severity: info
+        annotations:
+          summary: "High request rate on {{ $labels.job }}"
+          description: "Request rate is {{ $value }} req/s on {{ $labels.job }}."
+
+  - name: database
+    interval: 30s
+    rules:
+      # Alert when database connection pool is near exhaustion
+      - alert: DatabaseConnectionPoolHigh
+        expr: |
+          (
+            db_pool_connections_active
+            /
+            db_pool_connections_max
+          ) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Database connection pool usage high"
+          description: "Database connection pool is {{ $value | humanizePercentage }} full."
+
+  - name: otel_collector
+    interval: 30s
+    rules:
+      # Alert when OTel Collector is dropping data
+      - alert: OTelCollectorDroppingData
+        expr: rate(otelcol_processor_dropped_spans[5m]) > 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "OpenTelemetry Collector is dropping spans"
+          description: "OTel Collector is dropping {{ $value }} spans/s."
+
+      # Alert when OTel Collector memory usage is high
+      - alert: OTelCollectorHighMemory
+        expr: |
+          (
+            process_resident_memory_bytes{job="otel-collector"}
+            /
+            1024 / 1024
+          ) > 400
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "OpenTelemetry Collector memory usage high"
+          description: "OTel Collector is using {{ $value }}MB of memory."
+
+  - name: system_resources
+    interval: 30s
+    rules:
+      # Alert when disk space is critically low
+      - alert: DiskSpaceCritical
+        expr: |
+          (
+            node_filesystem_avail_bytes{mountpoint="/"}
+            /
+            node_filesystem_size_bytes{mountpoint="/"}
+          ) < 0.10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disk space critically low"
+          description: "Disk space is below 10% ({{ $value | humanizePercentage }} available)."
+
+      # Alert when disk space is getting low
+      - alert: DiskSpaceLow
+        expr: |
+          (
+            node_filesystem_avail_bytes{mountpoint="/"}
+            /
+            node_filesystem_size_bytes{mountpoint="/"}
+          ) < 0.20
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk space running low"
+          description: "Disk space is below 20% ({{ $value | humanizePercentage }} available)."
+
+      # Alert when system memory is high
+      - alert: HighMemoryUsage
+        expr: |
+          (
+            1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)
+          ) > 0.90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "System memory usage is high"
+          description: "Memory usage is above 90% ({{ $value | humanizePercentage }} used)."
+
+      # Alert when system CPU is high
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "System CPU usage is high"
+          description: "CPU usage is above 80% ({{ $value | humanize }}% used)."
+
+  - name: database_health
+    interval: 30s
+    rules:
+      # Alert when database is down (if postgres_exporter is available)
+      - alert: PostgreSQLDown
+        expr: pg_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL database is down"
+          description: "PostgreSQL database has been unreachable for 1 minute."
+
+      # Alert when database connections are high
+      - alert: DatabaseConnectionsHigh
+        expr: |
+          (
+            sum(pg_stat_database_numbackends)
+            /
+            pg_settings_max_connections
+          ) > 0.80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Database connections usage high"
+          description: "Database is using {{ $value | humanizePercentage }} of available connections."
+
+      # Alert when there are too many idle connections
+      - alert: TooManyIdleConnections
+        expr: count(pg_stat_activity_state{state="idle"}) > 20
+        for: 10m
+        labels:
+          severity: info
+        annotations:
+          summary: "Too many idle database connections"
+          description: "There are {{ $value }} idle connections to the database."
+
+  - name: application_health
+    interval: 30s
+    rules:
+      # Alert when OCR error rate is high
+      - alert: OCRHighErrorRate
+        expr: |
+          (
+            sum(rate(ocr_failures_total[5m]))
+            /
+            sum(rate(ocr_requests_total[5m]))
+          ) > 0.10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "OCR error rate is high"
+          description: "OCR error rate is {{ $value | humanizePercentage }} (threshold: 10%)."
+
+      # Alert when OCR processing is slow
+      - alert: OCRSlowProcessing
+        expr: |
+          (
+            rate(ocr_processing_seconds_sum[5m])
+            /
+            rate(ocr_processing_seconds_count[5m])
+          ) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "OCR processing is slow"
+          description: "Average OCR processing time is {{ $value | humanize }}s (threshold: 10s)."
+
+      # Alert when no OCR requests in last hour (possible service issue)
+      - alert: NoOCRRequests
+        expr: rate(ocr_requests_total[1h]) == 0
+        for: 1h
+        labels:
+          severity: info
+        annotations:
+          summary: "No OCR requests in the last hour"
+          description: "OCR service may not be processing requests or there's no traffic."

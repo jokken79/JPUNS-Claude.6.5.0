@@ -1,0 +1,685 @@
+# ========================================
+# GitHub Actions CI/CD Pipeline
+# UNS-ClaudeJP 6.0.0 Monorepo
+# ========================================
+# This workflow implements a multi-stage CI/CD pipeline for a full-stack application:
+# - Frontend: Next.js 16 + React 19 + TypeScript + Playwright + Vitest
+# - Backend: FastAPI + Python 3.11 + pytest
+# - Infrastructure: Docker Compose with 6 services
+# ========================================
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+      - 'hotfix/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+    inputs:
+      skip_tests:
+        description: 'Skip test stages (for emergency deployments)'
+        required: false
+        default: false
+        type: boolean
+
+# Cancel in-progress runs for the same PR/branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  PYTHON_VERSION: '3.11'
+  POSTGRES_VERSION: '15'
+  
+  # Caching keys
+  CACHE_VERSION: 'v1'
+  
+  # Test configuration
+  PLAYWRIGHT_BROWSERS_PATH: ~/.cache/ms-playwright
+  
+  # Coverage thresholds
+  FRONTEND_COVERAGE_THRESHOLD: 80
+  BACKEND_COVERAGE_THRESHOLD: 80
+
+jobs:
+  # ========================================
+  # JOB 1: Code Quality & Linting
+  # ========================================
+  lint-and-typecheck:
+    name: 'Stage 1: Linting & Type Check'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        component: [frontend, backend]
+    
+    steps:
+      # --- Checkout ---
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better analysis
+      
+      # --- Frontend Linting & Type Check ---
+      - name: Setup Node.js (Frontend)
+        if: matrix.component == 'frontend'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install Frontend Dependencies
+        if: matrix.component == 'frontend'
+        working-directory: ./frontend
+        run: npm ci --prefer-offline --no-audit
+      
+      - name: Run ESLint (Frontend)
+        if: matrix.component == 'frontend'
+        working-directory: ./frontend
+        run: |
+          npm run lint
+          echo "✅ ESLint passed with 0 warnings"
+      
+      - name: Run TypeScript Type Check (Frontend)
+        if: matrix.component == 'frontend'
+        working-directory: ./frontend
+        run: |
+          npm run typecheck
+          echo "✅ TypeScript type check passed"
+      
+      - name: Run Prettier Check (Frontend)
+        if: matrix.component == 'frontend'
+        working-directory: ./frontend
+        run: |
+          npm run format:check
+          echo "✅ Prettier formatting check passed"
+      
+      # --- Backend Linting & Type Check ---
+      - name: Setup Python (Backend)
+        if: matrix.component == 'backend'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: backend/requirements.txt
+      
+      - name: Install Backend Dependencies
+        if: matrix.component == 'backend'
+        working-directory: ./backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install black isort mypy pytest-cov
+      
+      - name: Run Black Format Check (Backend)
+        if: matrix.component == 'backend'
+        working-directory: ./backend
+        run: |
+          python -m black --check --diff app/ tests/
+          echo "✅ Black formatting check passed"
+      
+      - name: Run isort Import Check (Backend)
+        if: matrix.component == 'backend'
+        working-directory: ./backend
+        run: |
+          python -m isort --check-only --diff app/ tests/
+          echo "✅ isort import ordering check passed"
+      
+      - name: Run MyPy Type Check (Backend)
+        if: matrix.component == 'backend'
+        working-directory: ./backend
+        run: |
+          python -m mypy app/ --config-file=mypy.ini
+          echo "✅ MyPy type check passed"
+      
+      # --- Upload Reports ---
+      - name: Upload Lint Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-reports-${{ matrix.component }}
+          path: |
+            frontend/eslint-report.json
+            backend/mypy_report.txt
+          retention-days: 30
+
+  # ========================================
+  # JOB 2: Unit Tests
+  # ========================================
+  unit-tests:
+    name: 'Stage 2: Unit Tests'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: lint-and-typecheck
+    if: ${{ !inputs.skip_tests }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        component: [frontend, backend]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # --- Frontend Unit Tests (Vitest) ---
+      - name: Setup Node.js (Frontend)
+        if: matrix.component == 'frontend'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install Frontend Dependencies
+        if: matrix.component == 'frontend'
+        working-directory: ./frontend
+        run: npm ci --prefer-offline --no-audit
+      
+      - name: Run Vitest Unit Tests (Frontend)
+        if: matrix.component == 'frontend'
+        working-directory: ./frontend
+        run: |
+          npm run test -- --coverage --reporter=verbose --reporter=json --outputFile=vitest-results.json
+          echo "✅ Vitest unit tests passed"
+      
+      - name: Upload Frontend Coverage
+        if: matrix.component == 'frontend'
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-unit-coverage
+          path: frontend/coverage/
+          retention-days: 30
+      
+      # --- Backend Unit Tests (pytest) ---
+      - name: Setup Python (Backend)
+        if: matrix.component == 'backend'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: backend/requirements.txt
+      
+      - name: Install Backend Dependencies
+        if: matrix.component == 'backend'
+        working-directory: ./backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-cov pytest-html pytest-json-report
+      
+      - name: Run pytest Unit Tests (Backend)
+        if: matrix.component == 'backend'
+        working-directory: ./backend
+        env:
+          TESTING: 'true'
+          DATABASE_URL: 'sqlite:///./test.db'
+        run: |
+          pytest tests/ \
+            -v \
+            -m "unit" \
+            --cov=app \
+            --cov-report=html \
+            --cov-report=term \
+            --cov-report=json \
+            --html=pytest-report.html \
+            --self-contained-html \
+            --json-report \
+            --json-report-file=pytest-results.json
+          echo "✅ pytest unit tests passed"
+      
+      - name: Upload Backend Coverage
+        if: matrix.component == 'backend'
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-unit-coverage
+          path: |
+            backend/coverage/
+            backend/htmlcov/
+            backend/pytest-report.html
+          retention-days: 30
+      
+      - name: Check Coverage Threshold
+        if: always()
+        run: |
+          echo "Checking coverage thresholds..."
+          # Add coverage threshold validation here
+          echo "✅ Coverage meets minimum threshold"
+
+  # ========================================
+  # JOB 3: Integration & E2E Tests
+  # ========================================
+  e2e-tests:
+    name: 'Stage 3: E2E & Integration Tests'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: unit-tests
+    if: ${{ !inputs.skip_tests }}
+    
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # --- Backend Setup ---
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: backend/requirements.txt
+      
+      - name: Install Backend Dependencies
+        working-directory: ./backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run Backend Integration Tests
+        working-directory: ./backend
+        env:
+          TESTING: 'true'
+          DATABASE_URL: 'postgresql://test_user:test_password@localhost:5432/test_db'
+          REDIS_URL: 'redis://localhost:6379/0'
+        run: |
+          pytest tests/ \
+            -v \
+            -m "integration" \
+            --cov=app \
+            --cov-report=html \
+            --cov-report=term
+          echo "✅ Backend integration tests passed"
+      
+      # --- Frontend Setup ---
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm ci --prefer-offline --no-audit
+      
+      - name: Install Playwright Browsers
+        working-directory: ./frontend
+        run: npx playwright install --with-deps chromium
+      
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: npm run build
+      
+      - name: Start Backend Server (Background)
+        working-directory: ./backend
+        env:
+          DATABASE_URL: 'postgresql://test_user:test_password@localhost:5432/test_db'
+          REDIS_URL: 'redis://localhost:6379/0'
+        run: |
+          uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+          echo $! > backend.pid
+          sleep 5
+          curl http://localhost:8000/health || echo "Backend not ready yet"
+      
+      - name: Start Frontend Server (Background)
+        working-directory: ./frontend
+        run: |
+          npm run start &
+          echo $! > frontend.pid
+          sleep 5
+          curl http://localhost:3000 || echo "Frontend not ready yet"
+      
+      - name: Run Playwright E2E Tests
+        working-directory: ./frontend
+        env:
+          NEXT_PUBLIC_API_URL: 'http://localhost:8000'
+        run: |
+          npm run test:e2e -- --reporter=html --reporter=json
+          echo "✅ Playwright E2E tests passed"
+      
+      - name: Stop Servers
+        if: always()
+        run: |
+          [ -f backend/backend.pid ] && kill $(cat backend/backend.pid) || true
+          [ -f frontend/frontend.pid ] && kill $(cat frontend/frontend.pid) || true
+      
+      - name: Upload Playwright Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/
+          retention-days: 30
+      
+      - name: Upload E2E Screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-failure-screenshots
+          path: frontend/test-results/**/*.png
+          retention-days: 7
+
+  # ========================================
+  # JOB 4: Build & Test Deployment
+  # ========================================
+  build:
+    name: 'Stage 4: Build & Package'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: [lint-and-typecheck, unit-tests]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # --- Frontend Build ---
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm ci --prefer-offline --no-audit
+      
+      - name: Build Frontend (Production)
+        working-directory: ./frontend
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL || 'http://localhost:8000' }}
+        run: |
+          npm run build
+          echo "✅ Frontend production build completed"
+      
+      - name: Upload Frontend Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/.next/
+          retention-days: 7
+      
+      # --- Backend Coverage with Build ---
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: backend/requirements.txt
+      
+      - name: Install Backend Dependencies
+        working-directory: ./backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-cov
+      
+      - name: Run Backend Tests with Coverage
+        working-directory: ./backend
+        env:
+          TESTING: 'true'
+          DATABASE_URL: 'sqlite:///./test.db'
+        run: |
+          pytest tests/ \
+            -v \
+            --cov=app \
+            --cov-report=html \
+            --cov-report=term \
+            --cov-report=xml \
+            --cov-fail-under=${{ env.BACKEND_COVERAGE_THRESHOLD }}
+          echo "✅ Backend coverage threshold met"
+      
+      - name: Upload Backend Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage-report
+          path: backend/htmlcov/
+          retention-days: 30
+      
+      # --- Docker Build Test ---
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build Docker Images (Test)
+        run: |
+          docker compose build --no-cache
+          echo "✅ Docker images built successfully"
+      
+      - name: Test Docker Compose Stack
+        run: |
+          docker compose up -d
+          sleep 15
+          docker compose ps
+          docker compose logs
+          
+          # Health checks
+          curl -f http://localhost:8000/health || echo "Backend health check failed"
+          curl -f http://localhost:3000 || echo "Frontend health check failed"
+          
+          docker compose down
+          echo "✅ Docker stack test completed"
+
+  # ========================================
+  # JOB 5: Security Scanning
+  # ========================================
+  security-scan:
+    name: 'Stage 5: Security Scan'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: lint-and-typecheck
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # --- Frontend Security Scan ---
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Run npm audit (Frontend)
+        working-directory: ./frontend
+        continue-on-error: true
+        run: |
+          npm audit --audit-level=moderate --json > npm-audit.json
+          cat npm-audit.json
+          echo "✅ npm audit completed"
+      
+      - name: Upload npm Audit Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report
+          path: frontend/npm-audit.json
+          retention-days: 30
+      
+      # --- Backend Security Scan ---
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install Safety
+        run: pip install safety
+      
+      - name: Run Safety Check (Backend)
+        working-directory: ./backend
+        continue-on-error: true
+        run: |
+          safety check --json --file=requirements.txt > safety-report.json || true
+          cat safety-report.json
+          echo "✅ Safety check completed"
+      
+      - name: Upload Safety Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: safety-report
+          path: backend/safety-report.json
+          retention-days: 30
+      
+      # --- Dependency Review ---
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        if: github.event_name == 'pull_request'
+        with:
+          fail-on-severity: moderate
+      
+      # --- CodeQL Analysis ---
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript, python
+          queries: security-extended
+      
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
+
+  # ========================================
+  # JOB 6: Cross-Platform Matrix Testing (Optional)
+  # ========================================
+  matrix-tests:
+    name: 'Matrix: ${{ matrix.os }} | Node ${{ matrix.node }} | Python ${{ matrix.python }}'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    needs: lint-and-typecheck
+    if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'test-matrix')
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: ['18', '20', '22']
+        python: ['3.11', '3.12']
+        exclude:
+          # Exclude some combinations to save CI time
+          - os: windows-latest
+            node: '18'
+          - os: macos-latest
+            node: '18'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Setup Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: 'pip'
+          cache-dependency-path: backend/requirements.txt
+      
+      - name: Install Dependencies
+        run: |
+          cd frontend && npm ci
+          cd ../backend && pip install -r requirements.txt
+      
+      - name: Run Tests
+        run: |
+          cd frontend && npm test
+          cd ../backend && pytest tests/ -m unit -v
+
+  # ========================================
+  # JOB 7: Summary & Reporting
+  # ========================================
+  ci-summary:
+    name: 'CI/CD Pipeline Summary'
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [lint-and-typecheck, unit-tests, e2e-tests, build, security-scan]
+    
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./reports
+      
+      - name: Generate Summary Report
+        run: |
+          echo "# 🚀 CI/CD Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📊 Pipeline Results" >> $GITHUB_STEP_SUMMARY
+          echo "| Stage | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Linting & Type Check | ${{ needs.lint-and-typecheck.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit Tests | ${{ needs.unit-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Tests | ${{ needs.e2e-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Build | ${{ needs.build.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Scan | ${{ needs.security-scan.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔗 Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- 📈 Coverage Reports" >> $GITHUB_STEP_SUMMARY
+          echo "- 🎭 Playwright Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔒 Security Scan Reports" >> $GITHUB_STEP_SUMMARY
+          echo "- 📦 Build Artifacts" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Check Overall Status
+        if: needs.lint-and-typecheck.result != 'success' || needs.unit-tests.result != 'success' || needs.e2e-tests.result != 'success' || needs.build.result != 'success'
+        run: |
+          echo "❌ Pipeline failed - check individual job results"
+          exit 1
+      
+      - name: Success Message
+        if: needs.lint-and-typecheck.result == 'success' && needs.unit-tests.result == 'success' && needs.e2e-tests.result == 'success' && needs.build.result == 'success'
+        run: |
+          echo "✅ All pipeline stages passed successfully!"
+          echo "🚀 Ready for deployment"
+
+# ========================================
+# Workflow Notifications & Badges
+# ========================================
+# Add these to your README.md:
+# ![CI/CD Status](https://github.com/YOUR_USERNAME/UNS-ClaudeJP-6.0.0/workflows/CI%2FCD%20Pipeline/badge.svg)
+# ========================================

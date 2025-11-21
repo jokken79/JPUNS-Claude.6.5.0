@@ -1,0 +1,230 @@
+{
+  "factory_id": "加藤木材工業株式会社_本社工場",
+  "client_company": {
+    "name": "加藤木材工業株式会社",
+    "address": "愛知県春日井市新開町字平渕6",
+    "phone": "0568-36-2931",
+    "responsible_person": {
+      "department": "生産統括部",
+      "name": "部長　渡邉　茂芳",
+      "phone": "0568-36-2931"
+    },
+    "complaint_handler": {
+      "department": "生産統括部",
+      "name": "部長　渡邉　茂芳",
+      "phone": "0568-36-2931"
+    }
+  },
+  "plant": {
+    "name": "本社工場",
+    "address": "愛知県春日井市新開町字平渕6",
+    "phone": "0568-36-2931"
+  },
+  "lines": [
+    {
+      "line_id": "Factory-14",
+      "assignment": {
+        "department": "生産企画部",
+        "line": "資材課",
+        "supervisor": {
+          "department": "",
+          "name": "課長 徳山　善通",
+          "phone": "0568-36-2931"
+        }
+      },
+      "job": {
+        "description": "機械オペレーター及び機械メンテナンス他付随する業務",
+        "description2": "",
+        "hourly_rate": 1700.0
+      }
+    },
+    {
+      "line_id": "Factory-15",
+      "assignment": {
+        "department": "資材供給部",
+        "line": "基材課",
+        "supervisor": {
+          "department": "",
+          "name": "課長 満田　崇",
+          "phone": "0568-36-2931"
+        }
+      },
+      "job": {
+        "description": "機械オペレーター及び機械メンテナンス他付随する業務",
+        "description2": "",
+        "hourly_rate": 1700.0
+      }
+    },
+    {
+      "line_id": "Factory-16",
+      "assignment": {
+        "department": "資材供給部",
+        "line": "メラミン課",
+        "supervisor": {
+          "department": "",
+          "name": "課長 リュウ　テンキ",
+          "phone": "0568-36-2931"
+        }
+      },
+      "job": {
+        "description": "機械オペレーター及び機械メンテナンス他付随する業務",
+        "description2": "",
+        "hourly_rate": 1700.0
+      }
+    },
+    {
+      "line_id": "Factory-17",
+      "assignment": {
+        "department": "生産1部",
+        "line": "1課",
+        "supervisor": {
+          "department": "",
+          "name": "部長 木村　宏史",
+          "phone": "0568-36-2931"
+        }
+      },
+      "job": {
+        "description": "機械オペレーター及び機械メンテナンス他付随する業務",
+        "description2": "",
+        "hourly_rate": 1700.0
+      }
+    },
+    {
+      "line_id": "Factory-18",
+      "assignment": {
+        "department": "生産1部",
+        "line": "2課",
+        "supervisor": {
+          "department": "",
+          "name": "課長　小森　久",
+          "phone": "0568-36-2931"
+        }
+      },
+      "job": {
+        "description": "機械オペレーター及び機械メンテナンス他付随する業務",
+        "description2": "",
+        "hourly_rate": 1700.0
+      }
+    },
+    {
+      "line_id": "Factory-19",
+      "assignment": {
+        "department": "生産1部",
+        "line": "3課",
+        "supervisor": {
+          "department": "",
+          "name": "課長　小森　久",
+          "phone": "0568-36-2931"
+        }
+      },
+      "job": {
+        "description": "機械オペレーター及び機械メンテナンス他付随する業務",
+        "description2": "",
+        "hourly_rate": 1700.0
+      }
+    },
+    {
+      "line_id": "Factory-20",
+      "assignment": {
+        "department": "生産2部",
+        "line": "生産課",
+        "supervisor": {
+          "department": "",
+          "name": "部長　林　克行",
+          "phone": "0568-36-2931"
+        }
+      },
+      "job": {
+        "description": "機械オペレーター及び機械メンテナンス他付随する業務",
+        "description2": "",
+        "hourly_rate": 1700.0
+      }
+    },
+    {
+      "line_id": "Factory-21",
+      "assignment": {
+        "department": "生産2部",
+        "line": "J加工1課",
+        "supervisor": {
+          "department": "",
+          "name": "課長　高山　大樹",
+          "phone": "0568-36-2931"
+        }
+      },
+      "job": {
+        "description": "機械オペレーター及び機械メンテナンス他付随する業務",
+        "description2": "",
+        "hourly_rate": 1700.0
+      }
+    },
+    {
+      "line_id": "Factory-22",
+      "assignment": {
+        "department": "生産2部",
+        "line": "J加工2課",
+        "supervisor": {
+          "department": "",
+          "name": "部長　林　克行",
+          "phone": "0568-36-2931"
+        }
+      },
+      "job": {
+        "description": "機械オペレーター及び機械メンテナンス他付随する業務",
+        "description2": "",
+        "hourly_rate": 1700.0
+      }
+    },
+    {
+      "line_id": "Factory-23",
+      "assignment": {
+        "department": "生産管理部",
+        "line": "品質安全環境管理課",
+        "supervisor": {
+          "department": "",
+          "name": "課長　宮田　浩克",
+          "phone": "0568-36-2931"
+        }
+      },
+      "job": {
+        "description": "機械オペレーター及び機械メンテナンス他付随する業務",
+        "description2": "",
+        "hourly_rate": 1700.0
+      }
+    }
+  ],
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "営業部",
+      "name": "取締役 部長　中山　欣英",
+      "phone": "052-938-8840"
+    },
+    "complaint_handler": {
+      "department": "営業部",
+      "name": "取締役 部長　中山　欣英",
+      "phone": "052-938-8840"
+    }
+  },
+  "schedule": {
+    "work_hours": "昼勤：8時00分～17時00分 ・ 夜勤：20時00分～5時00分 (実働　7時間40分）",
+    "break_time": "昼勤：10時00～10時15分・12時00分～12時50分・15時00分～15時15分    夜勤：22時00～22時15・00時00分～00時50分・03時00分～03時15分",
+    "calendar": "月～金　（祝日、年末年始、夏季休業を除く。）　4勤2休シフト　　別紙ｶﾚﾝﾀﾞｰの通り",
+    "start_date": "2024-10-01 00:00:00",
+    "end_date": "2025-09-30 00:00:00",
+    "conflict_date": "2024-10-01 00:00:00",
+    "non_work_day_labor": "１ヶ月に２日の範囲内で命ずることができる。",
+    "overtime_labor": "5時間/日、45時間/月、360時間/年迄とする。但し、特別条項の申請により、6時間/日、80時間/月、720時間/年迄延長できる。申請は6回/年迄とする。",
+    "time_unit": "5.0"
+  },
+  "payment": {
+    "closing_date": "20日",
+    "payment_date": "翌月20日",
+    "bank_account": "愛知銀行　当知支店　普通2075479　名義人　ユニバーサル企画（株）",
+    "worker_closing_date": "20日",
+    "worker_payment_date": "15日",
+    "worker_calendar": "土曜日・日曜日・年末年始（12月30日～1月7日)・GW(4月28日～5月5日)・夏季休暇（8月11日～8月18日)"
+  },
+  "agreement": {
+    "period": "2025-03-31 00:00:00",
+    "explainer": ""
+  }
+}

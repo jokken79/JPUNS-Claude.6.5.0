@@ -1,0 +1,72 @@
+{
+  "factory_id": "六甲電子株式会社_本社工場",
+  "client_company": {
+    "name": "六甲電子株式会社",
+    "address": "兵庫県西宮市中島町8-5",
+    "phone": "0798-65- 4508",
+    "responsible_person": {
+      "department": "製造部製造  課",
+      "name": "部署： 製造部   ： ",
+      "phone": ""
+    },
+    "complaint_handler": {
+      "department": "",
+      "name": "",
+      "phone": ""
+    }
+  },
+  "plant": {
+    "name": "本社工場",
+    "address": "",
+    "phone": ""
+  },
+  "assignment": {
+    "department": "",
+    "line": "",
+    "supervisor": {
+      "department": "",
+      "name": "",
+      "phone": ""
+    }
+  },
+  "job": {
+    "description": "",
+    "description2": "",
+    "hourly_rate": 0.0
+  },
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "",
+      "name": "",
+      "phone": ""
+    },
+    "complaint_handler": {
+      "department": "",
+      "name": "",
+      "phone": ""
+    }
+  },
+  "schedule": {
+    "work_hours": "",
+    "break_time": "",
+    "calendar": "",
+    "start_date": "",
+    "end_date": "",
+    "conflict_date": "",
+    "non_work_day_labor": "",
+    "overtime_labor": "",
+    "time_unit": ""
+  },
+  "payment": {
+    "closing_date": "",
+    "payment_date": "",
+    "bank_account": "",
+    "worker_closing_date": "",
+    "worker_payment_date": "",
+    "worker_calendar": ""
+  },
+  "agreement": {
+    "period": "",
+    "explainer": ""
+  }
+}

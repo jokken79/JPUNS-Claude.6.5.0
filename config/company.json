@@ -1,0 +1,36 @@
+{
+  "company": {
+    "name_ja": "ユニバーサル企画株式会社",
+    "name_en": "UNS-KIKAKU",
+    "legal_name": "ユニバーサル企画 株式会社",
+    "postal_code": "461-0025",
+    "prefecture": "愛知県",
+    "city": "名古屋市東区",
+    "address": "徳川2-18-18",
+    "full_address": "愛知県名古屋市東区徳川2-18-18",
+    "phone": "052-938-8840",
+    "mobile": "080-7376-1988",
+    "email": "infoapp@uns-kikaku.com",
+    "website": "www.uns-kikaku.com",
+    "representative": "中山 雅和",
+    "founded_date": "2019-06-21",
+    "licenses": {
+      "dispatch_license": {
+        "name": "労働者派遣事業",
+        "number": "派 23-303669"
+      },
+      "support_organization": {
+        "name": "登録支援機関",
+        "number": "21登-006367"
+      },
+      "antique_dealer": {
+        "name": "古物商許可証",
+        "number": "愛知県公安委員会 第541032001600号"
+      },
+      "job_placement": {
+        "name": "有料職業紹介事業",
+        "number": "23-ユ-302989"
+      }
+    }
+  }
+}

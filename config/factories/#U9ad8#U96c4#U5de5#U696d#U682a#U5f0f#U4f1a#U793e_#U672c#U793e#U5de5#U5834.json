@@ -1,0 +1,196 @@
+{
+  "factory_id": "高雄工業株式会社_本社工場",
+  "client_company": {
+    "name": "高雄工業株式会社",
+    "address": "愛知県弥富市楠三丁目13番地2",
+    "phone": "0567-68-8110",
+    "responsible_person": {
+      "department": "愛知事業所",
+      "name": "部長　安藤　忍　",
+      "phone": "0567-68-8110"
+    },
+    "complaint_handler": {
+      "department": "人事広報管理部",
+      "name": "部長　山田　茂",
+      "phone": "0567-68-8110"
+    }
+  },
+  "plant": {
+    "name": "本社工場",
+    "address": "愛知県弥富市楠三丁目13番地2",
+    "phone": "0567-68-8110"
+  },
+  "lines": [
+    {
+      "line_id": "Factory-39",
+      "assignment": {
+        "department": "第一営業部本社営業課",
+        "line": "リフト作業",
+        "supervisor": {
+          "department": "",
+          "name": "係長　坂上　舞",
+          "phone": "0567-68-8110"
+        }
+      },
+      "job": {
+        "description": "鋳造材料の工場内加工ラインへの供給",
+        "description2": "",
+        "hourly_rate": 1750.0
+      }
+    },
+    {
+      "line_id": "Factory-40",
+      "assignment": {
+        "department": "製作課",
+        "line": "Aライン",
+        "supervisor": {
+          "department": "",
+          "name": "係長　山本　絋平",
+          "phone": "0567-68-8110"
+        }
+      },
+      "job": {
+        "description": "CVJメス型番の施削加工",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-41",
+      "assignment": {
+        "department": "製作課",
+        "line": "Tライン",
+        "supervisor": {
+          "department": "",
+          "name": "係長　山本　絋平",
+          "phone": "0567-68-8110"
+        }
+      },
+      "job": {
+        "description": "短軸加工品、長軸加工品のスプライン加工、NCプログラム修正",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-42",
+      "assignment": {
+        "department": "製作課",
+        "line": "バリ取り",
+        "supervisor": {
+          "department": "",
+          "name": "係長　山本　絋平",
+          "phone": "0567-68-8110"
+        }
+      },
+      "job": {
+        "description": "施削加工品のバリ取り加工",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-43",
+      "assignment": {
+        "department": "製作課",
+        "line": "切紛回収",
+        "supervisor": {
+          "department": "",
+          "name": "係長　山本　絋平",
+          "phone": "0567-68-8110"
+        }
+      },
+      "job": {
+        "description": "NC施盤から排出される金属くずの回収",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-44",
+      "assignment": {
+        "department": "製作課",
+        "line": "Fライン",
+        "supervisor": {
+          "department": "",
+          "name": "係長　山本　絋平",
+          "phone": "0567-68-8110"
+        }
+      },
+      "job": {
+        "description": "CVJ部品短軸品の施削加工、NCプログラム修正",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-45",
+      "assignment": {
+        "department": "製作課",
+        "line": "六面加工",
+        "supervisor": {
+          "department": "",
+          "name": "係長　山本　絋平",
+          "phone": "0567-68-8110"
+        }
+      },
+      "job": {
+        "description": "CVJ部品の穴あけ加工",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-46",
+      "assignment": {
+        "department": "製作課",
+        "line": "Gライン",
+        "supervisor": {
+          "department": "",
+          "name": "係長　山本　絋平",
+          "phone": "0567-68-8110"
+        }
+      },
+      "job": {
+        "description": "CVJ部品長軸品の施削加工、NCプログラム修正",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    }
+  ],
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "営業部",
+      "name": "取締役 ブウ　ティ　サウ",
+      "phone": "052-938-8840"
+    },
+    "complaint_handler": {
+      "department": "営業部",
+      "name": "取締役部長 中山　欣英",
+      "phone": "052-938-8840"
+    }
+  },
+  "schedule": {
+    "work_hours": "昼勤：7時00分～15時30分　夜勤：19時00分～3時30分",
+    "break_time": "昼勤：11時00分～11時45分 まで    夜勤：23時00分～23時45分　まで　（45分）",
+    "calendar": "月～金　(シフトに準ずる）休日は、土曜日・日曜日・年末年始（12月29日～1月5日)・GW(4月27日～5月4日)・夏季休暇（8月10日～8月17日)",
+    "start_date": "2024-10-01 00:00:00",
+    "end_date": "2025-09-30 00:00:00",
+    "conflict_date": "2026-09-30 00:00:00",
+    "non_work_day_labor": "１ヶ月に２日の範囲内で命ずることができる。",
+    "overtime_labor": "3時間/日、42時間/月、320時間/年迄とする。但し、特別条項の申請により、80時間/月、720時間/年迄延長できる。申請は6回/年迄とする。",
+    "time_unit": "15.0"
+  },
+  "payment": {
+    "closing_date": "15日",
+    "payment_date": "当月末日",
+    "bank_account": "愛知銀行　当知支店　普通2075479　名義人　ユニバーサル企画（株）",
+    "worker_closing_date": "１５日",
+    "worker_payment_date": "１５日",
+    "worker_calendar": "土曜日・日曜日・年末年始（12月30日～1月7日)・GW(4月28日～5月5日)・夏季休暇（8月11日～8月18日)"
+  },
+  "agreement": {
+    "period": "2025-03-31 00:00:00",
+    "explainer": ""
+  }
+}

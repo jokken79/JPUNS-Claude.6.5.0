@@ -1,0 +1,72 @@
+{
+  "factory_id": "Factory-94",
+  "client_company": {
+    "name": "高雄工業株式会社",
+    "address": "愛知県弥富市楠三丁目13番地2",
+    "phone": "0567-68-8110",
+    "responsible_person": {
+      "department": "岡山事業所",
+      "name": "課長　大治 国利",
+      "phone": "086-724-5330"
+    },
+    "complaint_handler": {
+      "department": "管理部 管理課",
+      "name": "課長　大治 国利",
+      "phone": "086-724-5330"
+    }
+  },
+  "plant": {
+    "name": "HUB工場",
+    "address": "岡山県岡山市北区御津伊田1028-19",
+    "phone": "086-724-5330"
+  },
+  "assignment": {
+    "department": "岡山営業課",
+    "line": "材料管理係",
+    "supervisor": {
+      "department": "第二営業部",
+      "name": "副部長 東郷 裕一",
+      "phone": "086-724-5330"
+    }
+  },
+  "job": {
+    "description": "材料入出庫の数量管理作業",
+    "description2": "",
+    "hourly_rate": 0.0
+  },
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "岡山事業部",
+      "name": "部長　景森　敦士",
+      "phone": "052-938-8840"
+    },
+    "complaint_handler": {
+      "department": "営業部",
+      "name": "取締役部長 中山　欣英",
+      "phone": "052-938-8840"
+    }
+  },
+  "schedule": {
+    "work_hours": "昼勤：8時30分～16時15分",
+    "break_time": "昼勤：12時00分～12時45分 まで（45分）",
+    "calendar": "週4ヶ日間(シフトに準ずる）休日は、月曜日から金曜日の間一日・土曜日・日曜日・夏季休暇（8月9日～8月17日)・年末年始（12月29日～1月5日)・GW(4月29日～5月6日)・",
+    "start_date": "2025-07-10 00:00:00",
+    "end_date": "2026-09-30 00:00:00",
+    "conflict_date": "2027-10-01 00:00:00",
+    "non_work_day_labor": "１ヶ月に２日の範囲内で命ずることができる。",
+    "overtime_labor": " ",
+    "time_unit": "15.0"
+  },
+  "payment": {
+    "closing_date": "15日",
+    "payment_date": "当月末日",
+    "bank_account": "愛知銀行　当知支店　普通2075479　名義人　ユニバーサル企画（株）",
+    "worker_closing_date": "１５日",
+    "worker_payment_date": "１５日",
+    "worker_calendar": "土曜日・日曜日・夏季休暇（8月13日～8月20日)・年末年始(12月30日～1月7日)・GW（4月28日～5月5日)"
+  },
+  "agreement": {
+    "period": "2025-03-31 00:00:00",
+    "explainer": ""
+  }
+}

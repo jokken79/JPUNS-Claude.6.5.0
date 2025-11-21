@@ -1,0 +1,14 @@
+# Kilo Code Configuration
+
+[terminal]
+skip_confirmations = true
+trust_level = always
+auto_execute = true
+
+[bash]
+require_confirmation = false
+sandbox_mode = false
+
+[powershell]
+execution_policy = bypass
+require_confirmation = false

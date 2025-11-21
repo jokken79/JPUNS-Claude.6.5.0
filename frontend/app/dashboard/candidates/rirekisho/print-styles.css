@@ -1,0 +1,463 @@
+/* Estilos específicos para impresión del formulario Rirekisho */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+/* Configuración de página para impresión A4 vertical */
+@page {
+  size: A4 portrait;
+  margin: 8mm;
+}
+
+/* Estilos base para impresión */
+@media print {
+  /* Resetear márgenes y padding */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    font-family: 'Noto Sans JP', sans-serif !important;
+    font-size: 10pt !important;
+    line-height: 1.3 !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Ocultar TODOS los elementos del dashboard y no deseados */
+  body > *:not(.print-preview-container):not(.print-preview-container *),
+  header,
+  aside,
+  footer,
+  nav,
+  .sidebar,
+  .header,
+  .dashboard-header,
+  .dashboard-sidebar,
+  .dashboard-footer,
+  .toaster,
+  .react-query-devtools,
+  [class*="react-query"],
+  [class*="tanstack"],
+  [data-testid*="devtools"],
+  .theme-selector,
+  .dropdown-menu,
+  .notification-badge,
+  .search-bar,
+  .user-menu,
+  .navigation-menu,
+  .breadcrumb,
+  .pagination,
+  .toolbar,
+  .action-buttons,
+  .print-toolbar,
+  [data-testid="header"],
+  [data-testid="sidebar"],
+  [data-testid="footer"],
+  [role="navigation"],
+  [role="toolbar"],
+  [aria-label*="navigation"],
+  [aria-label*="menu"],
+  [class*="sidebar"],
+  [class*="header"],
+  [class*="footer"],
+  [class*="toolbar"],
+  [class*="navigation"],
+  [class*="breadcrumb"],
+  [class*="pagination"],
+  [class*="toaster"],
+  [class*="notification"],
+  [class*="dropdown"],
+  [class*="menu"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Ocultar timestamps y metadatos */
+  .timestamp,
+  .date-time,
+  .print-date,
+  .generated-date,
+  .page-info,
+  [data-timestamp],
+  [class*="timestamp"],
+  [class*="date-time"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Ocultar elementos del formulario que no deben imprimirse */
+  button,
+  .btn,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  .toolbar,
+  .action-buttons,
+  .print-hidden {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Contenedor principal del formulario */
+  .print-preview-container,
+  .print-form-container {
+    display: block !important;
+    visibility: visible !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100vh !important;
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Asegurar que el contenido del formulario sea visible */
+  .print-preview-container *,
+  .print-form-container * {
+    visibility: visible !important;
+  }
+
+  /* Contenedor A4 */
+  .print-a4-container,
+  .rirekisho-print-container {
+    width: 190mm !important;
+    min-height: 277mm !important;
+    margin: 0 auto !important;
+    padding: 6mm !important;
+    background: white !important;
+    box-shadow: none !important;
+    border: none !important;
+    page-break-inside: avoid !important;
+    position: relative !important;
+  }
+
+  /* Corregir layout de foto y tabla - MANTENER ALINEACIÓN HORIZONTAL */
+  .form-section:first-child {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 4mm !important;
+    margin-bottom: 6pt !important;
+    page-break-inside: avoid !important;
+  }
+
+  .form-section:first-child > div:first-child,
+  .form-section:first-child > .grid {
+    flex-shrink: 0 !important;
+    width: 40mm !important;
+    height: 50mm !important;
+  }
+
+  .form-section:first-child > table {
+    flex: 1 !important;
+    width: auto !important;
+    margin-left: 0 !important;
+  }
+
+  /* Estilos para tablas */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 3pt !important;
+    table-layout: fixed !important;
+  }
+
+  th, td {
+    border: 1px solid black !important;
+    padding: 3px 5px !important; /* Increased padding for better readability */
+    font-size: 8pt !important;
+    vertical-align: middle !important;
+    background: transparent !important;
+    color: black !important;
+    word-wrap: break-word !important;
+    height: 16px !important; /* Explicit row height */
+    line-height: 1.4 !important; /* Better line spacing */
+  }
+
+  th {
+    background-color: #f0f0f0 !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width: auto !important;
+  }
+
+  /* Estilos para inputs y selects en impresión */
+  input, select, textarea {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: black !important;
+    font-size: 8pt !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+  }
+
+  /* Ocultar flechas de selects */
+  select::-ms-expand,
+  select::-webkit-calendar-picker-indicator {
+    display: none !important;
+  }
+
+  /* Ocultar iconos de date/month picker */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="month"]::-webkit-calendar-picker-indicator,
+  input[type="date"]::-moz-calendar-picker-indicator,
+  input[type="month"]::-moz-calendar-picker-indicator {
+    display: none !important;
+    -webkit-appearance: none !important;
+  }
+
+  /* Estilos para checkboxes */
+  input[type="checkbox"] {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    width: 10px !important;
+    height: 10px !important;
+    border: 1px solid black !important;
+    background: transparent !important;
+    position: relative !important;
+    margin-right: 3px !important;
+  }
+
+  input[type="checkbox"]:checked::after {
+    content: '✓' !important;
+    position: absolute !important;
+    top: -2px !important;
+    left: 0px !important;
+    font-size: 8pt !important;
+    color: black !important;
+  }
+
+  /* Estilos para imágenes */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid !important;
+    object-fit: cover !important;
+  }
+
+  /* Estilos para texto */
+  h1, h2, h3, h4, h5, h6 {
+    color: black !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    margin: 0 !important;
+  }
+
+  h1 {
+    font-size: 18pt !important;
+    text-align: center !important;
+    margin-bottom: 8pt !important;
+    font-weight: bold !important;
+  }
+
+  h2 {
+    font-size: 12pt !important;
+    margin-bottom: 4pt !important;
+    margin-top: 6pt !important;
+    font-weight: bold !important;
+  }
+
+  h3 {
+    font-size: 10pt !important;
+    margin-bottom: 3pt !important;
+    margin-top: 4pt !important;
+    font-weight: bold !important;
+  }
+
+  p {
+    margin-bottom: 3pt !important;
+    orphans: 3 !important;
+    widows: 3 !important;
+  }
+
+  /* Evitar cortes de página */
+  .no-break {
+    page-break-inside: avoid !important;
+  }
+
+  /* Saltos de página controlados */
+  .page-break {
+    page-break-before: always !important;
+  }
+
+  /* Secciones del formulario */
+  .form-section {
+    page-break-inside: avoid !important;
+    margin-bottom: 4pt !important;
+  }
+
+  /* Tablas de datos */
+  .data-table {
+    page-break-inside: avoid !important;
+    margin-bottom: 4pt !important;
+  }
+
+  /* Información de contacto */
+  .contact-info {
+    page-break-inside: avoid !important;
+  }
+
+  /* Información personal */
+  .personal-info {
+    page-break-inside: avoid !important;
+  }
+
+  /* Experiencia laboral */
+  .work-experience {
+    page-break-inside: avoid !important;
+  }
+
+  /* Información familiar */
+  .family-info {
+    page-break-inside: avoid !important;
+  }
+
+  /* Calificaciones */
+  .qualifications {
+    page-break-inside: avoid !important;
+  }
+
+  /* Ajustes específicos para el formulario Rirekisho */
+  .rirekisho-form {
+    font-size: 8pt !important;
+    line-height: 1.3 !important;
+  }
+
+  .rirekisho-form table {
+    font-size: 8pt !important;
+  }
+
+  .rirekisho-form th,
+  .rirekisho-form td {
+    padding: 1.5px 3px !important;
+    font-size: 8pt !important;
+  }
+
+  .rirekisho-form input,
+  .rirekisho-form select,
+  .rirekisho-form textarea {
+    font-size: 8pt !important;
+  }
+
+  /* Foto del candidato */
+  .candidate-photo,
+  .photo-img {
+    border: 1px solid black !important;
+    width: 40mm !important;
+    height: 50mm !important;
+    object-fit: cover !important;
+  }
+
+  /* Firma */
+  .signature-field {
+    min-height: 20mm !important;
+    border-bottom: 1px solid black !important;
+  }
+
+  /* Footer de impresión */
+  .print-footer {
+    margin-top: 6pt !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Encabezado de impresión */
+  .print-header {
+    text-align: center !important;
+    margin-bottom: 8mm !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Contenido principal */
+  .print-content {
+    page-break-inside: avoid !important;
+  }
+
+  /* Footer de la empresa */
+  .company-info {
+    text-align: center !important;
+    font-size: 8pt !important;
+    margin-top: 6pt !important;
+  }
+
+  /* Optimización para diferentes navegadores */
+  @media print and (-webkit-min-device-pixel-ratio:0) {
+    /* Safari y Chrome */
+    .print-a4-container,
+    .rirekisho-print-container {
+      -webkit-transform: scale(1) !important;
+      transform: scale(1) !important;
+    }
+  }
+
+  /* Firefox */
+  @media print and (min--moz-device-pixel-ratio:0) {
+    .print-a4-container,
+    .rirekisho-print-container {
+      width: 190mm !important;
+    }
+  }
+
+  /* Edge */
+  @media print and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .print-a4-container,
+    .rirekisho-print-container {
+      width: 190mm !important;
+    }
+  }
+
+  /* Asegurar que solo el contenido del formulario sea visible */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Footer logo transparency */
+  .footer-logo-container img,
+  .site-footer-content img {
+    background: transparent !important;
+    mix-blend-mode: multiply !important;
+    opacity: 1 !important;
+    filter: brightness(1) contrast(1) !important;
+  }
+
+  /* Footer alignment and sizing */
+  .site-footer-content {
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 12px !important; /* Compact gap for print */
+  }
+
+  .company-details {
+    text-align: right !important;
+    font-size: 9pt !important; /* Slightly larger for print */
+  }
+
+  .footer-logo-container img,
+  .site-footer-content img {
+    max-height: 40px !important; /* Optimized size for print */
+    width: auto !important;
+  }
+}
+
+/* Estilos para vista previa de impresión */
+@media screen {
+  .print-preview {
+    background: #f5f5f5;
+    padding: 20px;
+    border: 1px solid #ddd;
+  }
+
+  .print-preview .print-a4-container {
+    background: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin: 0 auto;
+  }
+}

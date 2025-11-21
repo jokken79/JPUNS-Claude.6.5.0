@@ -1,0 +1,954 @@
+{
+  "metadata": {
+    "aplicacion": "UNS-ClaudeJP 6.0.0",
+    "descripcion": "Sistema integral de gestión de recursos humanos para agencias de staffing japonesas",
+    "version": "6.0.0",
+    "fecha_analisis": "2025-11-19",
+    "archivos_fuente_totales": 660,
+    "rutas_base": {
+      "raiz": "/home/user/UNS-ClaudeJP-6.0.0",
+      "frontend": "/home/user/UNS-ClaudeJP-6.0.0/frontend",
+      "backend": "/home/user/UNS-ClaudeJP-6.0.0/backend"
+    }
+  },
+  "estructura_carpetas": {
+    "descripcion": "Arquitectura monorepo con frontend y backend separados",
+    "estructura": {
+      "raiz": {
+        "carpetas_principales": [
+          "frontend/ - Aplicación Next.js 16 (React 19, TypeScript, TailwindCSS)",
+          "backend/ - API FastAPI en Python 3.11+",
+          "docker/ - Configuración Docker Compose (6 servicios)",
+          "scripts/ - Utilidades de setup, git, extracción de datos",
+          "docs/ - Documentación exhaustiva (arquitectura, guías, etc)",
+          "config/ - Configuración de factories y aplicación",
+          "BASEDATEJP/ - Base de datos inicial",
+          "base-datos/ - Datos de backup/almacenamiento",
+          "uploads/ - Almacenamiento de archivos subidos"
+        ],
+        "archivos_importantes": [
+          ".env.example - Variables de entorno de ejemplo",
+          ".env.production - Configuración de producción",
+          "package.json - Dependencias del proyecto root",
+          "README.md - Documentación principal (37KB)",
+          "8_WEEK_PLAN_COMPLETE.md - Plan de 8 semanas completado",
+          "AUDIT_REPORT_FINAL_2025-11-19.md - Reporte de auditoría final",
+          "DEPLOYMENT_GUIDE_v6.0.0.md - Guía de despliegue"
+        ]
+      },
+      "frontend": {
+        "carpetas": {
+          "app/": "Next.js App Router (30+ páginas)",
+          "components/": "171 componentes React reutilizables",
+          "lib/": "Librerías y utilidades (API, validación, telemetría)",
+          "stores/": "Estado global (Zustand) - 8 stores",
+          "hooks/": "Custom React hooks",
+          "types/": "Tipos TypeScript",
+          "styles/": "Estilos y temas",
+          "contexts/": "React Context (tema, navegación)",
+          "utils/": "Funciones utilitarias",
+          "public/": "Archivos estáticos",
+          "e2e/": "Tests end-to-end con Playwright",
+          "tests/": "Tests unitarios (Vitest)"
+        },
+        "linea_de_codigos": "~10,000+ LOC"
+      },
+      "backend": {
+        "carpetas": {
+          "app/": "Código principal de la aplicación",
+          "app/api/": "24 routers FastAPI (endpoints)",
+          "app/models/": "Modelos SQLAlchemy (1816 LOC)",
+          "app/services/": "Servicios de negocio",
+          "app/core/": "Configuración core y middlewares",
+          "app/schemas/": "Esquemas Pydantic",
+          "app/utils/": "Funciones utilitarias",
+          "tests/": "Tests unitarios e integración",
+          "alembic/": "Migraciones de base de datos",
+          "scripts/": "Scripts de utilidad",
+          "security/": "Módulos de seguridad"
+        },
+        "linea_de_codigos": "~15,000+ LOC"
+      }
+    }
+  },
+  "frontend": {
+    "stack_tecnologico": {
+      "framework": "Next.js 16.0.0",
+      "react": "React 19.0.0",
+      "lenguaje": "TypeScript 5.6.0",
+      "estilos": "TailwindCSS 3.4.13 + Radix UI",
+      "componentes_ui": "Radix UI (20+ componentes primitivos)",
+      "formularios": "React Hook Form 7.65.0 + Zod 3.25.76",
+      "estado_global": "Zustand 5.0.8",
+      "data_fetching": "React Query (TanStack) 5.59.0 + Axios 1.7.7",
+      "testing": "Playwright 1.56.1 (E2E) + Vitest 2.1.5 (Unit)",
+      "animaciones": "Framer Motion 11.15.0",
+      "graficos": "Recharts 2.15.4",
+      "iconos": "Lucide React 0.451.0 + Heroicons 2.2.0",
+      "tablas": "TanStack React Table 8.21.3",
+      "telemetria": "OpenTelemetry 1.9.0",
+      "notificaciones": "Sonner 2.0.7 + React Hot Toast 2.6.0",
+      "otros": "QRCode 1.5.4, date-fns 4.1.0, clsx 2.1.1"
+    },
+    "configuracion_proyecto": {
+      "tsconfig": {
+        "target": "ES2020",
+        "strict": true,
+        "module": "esnext",
+        "strict_mode": "Habilitado",
+        "path_aliases": {
+          "@/*": "./*",
+          "@/components/*": "./components/*",
+          "@/lib/*": "./lib/*",
+          "@/stores/*": "./stores/*",
+          "@/types/*": "./types/*"
+        }
+      },
+      "next_config": "Configuración Next.js 16 con hot reload",
+      "tailwind": "Customizado con temas personalizados (12+ temas)",
+      "eslint": "ESLint con reglas estrictas (max-warnings 0)"
+    },
+    "paginas_principales": {
+      "total_paginas": 30,
+      "paginas": [
+        "/login - Página de autenticación",
+        "/dashboard - Dashboard principal (página raíz del panel)",
+        "/dashboard/page - Página de inicio del dashboard",
+        "/dashboard/salary - Gestión de nóminas",
+        "/dashboard/salary/reports - Reportes de salarios",
+        "/dashboard/salary/[id] - Detalle de salario",
+        "/dashboard/apartments - Gestión de apartamentos",
+        "/dashboard/apartments/create - Crear apartamento",
+        "/dashboard/apartments/search - Búsqueda de apartamentos",
+        "/dashboard/apartments/[id] - Detalle de apartamento",
+        "/dashboard/apartments/[id]/assign - Asignar empleado",
+        "/dashboard/apartments/[id]/edit - Editar apartamento",
+        "/dashboard/factories - Gestión de fábricas/clientes",
+        "/dashboard/factories/[id] - Detalle de fábrica",
+        "/dashboard/factories/[id]/config - Configuración de fábrica",
+        "/dashboard/factories/new - Crear nueva fábrica",
+        "/dashboard/timercards - Control de asistencia (タイムカード)",
+        "/dashboard/timercards/upload - Subir archivo de asistencia",
+        "/dashboard/yukyu - Gestión de vacaciones pagadas (有給休暇)",
+        "/dashboard/yukyu-requests - Solicitudes de vacaciones",
+        "/dashboard/yukyu-requests/create - Crear solicitud de vacaciones",
+        "/dashboard/payroll - Gestión de nómina",
+        "/dashboard/payroll/create - Crear cálculo de nómina",
+        "/dashboard/payroll/calculate - Calcular nómina",
+        "/dashboard/payroll/yukyu-summary - Resumen de vacaciones",
+        "/dashboard/profile - Perfil de usuario",
+        "/dashboard/reports - Reportes del sistema",
+        "/dashboard/design-system - Sistema de diseño",
+        "/dashboard/design-preferences - Preferencias de diseño",
+        "/dashboard/examples/forms - Ejemplos de formularios",
+        "/dashboard/help - Ayuda y soporte",
+        "/dashboard/keiri/yukyu-dashboard - Dashboard Keiri de vacaciones"
+      ]
+    },
+    "componentes_principales": {
+      "total_componentes": 171,
+      "categorias": {
+        "dashboard": {
+          "cantidad": 20,
+          "componentes": [
+            "header.tsx - Encabezado del dashboard",
+            "sidebar.tsx - Barra lateral de navegación",
+            "dashboard-header.tsx - Encabezado con navegación",
+            "metric-card.tsx - Tarjeta de métrica",
+            "stats-chart.tsx - Gráficos de estadísticas",
+            "QuickActions.tsx - Acciones rápidas",
+            "PayrollSummaryCard.tsx - Resumen de nómina",
+            "dashboard-tabs-wrapper.tsx - Tabs principales",
+            "layout-controls.tsx - Controles de layout",
+            "system-status-indicator.tsx - Indicador de estado",
+            "tabs/ApartmentsTab.tsx - Tab de apartamentos",
+            "tabs/EmployeesTab.tsx - Tab de empleados",
+            "tabs/FinancialsTab.tsx - Tab de finanzas",
+            "tabs/OverviewTab.tsx - Tab de resumen",
+            "tabs/ReportsTab.tsx - Tab de reportes",
+            "tabs/YukyuTab.tsx - Tab de vacaciones",
+            "charts/AreaChartCard.tsx - Gráfico de área",
+            "charts/BarChartCard.tsx - Gráfico de barras",
+            "charts/DonutChartCard.tsx - Gráfico de dona",
+            "charts/TrendCard.tsx - Gráfico de tendencias",
+            "charts/OccupancyChart.tsx - Gráfico de ocupación"
+          ]
+        },
+        "apartamentos": {
+          "cantidad": 8,
+          "componentes": [
+            "ApartmentSelector.tsx - Selector de apartamento",
+            "ApartmentSelector-enhanced.tsx - Selector mejorado",
+            "AssignmentForm.tsx - Formulario de asignación",
+            "DeductionCard.tsx - Tarjeta de descuentos"
+          ]
+        },
+        "salary": {
+          "cantidad": 5,
+          "componentes": [
+            "SalaryReportFilters.tsx - Filtros de reportes",
+            "SalaryBreakdownTable.tsx - Desglose de salario",
+            "SalaryDeductionsTable.tsx - Tabla de descuentos",
+            "SalaryCharts.tsx - Gráficos de salario",
+            "SalarySummaryCards.tsx - Resumen de salarios"
+          ]
+        },
+        "admin": {
+          "cantidad": 2,
+          "componentes": [
+            "user-management-panel.tsx - Panel de usuarios",
+            "system-settings-panel.tsx - Panel de configuración"
+          ]
+        },
+        "ui": {
+          "cantidad": 30,
+          "componentes": "Componentes base: Button, Input, Dialog, Select, etc. (Radix UI)"
+        },
+        "formularios": {
+          "cantidad": 10,
+          "componentes": [
+            "EmployeeForm.tsx - Formulario de empleado",
+            "CandidateEvaluator.tsx - Evaluador de candidatos"
+          ]
+        },
+        "ocr": {
+          "cantidad": 2,
+          "componentes": [
+            "OCRUploader.tsx - Cargador de OCR genérico",
+            "AzureOCRUploader.tsx - Cargador Azure OCR"
+          ]
+        },
+        "otros": {
+          "cantidad": 40,
+          "componentes": [
+            "error-boundary.tsx - Manejo de errores",
+            "error-state.tsx - Estado de error",
+            "empty-state.tsx - Estado vacío",
+            "page-guard.tsx - Protección de página",
+            "progress-indicator.tsx - Indicador de progreso",
+            "under-construction.tsx - En construcción"
+          ]
+        }
+      }
+    },
+    "almacenamiento_estado": {
+      "herramienta": "Zustand 5.0.8",
+      "stores": 8,
+      "detalles": {
+        "auth-store.ts": {
+          "proposito": "Autenticación y usuario",
+          "estado": "token, user, isAuthenticated"
+        },
+        "salary-store.ts": {
+          "proposito": "Estado de salarios",
+          "estado": "salaries, filters, selectedSalary"
+        },
+        "dashboard-tabs-store.ts": {
+          "proposito": "Navegación de tabs del dashboard",
+          "estado": "activeTab, tabHistory"
+        },
+        "payroll-store.ts": {
+          "proposito": "Estado de nómina",
+          "estado": "payrolls, calculations"
+        },
+        "fonts-store.ts": {
+          "proposito": "Fuentes y tipografía",
+          "estado": "selectedFont, fontStack"
+        },
+        "layout-store.ts": {
+          "proposito": "Layout y tema",
+          "estado": "sidebarOpen, theme, layoutMode"
+        },
+        "themeStore.ts": {
+          "proposito": "Temas personalizados",
+          "estado": "currentTheme, customThemes"
+        },
+        "settings-store.ts": {
+          "proposito": "Configuración general",
+          "estado": "appSettings, preferences"
+        }
+      }
+    },
+    "contextos": {
+      "total": 2,
+      "detalles": {
+        "theme-context.tsx": "Contexto de tema/dark mode",
+        "navigation-context.tsx": "Contexto de navegación"
+      }
+    },
+    "hooks_customizados": {
+      "total": 12,
+      "lista": [
+        "use-toast.ts - Notificaciones toast",
+        "use-page-visibility.ts - Visibilidad de página",
+        "use-cached-page-visibility.ts - Visibilidad cacheada",
+        "use-cached-page-permission.ts - Permisos cacheados",
+        "use-page-permission.ts - Permisos de página",
+        "use-form-validation.ts - Validación de formularios",
+        "use-dev-auto-login.ts - Auto-login en desarrollo",
+        "use-route-change.ts - Cambios de ruta",
+        "useThemePreview.ts - Preview de temas",
+        "useFormValidation.ts - Validación (versión class)",
+        "useThemeApplier.ts - Aplicador de temas",
+        "useDesignPreferences.ts - Preferencias de diseño"
+      ]
+    },
+    "librerías_utilitarias": {
+      "api.ts": {
+        "descripcion": "Cliente Axios configurado con interceptores",
+        "funciones": "authService, employeeService, candidateService, factoryService, timerCardService, salaryService, requestService, dashboardService, apartmentsV2Service, adminControlPanelService, userManagementService, systemSettingsService",
+        "ubicacion": "/home/user/UNS-ClaudeJP-6.0.0/frontend/lib/api.ts",
+        "lineas_codigo": 994
+      },
+      "payroll-api.ts": {
+        "descripcion": "API específica para nómina",
+        "ubicacion": "/home/user/UNS-ClaudeJP-6.0.0/frontend/lib/payroll-api.ts"
+      },
+      "validations": {
+        "descripcion": "Esquemas Zod para validación",
+        "archivos": ["candidate.ts", "candidate-schema.ts", "index.ts"],
+        "ubicacion": "/home/user/UNS-ClaudeJP-6.0.0/frontend/lib/validations/"
+      },
+      "utilities": {
+        "descripcion": "Funciones utilitarias varias",
+        "ubicacion": "/home/user/UNS-ClaudeJP-6.0.0/frontend/lib/utilities/"
+      },
+      "themes.ts": {
+        "descripcion": "Configuración de 12+ temas",
+        "ubicacion": "/home/user/UNS-ClaudeJP-6.0.0/frontend/lib/themes.ts"
+      }
+    }
+  },
+  "backend": {
+    "stack_tecnologico": {
+      "framework": "FastAPI 0.115.6",
+      "lenguaje": "Python 3.11+",
+      "base_datos": "PostgreSQL 15",
+      "cache": "Redis 7",
+      "orm": "SQLAlchemy 2.0",
+      "validacion": "Pydantic 2.0",
+      "migraciones": "Alembic",
+      "autenticacion": "JWT (HS256)",
+      "ocr": "Azure Computer Vision, EasyOCR, Tesseract, Gemini API",
+      "ai_providers": "OpenAI, Gemini, Anthropic Claude, Zhipu",
+      "telemetria": "OpenTelemetry",
+      "monitoring": "Prometheus, Grafana",
+      "otros": "python-dotenv, requests, pandas, openpyxl"
+    },
+    "routers_api": {
+      "total": 24,
+      "lista": [
+        "auth.py - Autenticación JWT y gestión de usuarios",
+        "admin.py - Panel de administración y control de sistema",
+        "apartments_v2.py - Gestión de apartamentos V2 con features avanzados",
+        "audit.py - Seguimiento de auditoría y reportes",
+        "azure_ocr.py - Integración Azure Vision OCR",
+        "candidates.py - Gestión de candidatos (履歴書) + OCR",
+        "contracts.py - Gestión de contratos",
+        "dashboard.py - Estadísticas y analytics",
+        "database.py - Utilidades de gestión de BD",
+        "employees.py - Gestión de empleados (派遣社員)",
+        "factories.py - Gestión de fábricas/clientes (派遣先)",
+        "import_export.py - Importación/exportación de datos",
+        "monitoring.py - Monitoreo de salud del sistema",
+        "notifications.py - Gestión de notificaciones (Email, LINE)",
+        "pages.py - Gestión de páginas",
+        "payroll.py - Procesamiento y cálculos de nómina",
+        "reports.py - Generación de reportes PDF",
+        "requests.py - Workflow de solicitudes de empleados (申請)",
+        "resilient_import.py - Importación resiliente de datos",
+        "role_permissions.py - Control de acceso basado en roles (RBAC)",
+        "salary.py - Cálculos y gestión de salarios (給与)",
+        "settings.py - Configuración de la aplicación",
+        "timer_cards.py - Seguimiento de asistencia (タイムカード)",
+        "yukyu.py - Gestión de vacaciones pagadas (有給休暇)"
+      ]
+    },
+    "modelos_base_datos": {
+      "ubicacion": "/home/user/UNS-ClaudeJP-6.0.0/backend/app/models/",
+      "total_lineas": 1816,
+      "archivos": [
+        "models.py (1670 LOC) - Modelos principales",
+        "payroll_models.py (146 LOC) - Modelos de nómina",
+        "mixins.py - Mixins para modelos (SoftDeleteMixin, etc)"
+      ],
+      "enumeraciones": [
+        "UserRole - Roles de usuario (ADMIN, MANAGER, EMPLOYEE, etc)",
+        "CandidateStatus - Estados de candidato",
+        "DocumentType - Tipos de documentos",
+        "RequestType - Tipos de solicitudes",
+        "RequestStatus - Estados de solicitudes",
+        "YukyuStatus - Estados de vacaciones",
+        "ShiftType - Tipos de turno",
+        "RoomType - Tipos de habitación",
+        "ApartmentStatus - Estados de apartamento",
+        "AssignmentStatus - Estados de asignación",
+        "ChargeType - Tipos de cargo",
+        "DeductionStatus - Estados de descuento",
+        "AdminActionType - Tipos de acción admin",
+        "ResourceType - Tipos de recurso",
+        "AIProvider - Proveedores de IA"
+      ],
+      "modelos_principales": [
+        "User - Usuario del sistema con autenticación",
+        "RefreshToken - Tokens de refresco JWT",
+        "Candidate - Candidato (履歴書/Rirekisho)",
+        "Employee - Empleado (派遣社員)",
+        "Factory - Fábrica/Cliente (派遣先)",
+        "TimerCard - Tarjeta de asistencia (タイムカード)",
+        "SalaryCalculation - Cálculo de salario",
+        "Request - Solicitud de empleado (申請)",
+        "Yukyu - Vacación pagada (有給休暇)",
+        "Apartment - Apartamento para empleados",
+        "Assignment - Asignación de empleado a apartamento",
+        "AdditionalCharge - Cargos adicionales",
+        "Deduction - Descuentos de renta",
+        "AuditLog - Log de auditoría",
+        "SystemSetting - Configuración del sistema",
+        "Page - Página del sistema",
+        "RolePermission - Permiso de rol"
+      ]
+    },
+    "servicios": {
+      "total": 20,
+      "ubicacion": "/home/user/UNS-ClaudeJP-6.0.0/backend/app/services/",
+      "lista": [
+        "yukyu_service.py - Servicio de vacaciones",
+        "additional_charge_service.py - Servicio de cargos adicionales",
+        "ocr_cache_service.py - Cache para OCR",
+        "batch_optimizer.py - Optimización de batch",
+        "payroll_service.py - Servicio de nómina principal",
+        "notification_service.py - Notificaciones (Email, LINE)",
+        "import_service.py - Servicio de importación",
+        "audit_service.py - Servicio de auditoría",
+        "employee_matching_service.py - Matching de empleados",
+        "ai_gateway.py - Gateway para múltiples IA",
+        "ai_usage_service.py - Seguimiento de uso de IA",
+        "payroll/payroll_validator.py - Validador de nómina",
+        "payroll/payroll_service.py - Servicio de nómina detallado",
+        "payroll/deduction_calculator.py - Calculador de descuentos",
+        "payroll/payslip_generator.py - Generador de recibos de pago",
+        "payroll/rate_calculator.py - Calculador de tasas",
+        "payroll/overtime_calculator.py - Calculador de horas extras",
+        "additional_providers.py - Proveedores adicionales de IA",
+        "streaming_service.py - Servicio de streaming"
+      ]
+    },
+    "configuracion_core": {
+      "ubicacion": "/home/user/UNS-ClaudeJP-6.0.0/backend/app/core/",
+      "componentes": [
+        "config.py - Variables de entorno y configuración",
+        "database.py - Configuración de BD",
+        "security.py - Seguridad (JWT, contraseñas)",
+        "redis_client.py - Cliente Redis",
+        "logging.py - Configuración de logging",
+        "resilience/ - Patrones de resiliencia (retry, circuit breaker)",
+        "middleware - Middlewares personalizados"
+      ]
+    },
+    "esquemas_pydantic": {
+      "ubicacion": "/home/user/UNS-ClaudeJP-6.0.0/backend/app/schemas/",
+      "descripcion": "Esquemas para validación de entrada/salida"
+    },
+    "testing": {
+      "ubicacion": "/home/user/UNS-ClaudeJP-6.0.0/backend/tests/",
+      "total_tests": 30,
+      "cobertura": "Tests para OCR, payroll, seguridad, APIs, etc"
+    }
+  },
+  "apis_endpoints": {
+    "descripcion": "Endpoints REST/JSON que el frontend consume",
+    "base_url": "/api",
+    "autenticacion": "Bearer Token (JWT)",
+    "endpoints_principales": [
+      {
+        "modulo": "auth",
+        "endpoints": [
+          "POST /api/auth/login/ - Autenticación",
+          "POST /api/auth/register - Registro de usuario",
+          "GET /api/auth/me/ - Usuario actual",
+          "GET /api/auth/users - Listar usuarios (admin)",
+          "POST /api/auth/users/{userId}/reset-password - Reset de contraseña"
+        ]
+      },
+      {
+        "modulo": "employees",
+        "endpoints": [
+          "GET /api/employees/ - Listar empleados",
+          "POST /api/employees/ - Crear empleado",
+          "GET /api/employees/{id}/ - Detalle",
+          "PUT /api/employees/{id}/ - Actualizar",
+          "DELETE /api/employees/{id}/ - Eliminar",
+          "GET /api/employees/available-for-apartment - Empleados disponibles"
+        ]
+      },
+      {
+        "modulo": "candidates",
+        "endpoints": [
+          "GET /api/candidates/ - Listar candidatos",
+          "POST /api/candidates/ - Crear candidato",
+          "GET /api/candidates/{id}/ - Detalle",
+          "PUT /api/candidates/{id}/ - Actualizar",
+          "DELETE /api/candidates/{id}/ - Eliminar",
+          "POST /api/candidates/{id}/approve/ - Aprobar",
+          "POST /api/candidates/{id}/reject/ - Rechazar"
+        ]
+      },
+      {
+        "modulo": "factories",
+        "endpoints": [
+          "GET /api/factories - Listar fábricas",
+          "POST /api/factories - Crear fábrica",
+          "GET /api/factories/{id}/ - Detalle",
+          "PUT /api/factories/{id}/ - Actualizar",
+          "DELETE /api/factories/{id}/ - Eliminar"
+        ]
+      },
+      {
+        "modulo": "timer_cards",
+        "endpoints": [
+          "GET /api/timer-cards - Listar tarjetas",
+          "POST /api/timer-cards - Crear",
+          "POST /api/timer-cards/upload/ - Subir PDF/OCR",
+          "POST /api/timer-cards/bulk/ - Crear masivo",
+          "GET /api/timer-cards/{id}/ - Detalle",
+          "PUT /api/timer-cards/{id}/ - Actualizar",
+          "DELETE /api/timer-cards/{id}/ - Eliminar"
+        ]
+      },
+      {
+        "modulo": "salary",
+        "endpoints": [
+          "GET /api/salary/ - Listar salarios",
+          "POST /api/salary/calculate/ - Calcular",
+          "GET /api/salary/{id}/ - Detalle",
+          "PUT /api/salary/{id}/ - Actualizar",
+          "PUT /api/salary/{id}/mark-paid/ - Marcar pagado",
+          "POST /api/salary/{id}/payslip/ - Generar recibo",
+          "POST /api/salary/export/excel/ - Exportar Excel",
+          "POST /api/salary/export/pdf/ - Exportar PDF"
+        ]
+      },
+      {
+        "modulo": "apartments_v2",
+        "endpoints": [
+          "GET /api/apartments/apartments - Listar apartamentos",
+          "POST /api/apartments/apartments - Crear",
+          "GET /api/apartments/apartments/{id} - Detalle",
+          "PUT /api/apartments/apartments/{id} - Actualizar",
+          "DELETE /api/apartments/apartments/{id} - Eliminar",
+          "GET /api/apartments/assignments - Listar asignaciones",
+          "POST /api/apartments/assignments - Crear asignación",
+          "GET /api/apartments/assignments/{id} - Detalle",
+          "PUT /api/apartments/assignments/{id}/end - Terminar asignación",
+          "POST /api/apartments/assignments/transfer - Transferencia",
+          "GET /api/apartments/reports/occupancy - Reporte ocupación",
+          "GET /api/apartments/reports/arrears - Reporte atrasos",
+          "GET /api/apartments/reports/maintenance - Reporte mantenimiento",
+          "GET /api/apartments/reports/costs - Reporte costos"
+        ]
+      },
+      {
+        "modulo": "yukyu",
+        "endpoints": [
+          "GET /api/yukyu/ - Listar vacaciones",
+          "POST /api/yukyu/ - Crear",
+          "GET /api/yukyu/{id}/ - Detalle",
+          "PUT /api/yukyu/{id}/ - Actualizar",
+          "DELETE /api/yukyu/{id}/ - Eliminar"
+        ]
+      },
+      {
+        "modulo": "admin",
+        "endpoints": [
+          "GET /api/admin/settings - Obtener configuración",
+          "PUT /api/admin/settings/{key} - Actualizar configuración",
+          "GET /api/admin/statistics - Estadísticas",
+          "POST /api/admin/maintenance-mode - Modo mantenimiento",
+          "GET /api/admin/audit-log - Log de auditoría",
+          "GET /api/admin/import-config - Importar configuración"
+        ]
+      },
+      {
+        "modulo": "dashboard",
+        "endpoints": [
+          "GET /api/dashboard/stats/ - Estadísticas",
+          "GET /api/dashboard/recent-activity/ - Actividad reciente"
+        ]
+      }
+    ]
+  },
+  "configuracion_proyecto": {
+    "variables_entorno": {
+      "ubicacion": ".env.example y .env.production",
+      "variables_obligatorias": [
+        "SECRET_KEY (64 bytes para JWT)",
+        "POSTGRES_PASSWORD (contraseña BD)",
+        "DATABASE_URL (string de conexión)",
+        "REDIS_PASSWORD"
+      ],
+      "variables_opcionales": [
+        "GEMINI_API_KEY (Google IA)",
+        "GOOGLE_CLOUD_VISION_API_KEY",
+        "AZURE_COMPUTER_VISION_ENDPOINT + KEY",
+        "OPENAI_API_KEY",
+        "ANTHROPIC_API_KEY",
+        "LINE_CHANNEL_ACCESS_TOKEN",
+        "SMTP_* (Email configuration)"
+      ]
+    },
+    "docker_compose": {
+      "servicios": 6,
+      "lista": [
+        "backend - FastAPI (puerto 8000)",
+        "frontend - Next.js (puerto 3000)",
+        "postgres - PostgreSQL 15 (puerto 5432)",
+        "redis - Redis 7 (puerto 6379)",
+        "adminer - Gestor BD web (puerto 8080)",
+        "grafana - Monitoreo (puerto 3001)"
+      ],
+      "red": "uns-network"
+    }
+  },
+  "relaciones_componentes": {
+    "descripcion": "Mapeo de cómo componentes y APIs se relacionan",
+    "flujo_principal": {
+      "usuario_autenticacion": {
+        "componentes": ["login/page.tsx"],
+        "apis": [
+          "POST /api/auth/login/",
+          "GET /api/auth/me/"
+        ],
+        "almacenamiento": "auth-store (Zustand)"
+      },
+      "dashboard": {
+        "componentes": [
+          "dashboard/page.tsx",
+          "dashboard-header.tsx",
+          "sidebar.tsx",
+          "dashboard-tabs-wrapper.tsx"
+        ],
+        "apis": [
+          "GET /api/dashboard/stats/",
+          "GET /api/dashboard/recent-activity/"
+        ],
+        "almacenamiento": "dashboard-tabs-store"
+      },
+      "gestion_empleados": {
+        "paginas": [
+          "/dashboard/candidates (candidatos)",
+          "/dashboard/employees (empleados después de aprobación)"
+        ],
+        "componentes": [
+          "CandidateEvaluator.tsx",
+          "EmployeeForm.tsx"
+        ],
+        "apis": [
+          "GET /api/candidates/",
+          "POST /api/candidates/",
+          "POST /api/candidates/{id}/approve/",
+          "GET /api/employees/",
+          "POST /api/employees/",
+          "GET /api/employees/available-for-apartment"
+        ]
+      },
+      "gestion_apartamentos": {
+        "paginas": [
+          "/dashboard/apartments",
+          "/dashboard/apartments/create",
+          "/dashboard/apartments/[id]",
+          "/dashboard/apartments/[id]/assign"
+        ],
+        "componentes": [
+          "ApartmentSelector.tsx",
+          "AssignmentForm.tsx",
+          "DeductionCard.tsx"
+        ],
+        "apis": [
+          "GET /api/apartments/apartments",
+          "POST /api/apartments/apartments",
+          "GET /api/apartments/assignments",
+          "POST /api/apartments/assignments",
+          "GET /api/apartments/reports/*"
+        ]
+      },
+      "nómina": {
+        "paginas": [
+          "/dashboard/salary",
+          "/dashboard/salary/reports",
+          "/dashboard/salary/[id]",
+          "/dashboard/payroll/*"
+        ],
+        "componentes": [
+          "SalaryReportFilters.tsx",
+          "SalaryBreakdownTable.tsx",
+          "SalarySummaryCards.tsx"
+        ],
+        "apis": [
+          "GET /api/salary/",
+          "POST /api/salary/calculate/",
+          "GET /api/salary/reports/",
+          "POST /api/salary/export/excel/",
+          "POST /api/salary/export/pdf/"
+        ],
+        "almacenamiento": "salary-store"
+      },
+      "asistencia": {
+        "paginas": [
+          "/dashboard/timercards",
+          "/dashboard/timercards/upload"
+        ],
+        "componentes": [
+          "OCRUploader.tsx",
+          "AzureOCRUploader.tsx"
+        ],
+        "apis": [
+          "GET /api/timer-cards",
+          "POST /api/timer-cards/upload/",
+          "POST /api/timer-cards/bulk/"
+        ]
+      },
+      "vacaciones": {
+        "paginas": [
+          "/dashboard/yukyu",
+          "/dashboard/yukyu-requests/create"
+        ],
+        "componentes": [
+          "pending-requests-table.tsx",
+          "yukyu-metric-card.tsx",
+          "yukyu-trend-chart.tsx"
+        ],
+        "apis": [
+          "GET /api/yukyu/",
+          "POST /api/yukyu/",
+          "GET /api/requests/",
+          "POST /api/requests/"
+        ]
+      }
+    }
+  },
+  "problemas_seguridad": {
+    "vulnerabilidades": [
+      {
+        "tipo": "XSS (Cross-Site Scripting) - innerHTML",
+        "severidad": "ALTA",
+        "ubicacion": "/home/user/UNS-ClaudeJP-6.0.0/frontend/app/dashboard/candidates/page.tsx",
+        "descripcion": "Uso de innerHTML para asignar contenido HTML directamente",
+        "codigo": "icon.innerHTML = '<svg...>...'",
+        "riesgo": "Si el contenido viene de entrada de usuario, podría permitir inyección de scripts",
+        "recomendacion": "Usar innerText, textContent, o crear elementos DOM directamente"
+      },
+      {
+        "tipo": "XSS (Cross-Site Scripting) - dangerouslySetInnerHTML",
+        "severidad": "MEDIA",
+        "ubicacion": "/home/user/UNS-ClaudeJP-6.0.0/frontend/app/layout.tsx",
+        "descripcion": "Uso de dangerouslySetInnerHTML en componentes React",
+        "riesgo": "Potencial vector de XSS si el HTML viene de fuentes no confiables",
+        "recomendacion": "Verificar que todo HTML sea sanitizado o usar react-html-parser"
+      },
+      {
+        "tipo": "Credenciales en .env.example",
+        "severidad": "BAJA",
+        "ubicacion": "/home/user/UNS-ClaudeJP-6.0.0/.env.example",
+        "descripcion": "Contiene ejemplos de credenciales con valores por defecto",
+        "contenido": "POSTGRES_PASSWORD=change-me-in-local, REDIS_PASSWORD=change-me-in-local",
+        "riesgo": "Si alguien usa los ejemplos sin cambiar, sistema vulnerable",
+        "recomendacion": "Adicionar comentarios más explícitos, incluir script de validación"
+      },
+      {
+        "tipo": "Demo credentials expuestas",
+        "severidad": "MEDIA",
+        "ubicacion": ".env.example líneas 196-198",
+        "descripcion": "Credenciales de demostración en ejemplo",
+        "contenido": "NEXT_PUBLIC_DEMO_USER=admin, NEXT_PUBLIC_DEMO_PASS=admin123",
+        "riesgo": "En producción, estas credenciales deben estar deshabilitadas",
+        "recomendacion": "Usar solo en desarrollo, validar en producción"
+      },
+      {
+        "tipo": "CORS configuration en desarrollo",
+        "severidad": "BAJA",
+        "ubicacion": ".env.example",
+        "descripcion": "CORS habilitado para localhost",
+        "riesgo": "En producción debe ser específico al dominio real",
+        "recomendacion": "Revisar backend/app/core/config.py para CORS en producción"
+      },
+      {
+        "tipo": "API base URL configuration",
+        "severidad": "MEDIA",
+        "ubicacion": "frontend/lib/api.ts",
+        "descripcion": "Base URL de API se normaliza pero podría causar CSRF",
+        "riesgo": "Si CORS no está bien configurado, podría permitir requests cross-origin",
+        "recomendacion": "Implementar CSRF tokens si usa cookies (actualmente usa Bearer token)"
+      }
+    ],
+    "hardcoded_values": [
+      {
+        "ubicacion": "scripts/utilities/generate_env.py",
+        "items": [
+          "localhost en URLs (desarrollo, OK)",
+          "Puertos hardcodeados (3000, 8000, 5432, 6379, 3001)",
+          "Valores por defecto de configuración"
+        ],
+        "riesgo": "Bajo - son para desarrollo local"
+      }
+    ],
+    "best_practices": {
+      "implementados": [
+        "Uso de Bearer Token JWT para autenticación",
+        "Validación con Pydantic (backend) y Zod (frontend)",
+        "TypeScript strict mode habilitado",
+        "HTTPS support en producción",
+        "Logs estructurados con OpenTelemetry",
+        "Role-based access control (RBAC)",
+        "Soft deletes para datos sensibles",
+        "Auditoría de cambios"
+      ],
+      "mejoras_sugeridas": [
+        "Implementar rate limiting en endpoints",
+        "Agregar CSRF tokens aunque use JWT",
+        "Validar y sanitizar todas las entradas de OCR",
+        "Usar librerías de sanitización HTML (DOMPurify, sanitize-html)",
+        "Implementar Content Security Policy (CSP) headers",
+        "Agregar HSTS headers",
+        "Implementar request signing para endpoints críticos"
+      ]
+    }
+  },
+  "problemas_codigo": {
+    "todo_comments": [
+      {
+        "ubicacion": "backend/tests/test_payroll_integration.py",
+        "descripcion": "SEMANA 6.3: Implementar métodos de integración de nómina con tarjetas",
+        "prioridad": "MEDIA"
+      },
+      {
+        "ubicacion": "backend/app/api/payroll.py",
+        "descripcion": "SEMANA 6: Implementar endpoint calculate_payroll_from_timer_cards",
+        "prioridad": "MEDIA"
+      },
+      {
+        "ubicacion": "backend/app/api/admin.py",
+        "descripcion": "Implementar cálculo del tamaño de la BD",
+        "prioridad": "BAJA"
+      },
+      {
+        "ubicacion": "backend/app/api/admin.py",
+        "descripcion": "Implementar cálculo de uptime",
+        "prioridad": "BAJA"
+      },
+      {
+        "ubicacion": "backend/app/api/ai_gateway.py",
+        "descripcion": "Implementar rate limiting cuando esté implementado",
+        "prioridad": "MEDIA"
+      }
+    ],
+    "bugs_knowns": [
+      {
+        "ubicacion": "backend/app/api/resilient_import.py",
+        "descripcion": "BUG #6 FIX: Soporte para múltiples encodings en importación",
+        "estado": "PARCIALMENTE RESUELTO"
+      }
+    ]
+  },
+  "metricas_proyecto": {
+    "archivos_fuente": {
+      "total": 660,
+      "frontend_tsx_ts": "~200",
+      "backend_py": "~100",
+      "tests": "~30",
+      "configuracion": "~50"
+    },
+    "lineas_codigo": {
+      "frontend": "~10,000+",
+      "backend": "~15,000+",
+      "total": "~25,000+"
+    },
+    "cobertura_testing": {
+      "backend": "Tests para principales funcionalidades",
+      "frontend": "Playwright E2E + Vitest unit tests",
+      "estado": "En desarrollo"
+    }
+  },
+  "sugerencias_mejora": [
+    {
+      "categoria": "Seguridad",
+      "prioridad": "ALTA",
+      "items": [
+        "Reemplazar innerHTML con métodos seguros (createElement, textContent)",
+        "Implementar DOMPurify o sanitize-html para contenido HTML",
+        "Agregar Content Security Policy (CSP) headers",
+        "Implementar rate limiting en API endpoints",
+        "Agregar request timeout más agresivos (actualmente 30s)",
+        "Validar y sanitizar todos los datos de OCR",
+        "Implementar secret rotation para API keys",
+        "Usar HTTPS en todas las conexiones"
+      ]
+    },
+    {
+      "categoria": "Performance",
+      "prioridad": "MEDIA",
+      "items": [
+        "Implementar caching más agresivo con Redis",
+        "Optimizar queries de BD con índices adicionales",
+        "Implementar lazy loading en componentes grandes",
+        "Cachear resultados de OCR",
+        "Implementar pagination en todas las listas grandes",
+        "Comprimir respuestas gzip en backend",
+        "Optimizar bundle size del frontend (actualmente desconocido)"
+      ]
+    },
+    {
+      "categoria": "Testing",
+      "prioridad": "MEDIA",
+      "items": [
+        "Aumentar cobertura de tests (target: 80%+)",
+        "Implementar tests de integración más exhaustivos",
+        "Agregar performance tests",
+        "Agregar load tests para OCR y nómina",
+        "Completar TODO tests pendientes",
+        "Agregar tests de seguridad (OWASP)"
+      ]
+    },
+    {
+      "categoria": "Arquitectura",
+      "prioridad": "BAJA",
+      "items": [
+        "Considerar microservicios para OCR (muy pesado)",
+        "Implementar message queue (RabbitMQ) para procesos asíncronos",
+        "Separar BD de lectura/escritura si escalabilidad lo requiere",
+        "Implementar GraphQL como alternativa a REST",
+        "Agregar API versioning explícito"
+      ]
+    },
+    {
+      "categoria": "Documentación",
+      "prioridad": "MEDIA",
+      "items": [
+        "Documentar modelos de BD en detail",
+        "Crear diagramas UML de relaciones",
+        "Documentar flujos de negocio por módulo",
+        "Crear guía de contribución",
+        "Documentar las decisiones de arquitectura (ADR)"
+      ]
+    },
+    {
+      "categoria": "DevOps",
+      "prioridad": "MEDIA",
+      "items": [
+        "Implementar CI/CD pipeline (GitHub Actions, GitLab CI)",
+        "Agregar health checks a todos los servicios",
+        "Implementar auto-scaling para producción",
+        "Agregar backup automático de BD",
+        "Implementar disaster recovery plan",
+        "Agregar monitoring de costos (si usa cloud)"
+      ]
+    }
+  ],
+  "flujo_datos": {
+    "autenticacion": "Usuario → login/page.tsx → authService.login → /api/auth/login/ → JWT token → auth-store → localStorage",
+    "gestion_empleados": "Candidato → CandidateEvaluator → candidateService → /api/candidates/{id}/approve/ → Employee",
+    "nómina": "TimerCard → SalaryReportFilters → salaryService.calculateSalary → /api/salary/calculate/ → salary-store",
+    "apartamentos": "ApartmentSelector → apartmentsV2Service → /api/apartments/apartments → AssignmentForm → assignment creation",
+    "ocr": "Archivo → OCRUploader → timerCardService.uploadTimerCardPDF → /api/timer-cards/upload/ → Azure Vision API"
+  }
+}

@@ -1,0 +1,243 @@
+{
+  "matrix_configurations": {
+    "full_matrix": {
+      "description": "Complete cross-platform testing matrix for major releases",
+      "os": ["ubuntu-latest", "windows-latest", "macos-latest"],
+      "node": ["18", "20", "22"],
+      "python": ["3.11", "3.12"],
+      "total_combinations": 18,
+      "estimated_duration_minutes": 45,
+      "use_cases": [
+        "Major version releases (v7.0.0, v8.0.0)",
+        "Breaking API changes",
+        "Cross-platform feature additions",
+        "Dependency major version updates"
+      ]
+    },
+    
+    "minimal_matrix": {
+      "description": "Fast matrix for quick validation",
+      "os": ["ubuntu-latest"],
+      "node": ["20"],
+      "python": ["3.11"],
+      "total_combinations": 1,
+      "estimated_duration_minutes": 10,
+      "use_cases": [
+        "Feature branch development",
+        "Bug fixes",
+        "Documentation updates",
+        "Regular pull requests"
+      ]
+    },
+    
+    "recommended_matrix": {
+      "description": "Balanced matrix for release candidates",
+      "os": ["ubuntu-latest", "windows-latest"],
+      "node": ["20", "22"],
+      "python": ["3.11"],
+      "total_combinations": 4,
+      "estimated_duration_minutes": 25,
+      "use_cases": [
+        "Release candidate testing",
+        "Minor version releases (v6.1.0, v6.2.0)",
+        "Hotfix validation",
+        "Quarterly regression testing"
+      ]
+    }
+  },
+  
+  "exclusions": {
+    "description": "Excluded combinations to optimize CI time and cost",
+    "rules": [
+      {
+        "os": "windows-latest",
+        "node": "18",
+        "reason": "Node 18 EOL approaching, Windows support not critical"
+      },
+      {
+        "os": "macos-latest",
+        "node": "18",
+        "reason": "Node 18 EOL approaching, macOS support not critical"
+      },
+      {
+        "os": "windows-latest",
+        "python": "3.12",
+        "reason": "Python 3.12 Windows compatibility tested separately"
+      }
+    ]
+  },
+  
+  "platform_specific_tests": {
+    "ubuntu-latest": {
+      "priority": "high",
+      "description": "Primary CI/CD environment and production deployment platform",
+      "special_tests": [
+        "Docker container builds",
+        "PostgreSQL integration",
+        "Redis caching",
+        "Full E2E suite with Playwright"
+      ],
+      "run_on": ["all branches", "all PRs"]
+    },
+    
+    "windows-latest": {
+      "priority": "medium",
+      "description": "Enterprise environment and developer workstations",
+      "special_tests": [
+        "Windows file path handling",
+        "CRLF line endings",
+        "Case-insensitive file systems",
+        "Windows-specific dependencies (pywin32)"
+      ],
+      "run_on": ["release candidates", "manual trigger with test-matrix label"]
+    },
+    
+    "macos-latest": {
+      "priority": "low",
+      "description": "Developer workstations (Mac)",
+      "special_tests": [
+        "macOS-specific issues",
+        "ARM64 compatibility (M1/M2/M3)",
+        "Homebrew dependencies"
+      ],
+      "run_on": ["release candidates", "manual trigger with test-matrix label"]
+    }
+  },
+  
+  "version_support": {
+    "node": {
+      "18": {
+        "status": "maintenance",
+        "eol_date": "2025-04-30",
+        "recommendation": "Migrate to Node 20 LTS",
+        "test_priority": "low"
+      },
+      "20": {
+        "status": "active_lts",
+        "eol_date": "2026-04-30",
+        "recommendation": "Recommended for production",
+        "test_priority": "high"
+      },
+      "22": {
+        "status": "current",
+        "eol_date": "2027-04-30",
+        "recommendation": "Early adoption, test for compatibility",
+        "test_priority": "medium"
+      }
+    },
+    
+    "python": {
+      "3.11": {
+        "status": "stable",
+        "eol_date": "2027-10-24",
+        "recommendation": "Current project version, primary support",
+        "test_priority": "high"
+      },
+      "3.12": {
+        "status": "stable",
+        "eol_date": "2028-10-02",
+        "recommendation": "Test for future migration",
+        "test_priority": "medium"
+      }
+    }
+  },
+  
+  "trigger_conditions": {
+    "automatic": {
+      "branches": ["main", "develop"],
+      "matrix": "minimal_matrix",
+      "description": "Fast feedback on main branches"
+    },
+    
+    "pull_request": {
+      "target_branches": ["main", "develop"],
+      "matrix": "minimal_matrix",
+      "description": "Fast PR validation"
+    },
+    
+    "labeled_pr": {
+      "label": "test-matrix",
+      "matrix": "full_matrix",
+      "description": "Comprehensive testing when explicitly requested"
+    },
+    
+    "manual_dispatch": {
+      "matrix": "recommended_matrix",
+      "description": "Balanced testing for manual runs"
+    },
+    
+    "scheduled": {
+      "cron": "0 2 * * 1",
+      "matrix": "full_matrix",
+      "description": "Weekly full regression testing (Mondays at 2 AM UTC)"
+    }
+  },
+  
+  "performance_metrics": {
+    "minimal_matrix": {
+      "avg_duration_minutes": 10,
+      "ci_minutes_per_run": 10,
+      "monthly_cost_estimate_usd": 15,
+      "runs_per_month": 300
+    },
+    
+    "recommended_matrix": {
+      "avg_duration_minutes": 25,
+      "ci_minutes_per_run": 100,
+      "monthly_cost_estimate_usd": 50,
+      "runs_per_month": 50
+    },
+    
+    "full_matrix": {
+      "avg_duration_minutes": 45,
+      "ci_minutes_per_run": 810,
+      "monthly_cost_estimate_usd": 40,
+      "runs_per_month": 5
+    }
+  },
+  
+  "optimization_strategies": {
+    "caching": {
+      "npm_cache": {
+        "enabled": true,
+        "key": "${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}",
+        "time_saved_seconds": 120
+      },
+      "pip_cache": {
+        "enabled": true,
+        "key": "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}",
+        "time_saved_seconds": 90
+      },
+      "playwright_cache": {
+        "enabled": true,
+        "key": "${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}",
+        "time_saved_seconds": 180
+      }
+    },
+    
+    "parallelization": {
+      "max_parallel_jobs": 10,
+      "frontend_backend_parallel": true,
+      "test_sharding": {
+        "playwright": {
+          "enabled": false,
+          "shards": 3,
+          "description": "Split Playwright tests across 3 runners (future enhancement)"
+        }
+      }
+    },
+    
+    "fail_fast": {
+      "enabled": false,
+      "description": "Complete all matrix combinations even if one fails (better debugging)"
+    }
+  },
+  
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-11-19",
+    "maintainer": "@cicd-pipeline-engineer",
+    "documentation": "CI_CD_IMPLEMENTATION.md",
+    "workflow_file": ".github/workflows/ci-cd.yml"
+  }
+}

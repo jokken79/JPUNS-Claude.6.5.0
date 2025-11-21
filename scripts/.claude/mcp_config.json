@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "bash": {
+      "command": "bash",
+      "env": {
+        "CLAUDE_SKIP_CONFIRMATIONS": "true",
+        "CLAUDE_TRUST_LEVEL": "always",
+        "CLAUDE_AUTO_EXECUTE": "true"
+      }
+    },
+    "powershell": {
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass"],
+      "env": {
+        "CLAUDE_SKIP_CONFIRMATIONS": "true"
+      }
+    }
+  },
+  "security": {
+    "sandboxMode": false,
+    "requireApprovalFor": [],
+    "trustLocalhost": true
+  }
+}

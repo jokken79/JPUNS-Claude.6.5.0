@@ -1,0 +1,137 @@
+================================================================================
+               APARTMENT-FACTORY RELATIONSHIP MODEL DIAGRAM
+================================================================================
+
++-----------------------------+
+|       REGIONS               |
+| --------------------------- |
+| PK  id                      |
+|     name                    |
+|     description             |
+|     is_active               |
++-----------------------------+
+              |
+              | 1
+              |
+              +----------------------+
+              |                      |
+              | N                    | N
+              |                      |
++-------------v--------------------+ |  +------------------------------+
+|       APARTMENTS                 | |  |       FACTORIES              |
+| -------------------------------- | |  | ---------------------------- |
+| PK  id                           | |  | PK  id                       |
+|     apartment_code               | |  |     factory_id (business)    |
+|     name                         | |  |     company_name             |
+|     address                      | |  |     plant_name               |
+| FK  region_id         -----------+ |  |     address                  |
+|     zone (NEW)                   | |  |     phone                    |
+|     prefecture                   | |  |     contact_person           |
+|     city                         | |  |     is_active                |
+|     base_rent                    | |  +------------------------------+
+|     monthly_rent                 | |                |
+|     capacity                     | |                |
+|     status                       | |                |
+|     is_available                 | |                |
++----------------------------------+ |                |
+              |                      |                |
+              | 1                    | 1              |
+              |                      |                |
+              |                      |                |
+              | N                    | N              |
+              +----------+-----------+                |
+                         |                            |
+                         v                            |
+           +-----------------------------------+       |
+           |   APARTMENT_FACTORY (NEW)         |       |
+           | --------------------------------- |       |
+           | PK  id                            |       |
+           | FK  apartment_id       -----------+       |
+           | FK  factory_id        --------------------+
+           |     is_primary                    |
+           |     priority                      |
+           |     distance_km (NEW)             |
+           |     commute_minutes (NEW)         |
+           |     effective_from (NEW)          |
+           |     effective_until (NEW)         |
+           |     notes                         |
+           |     created_at                    |
+           |     updated_at                    |
+           +-----------------------------------+
+                         |
+                         | N
+                         |
+                         v
+           +-----------------------------------+
+           |       EMPLOYEES                   |
+           | --------------------------------- |
+           | PK  id                            |
+           | FK  apartment_id (existing)       |
+           | FK  factory_id (existing)         |
+           |     full_name_kanji               |
+           |     hire_date                     |
+           |     is_active                     |
+           |     ...                           |
+           +-----------------------------------+
+
+================================================================================
+LEGEND
+================================================================================
+PK  = Primary Key
+FK  = Foreign Key
+NEW = New field/table added by this migration
+1   = One (cardinality)
+N   = Many (cardinality)
+
+================================================================================
+KEY RELATIONSHIPS
+================================================================================
+1. regions    1:N  apartments  (One region has many apartments)
+2. apartments N:M  factories   (Through apartment_factory junction)
+3. apartments 1:N  employees   (One apartment houses many employees)
+4. factories  1:N  employees   (One factory employs many workers)
+
+================================================================================
+CONSTRAINTS
+================================================================================
+- apartment_factory.is_primary: Only ONE primary factory per apartment 
+                                 (enforced by trigger)
+- apartment_factory.effective_from/until: Valid date range 
+                                           (until > from OR until IS NULL)
+- apartment_factory.priority: Must be positive integer (1 = highest priority)
+- apartment_factory.distance_km: Non-negative value or NULL
+- apartment_factory.commute_minutes: Non-negative value or NULL
+
+================================================================================
+INDEXES
+================================================================================
+- idx_apartments_region (apartments.region_id)
+- idx_apartments_zone (apartments.zone)
+- idx_apartments_prefecture_city (apartments.prefecture, apartments.city)
+- idx_apartment_factory_apartment (apartment_factory.apartment_id)
+- idx_apartment_factory_factory (apartment_factory.factory_id)
+- idx_apartment_factory_primary (WHERE is_primary = TRUE)
+- idx_apartment_factory_active (WHERE effective_until IS NULL OR > CURRENT_DATE)
+- idx_apartment_factory_dates (effective_from, effective_until)
+
+================================================================================
+HELPER FUNCTIONS
+================================================================================
+- get_factory_apartments(factory_id, active_only)
+  Returns apartments for a factory with availability
+
+- get_apartment_factories(apartment_id, active_only)
+  Returns factories served by an apartment
+
+- populate_apartment_factory_from_employees()
+  Initial data migration from employees table
+
+================================================================================
+VIEW
+================================================================================
+- v_apartment_factory_details
+  Comprehensive denormalized view with:
+  * Apartment details (name, address, capacity)
+  * Factory details (company_name, plant_name)
+  * Relationship metadata (is_primary, priority, distance)
+  * Calculated fields (current_occupancy, factory_employees_count, is_active)

@@ -1,0 +1,72 @@
+{
+  "factory_id": "ピーエムアイ有限会社_本社工場",
+  "client_company": {
+    "name": "ピーエムアイ有限会社",
+    "address": "愛知県豊田市神池町2丁目1236番地643",
+    "phone": "0565-80-0037",
+    "responsible_person": {
+      "department": "製造課",
+      "name": "代表取締役　谷口　江二",
+      "phone": "0565-80-0037"
+    },
+    "complaint_handler": {
+      "department": "製造課",
+      "name": "代表取締役　谷口　江二",
+      "phone": "0565-80-0037"
+    }
+  },
+  "plant": {
+    "name": "本社工場",
+    "address": "愛知県豊田市神池町2丁目1236番地643",
+    "phone": "0565-80-0037"
+  },
+  "assignment": {
+    "department": "製造1",
+    "line": "成型ライン",
+    "supervisor": {
+      "department": "製造課",
+      "name": "代表取締役　谷口　江二",
+      "phone": "0565-80-0037"
+    }
+  },
+  "job": {
+    "description": "プラスチック製品の製造におけるすべての行為",
+    "description2": "",
+    "hourly_rate": 1750.0
+  },
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "営業部",
+      "name": "取締役 ブウ　ティ　サウ",
+      "phone": "052-938-8840"
+    },
+    "complaint_handler": {
+      "department": "営業部",
+      "name": "取締役部長 中山　欣英",
+      "phone": "052-938-8840"
+    }
+  },
+  "schedule": {
+    "work_hours": "昼勤：9時00分～18時15分　夜勤1：17時00分～1時00分　夜勤2：01時00分～09時00分",
+    "break_time": "昼勤：12時00分～13時00分・15時00分～15時15分    夜勤1：21時00～22時00　 夜勤2：04時00～05時00",
+    "calendar": "月～金　（祝日、年末年始、夏季休業を除く。）　4勤2休シフト　　別紙ｶﾚﾝﾀﾞｰの通り",
+    "start_date": "2023-08-21 00:00:00",
+    "end_date": "2024-08-20 00:00:00",
+    "conflict_date": "2026-08-20 00:00:00",
+    "non_work_day_labor": "１ヶ月に２日の範囲内で命ずることができる。",
+    "overtime_labor": "5時間/日、45時間/月、360時間/年迄とする。但し、特別条項の申請により、6時間/日、80時間/月、720時間/年迄延長できる。申請は6回/年迄とする。",
+    "time_unit": "15.0"
+  },
+  "payment": {
+    "closing_date": "20日",
+    "payment_date": "末日",
+    "bank_account": "碧海信用金庫　刈谷支店　普通　6072767　名義人　ユニバーサル企画(株)",
+    "worker_closing_date": "20日",
+    "worker_payment_date": "15日",
+    "worker_calendar": "土曜日・日曜日・年末年始（12月30日～1月7日)・GW(4月28日～5月5日)・夏季休暇（8月11日～8月18日)"
+  },
+  "agreement": {
+    "period": "2025-03-31 00:00:00",
+    "explainer": ""
+  }
+}
