@@ -77,3 +77,51 @@ export function usePageVisibility(): UsePageVisibilityReturn {
     togglePageVisibility,
   };
 }
+
+// Hook to get all page visibility settings (alias for backward compatibility)
+export function useAllPagesVisibility() {
+  const [pages, setPages] = useState<PageVisibility[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchAllPages = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await axiosInstance.get('/pages/visibility');
+      setPages(response.data);
+    } catch (err: any) {
+      console.error('Error fetching all pages:', err);
+      setError(err.message || 'Failed to fetch pages');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updatePageVisibility = async (pageKey: string, isEnabled: boolean) => {
+    try {
+      await axiosInstance.put(`/pages/visibility/${pageKey}`, { is_enabled: isEnabled });
+      // Update local state
+      setPages(prev => prev.map(page =>
+        page.page_key === pageKey
+          ? { ...page, is_enabled: isEnabled }
+          : page
+      ));
+    } catch (err: any) {
+      console.error('Error updating page:', err);
+      throw err;
+    }
+  };
+
+  useEffect(() => {
+    fetchAllPages();
+  }, []);
+
+  return {
+    pages,
+    loading,
+    error,
+    updatePageVisibility,
+    refresh: fetchAllPages,
+  };
+}
