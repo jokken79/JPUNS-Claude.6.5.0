@@ -315,16 +315,6 @@ from app.schemas.role_page_permission import (
     RolePagePermissionResponse,
 )
 
-# Apartment V2 Complete schemas (with all 35 fields)
-from app.schemas.apartment_v2_complete import (
-    RoomType,
-    ApartmentStatus,
-    ApartmentBaseV2Complete,
-    ApartmentCreateV2Complete,
-    ApartmentUpdateV2Complete,
-    ApartmentResponseV2Complete,
-    ApartmentWithEmployeesV2Complete,
-)
 
 __all__ = [
     # Authentication
@@ -547,13 +537,4 @@ __all__ = [
     "RolePagePermissionCreate",
     "RolePagePermissionUpdate",
     "RolePagePermissionResponse",
-
-    # Apartment V2 Complete (all 35 fields)
-    "RoomType",
-    "ApartmentStatus",
-    "ApartmentBaseV2Complete",
-    "ApartmentCreateV2Complete",
-    "ApartmentUpdateV2Complete",
-    "ApartmentResponseV2Complete",
-    "ApartmentWithEmployeesV2Complete",
 ]
