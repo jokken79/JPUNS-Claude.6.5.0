@@ -4,7 +4,7 @@ import { Search, Bell, LogOut, User, Settings, Menu, LayoutDashboard, Users, Bui
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LayoutControls } from '@/components/dashboard/layout-controls';
-import { ThemeSwitcherImproved } from '@/components/ui/theme-switcher-improved';
+import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -212,8 +212,8 @@ export function Header() {
 
         {/* Acciones del Header */}
         <div className="flex items-center gap-2">
-          {/* Improved Theme Switcher */}
-          <ThemeSwitcherImproved />
+          {/* Theme Switcher */}
+          <ThemeSwitcher />
 
           {/* Controles de Layout */}
           <LayoutControls />
