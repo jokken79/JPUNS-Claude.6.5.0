@@ -108,9 +108,9 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
   if (isLoading) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-700 dark:text-gray-300">Cargando datos...</p>
+        <div className="bg-card rounded-lg p-8 border border-border">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-foreground">Cargando datos...</p>
         </div>
       </div>
     );
@@ -118,29 +118,27 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-7xl max-h-[90vh] flex flex-col">
+      <div className="bg-card rounded-lg shadow-2xl w-full max-w-7xl max-h-[90vh] flex flex-col border border-border">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between p-6 border-b border-border">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Datos de: {tableName}
-            </h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <h2 className="text-2xl font-bold">Datos de: {tableName}</h2>
+            <p className="text-sm text-muted-foreground mt-1">
               Total: {data?.totalCount.toLocaleString()} filas
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
+            className="p-2 hover:bg-muted rounded-lg transition"
           >
-            <X className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+            <X className="w-6 h-6 text-muted-foreground" />
           </button>
         </div>
 
         {/* Search Bar */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-4 border-b border-border">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <input
               type="text"
               value={search}
@@ -149,7 +147,7 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
                 setPage(1); // Reset to first page on search
               }}
               placeholder="Buscar en cualquier columna..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary bg-background text-foreground"
             />
           </div>
         </div>
@@ -157,15 +155,15 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
         {/* Table Container */}
         <div className="flex-1 overflow-auto p-4">
           <table className="w-full border-collapse">
-            <thead className="sticky top-0 bg-gray-50 dark:bg-gray-900 z-10">
+            <thead className="sticky top-0 bg-muted z-10">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider border-b-2 border-gray-200 dark:border-gray-700">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider border-b-2 border-border">
                   Acciones
                 </th>
                 {data?.columns.map((col: string) => (
                   <th
                     key={col}
-                    className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider border-b-2 border-gray-200 dark:border-gray-700"
+                    className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider border-b-2 border-border"
                   >
                     {col}
                   </th>
@@ -176,10 +174,10 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
               {data?.rows.map((row: TableRow, rowIndex: number) => (
                 <tr
                   key={row.id || rowIndex}
-                  className="hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                  className="hover:bg-muted transition"
                 >
                   {/* Actions Column */}
-                  <td className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                  <td className="px-4 py-3 border-b border-border">
                     <button
                       onClick={() => handleDeleteRow(row.id)}
                       disabled={deleteMutation.isPending}
@@ -198,7 +196,7 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
                     return (
                       <td
                         key={col}
-                        className="px-4 py-3 border-b border-gray-200 dark:border-gray-700"
+                        className="px-4 py-3 border-b border-border"
                       >
                         {isEditing ? (
                           <div className="flex items-center gap-2">
@@ -206,7 +204,7 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
                               type="text"
                               value={editingCell?.value ?? ''}
                               onChange={(e) => editingCell && setEditingCell({ ...editingCell, value: e.target.value })}
-                              className="flex-1 px-2 py-1 border border-blue-500 rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+                              className="flex-1 px-2 py-1 border border-primary rounded focus:ring-2 focus:ring-primary bg-background text-foreground"
                               autoFocus
                             />
                             <button
@@ -219,7 +217,7 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
                             </button>
                             <button
                               onClick={handleCellCancel}
-                              className="p-1 text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition"
+                              className="p-1 text-muted-foreground hover:bg-muted rounded transition"
                               title="Cancelar"
                             >
                               <XCircle className="w-4 h-4" />
@@ -227,10 +225,10 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
                           </div>
                         ) : (
                           <div className="flex items-center justify-between group">
-                            <span className="text-sm text-gray-700 dark:text-gray-300">
+                            <span className="text-sm text-foreground">
                               {cellValue !== null && cellValue !== undefined
                                 ? String(cellValue)
-                                : <span className="text-gray-400 italic">null</span>}
+                                : <span className="text-muted-foreground italic">null</span>}
                             </span>
                             {col !== 'id' && (
                               <button
@@ -253,7 +251,7 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
 
           {data?.rows.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-muted-foreground">
                 {search ? 'No se encontraron resultados' : 'No hay datos en esta tabla'}
               </p>
             </div>
@@ -261,9 +259,9 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
         </div>
 
         {/* Pagination */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+        <div className="p-4 border-t border-border flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <label className="text-sm text-gray-600 dark:text-gray-400">
+            <label className="text-sm text-muted-foreground">
               Filas por página:
             </label>
             <select
@@ -272,7 +270,7 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
                 setPageSize(Number(e.target.value));
                 setPage(1);
               }}
-              className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white"
+              className="px-3 py-1 border border-input rounded bg-background text-foreground"
             >
               <option value={10}>10</option>
               <option value={20}>20</option>
@@ -285,19 +283,19 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
             <button
               onClick={() => setPage(Math.max(1, page - 1))}
               disabled={page === 1}
-              className="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 border border-input rounded hover:bg-muted transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
 
-            <span className="text-sm text-gray-700 dark:text-gray-300 px-4">
+            <span className="text-sm text-foreground px-4">
               Página {page} de {totalPages}
             </span>
 
             <button
               onClick={() => setPage(Math.min(totalPages, page + 1))}
               disabled={page === totalPages}
-              className="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 border border-input rounded hover:bg-muted transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -307,24 +305,22 @@ export default function TableDataViewer({ tableName, onClose }: TableDataViewerP
         {/* Delete Confirmation Modal */}
         {showDeleteConfirm && (
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl">
+            <div className="bg-card rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl border border-border">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-red-100 dark:bg-red-900 rounded-full">
                   <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                  ¿Confirmar eliminación?
-                </h3>
+                <h3 className="text-xl font-bold">¿Confirmar eliminación?</h3>
               </div>
 
-              <p className="text-gray-700 dark:text-gray-300 mb-4">
+              <p className="text-foreground mb-4">
                 ¿Estás seguro de que deseas eliminar esta fila? Esta acción no se puede deshacer.
               </p>
 
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowDeleteConfirm(null)}
-                  className="flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition font-medium"
+                  className="flex-1 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition font-medium"
                 >
                   Cancelar
                 </button>

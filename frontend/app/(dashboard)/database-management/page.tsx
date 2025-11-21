@@ -110,18 +110,18 @@ export default function DatabaseManagementPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="space-y-6">
       {/* Back Button */}
       <button
         onClick={() => router.back()}
-        className="mb-4 flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
+        className="flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition"
       >
         <ArrowLeft className="w-5 h-5" />
         <span className="font-medium">Volver</span>
@@ -130,21 +130,19 @@ export default function DatabaseManagementPage() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <Database className="w-8 h-8 text-blue-600" />
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Gestión de Base de Datos
-          </h1>
+          <Database className="w-8 h-8 text-primary" />
+          <h1 className="text-3xl font-bold">Gestión de Base de Datos</h1>
         </div>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-muted-foreground">
           Control completo de todas las tablas: importar, exportar y borrar datos
         </p>
       </div>
 
       {/* Actions Bar */}
-      <div className="mb-6 flex gap-4">
+      <div className="flex gap-4">
         <button
           onClick={() => refetch()}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
         >
           <RefreshCw className="w-4 h-4" />
           Actualizar
@@ -156,19 +154,17 @@ export default function DatabaseManagementPage() {
         {tables?.map((table) => (
           <div
             key={table.name}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition"
+            className="bg-card rounded-lg shadow-lg p-6 border border-border hover:shadow-xl transition"
           >
             {/* Table Header */}
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                  <TableIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <TableIcon className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-gray-900 dark:text-white">
-                    {table.name}
-                  </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <h3 className="font-bold text-lg">{table.name}</h3>
+                  <p className="text-sm text-muted-foreground">
                     {table.rowCount.toLocaleString()} filas
                   </p>
                 </div>
@@ -176,21 +172,21 @@ export default function DatabaseManagementPage() {
             </div>
 
             {/* Columns Info */}
-            <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">
+            <div className="mb-4 p-3 bg-muted rounded-lg">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">
                 COLUMNAS ({table.columns.length}):
               </p>
               <div className="flex flex-wrap gap-1">
                 {table.columns.slice(0, 5).map((col) => (
                   <span
                     key={col.name}
-                    className="text-xs px-2 py-1 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded"
+                    className="text-xs px-2 py-1 bg-secondary text-secondary-foreground rounded"
                   >
                     {col.name}
                   </span>
                 ))}
                 {table.columns.length > 5 && (
-                  <span className="text-xs px-2 py-1 text-gray-500">
+                  <span className="text-xs px-2 py-1 text-muted-foreground">
                     +{table.columns.length - 5} más
                   </span>
                 )}
@@ -249,24 +245,22 @@ export default function DatabaseManagementPage() {
       {/* Truncate Confirmation Modal */}
       {showTruncateConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-md w-full mx-4 shadow-2xl">
+          <div className="bg-card rounded-lg p-8 max-w-md w-full mx-4 shadow-2xl border border-border">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-3 bg-red-100 dark:bg-red-900 rounded-full">
                 <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                ¿Confirmar borrado?
-              </h3>
+              <h3 className="text-2xl font-bold">¿Confirmar borrado?</h3>
             </div>
 
             <div className="mb-6">
-              <p className="text-gray-700 dark:text-gray-300 mb-3">
+              <p className="text-foreground mb-3">
                 Estás a punto de <strong className="text-red-600">borrar TODAS las filas</strong> de la tabla:
               </p>
-              <p className="text-xl font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg text-center">
+              <p className="text-xl font-bold text-red-600 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg text-center">
                 {tableToTruncate}
               </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-3">
+              <p className="text-sm text-muted-foreground mt-3">
                 ⚠️ Esta acción NO se puede deshacer. La estructura de la tabla se mantendrá, pero todos los datos se perderán.
               </p>
             </div>
@@ -277,7 +271,7 @@ export default function DatabaseManagementPage() {
                   setShowTruncateConfirm(false);
                   setTableToTruncate(null);
                 }}
-                className="flex-1 px-4 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition font-medium"
+                className="flex-1 px-4 py-3 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition font-medium"
               >
                 Cancelar
               </button>
