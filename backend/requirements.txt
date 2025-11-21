@@ -1,0 +1,94 @@
+# FastAPI Framework
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+
+# Database
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+alembic==1.17.0
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.2.1
+
+# OCR & Image Processing
+Pillow==11.1.0
+pdf2image==1.17.0
+opencv-python-headless==4.10.0.84
+numpy>=1.23.5,<2.0.0
+azure-cognitiveservices-vision-computervision==0.9.1
+requests==2.32.5
+pykakasi==2.3.0
+pytesseract==0.3.10
+
+# Excel/CSV Processing
+openpyxl==3.1.5
+pandas==2.3.3
+
+# Access Database
+pyodbc==5.3.0; sys_platform == 'win32'
+
+# PDF Processing
+pdfplumber==0.11.5
+reportlab==4.4.4
+
+# Email
+python-dotenv==1.0.1
+aiosmtplib==3.0.2
+jinja2==3.1.6
+
+# Validation
+pydantic==2.10.5
+pydantic-settings==2.11.0
+email-validator==2.3.0
+
+# Date/Time
+python-dateutil==2.9.0.post0
+pytz==2025.2
+
+# Scheduling
+apscheduler==3.10.4
+
+# HTTP Requests
+httpx==0.28.1
+aiohttp==3.13.1
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.24.0
+
+# Type Checking
+mypy==1.7.0
+
+# Redis (opcional)
+redis==7.0.1
+
+# Face Detection Enhancement
+mediapipe==0.10.15
+easyocr==1.7.2
+
+# Logging
+loguru==0.7.3
+
+# Rate Limiting
+slowapi==0.1.9
+
+# Observability & Telemetry
+# Note: Using versions compatible with protobuf<5 (required by mediapipe)
+opentelemetry-api==1.27.0
+opentelemetry-sdk==1.27.0
+opentelemetry-exporter-otlp-proto-grpc==1.27.0
+opentelemetry-instrumentation-fastapi==0.48b0
+opentelemetry-instrumentation-logging==0.48b0
+opentelemetry-instrumentation-requests==0.48b0
+opentelemetry-instrumentation-sqlalchemy==0.48b0
+prometheus-fastapi-instrumentator==7.1.0
+psutil==6.1.0
+
+# Note: pywin32 is NOT needed in Docker (Linux containers)
+# It's only required on Windows host for:
+# - backend/scripts/export_access_to_json.py
+# - backend/scripts/extract_access_attachments.py
+# Install it locally on Windows with: pip install pywin32

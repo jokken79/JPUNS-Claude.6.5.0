@@ -1,0 +1,447 @@
+/**
+ * Animation Styles
+ *
+ * Provides multiple animation speed options:
+ * - .no-animations: Disable all animations (for accessibility/performance)
+ * - .animations-smooth: Slower, more deliberate animations
+ * - .animations-normal: Default animation speed (applied by default)
+ * - .animations-energetic: Faster, more responsive animations
+ */
+
+/* ================================================
+   NO ANIMATIONS MODE (Accessibility & Performance)
+   ================================================ */
+
+.no-animations *,
+.no-animations *::before,
+.no-animations *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  transition-delay: 0ms !important;
+  scroll-behavior: auto !important;
+}
+
+.no-animations {
+  scroll-behavior: auto !important;
+}
+
+/* ================================================
+   SMOOTH ANIMATIONS (Relaxed, slow transitions)
+   ================================================ */
+
+.animations-smooth {
+  --animation-duration-fast: 300ms;
+  --animation-duration-normal: 500ms;
+  --animation-duration-slow: 800ms;
+  --animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animations-smooth * {
+  transition-duration: var(--animation-duration-normal);
+  transition-timing-function: var(--animation-timing);
+}
+
+.animations-smooth [data-animate="fade"] {
+  animation-duration: var(--animation-duration-slow);
+}
+
+.animations-smooth [data-animate="slide"] {
+  animation-duration: var(--animation-duration-slow);
+}
+
+.animations-smooth [data-animate="scale"] {
+  animation-duration: var(--animation-duration-normal);
+}
+
+/* ================================================
+   NORMAL ANIMATIONS (Default, balanced speed)
+   ================================================ */
+
+:root {
+  --animation-duration-fast: 150ms;
+  --animation-duration-normal: 250ms;
+  --animation-duration-slow: 400ms;
+  --animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Default transition for all interactive elements */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-duration: var(--animation-duration-fast);
+  transition-timing-function: var(--animation-timing);
+}
+
+/* ================================================
+   ENERGETIC ANIMATIONS (Fast, snappy transitions)
+   ================================================ */
+
+.animations-energetic {
+  --animation-duration-fast: 100ms;
+  --animation-duration-normal: 150ms;
+  --animation-duration-slow: 250ms;
+  --animation-timing: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.animations-energetic * {
+  transition-duration: var(--animation-duration-fast);
+  transition-timing-function: var(--animation-timing);
+}
+
+.animations-energetic [data-animate="fade"] {
+  animation-duration: var(--animation-duration-normal);
+}
+
+.animations-energetic [data-animate="slide"] {
+  animation-duration: var(--animation-duration-normal);
+}
+
+.animations-energetic [data-animate="scale"] {
+  animation-duration: var(--animation-duration-fast);
+}
+
+/* ================================================
+   ANIMATION KEYFRAMES
+   ================================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* ================================================
+   UTILITY CLASSES FOR ANIMATIONS
+   ================================================ */
+
+.animate-fade-in {
+  animation: fadeIn var(--animation-duration-normal) var(--animation-timing);
+}
+
+.animate-fade-out {
+  animation: fadeOut var(--animation-duration-normal) var(--animation-timing);
+}
+
+.animate-slide-in-top {
+  animation: slideInFromTop var(--animation-duration-normal) var(--animation-timing);
+}
+
+.animate-slide-in-bottom {
+  animation: slideInFromBottom var(--animation-duration-normal) var(--animation-timing);
+}
+
+.animate-slide-in-left {
+  animation: slideInFromLeft var(--animation-duration-normal) var(--animation-timing);
+}
+
+.animate-slide-in-right {
+  animation: slideInFromRight var(--animation-duration-normal) var(--animation-timing);
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--animation-duration-normal) var(--animation-timing);
+}
+
+.animate-scale-out {
+  animation: scaleOut var(--animation-duration-normal) var(--animation-timing);
+}
+
+.animate-bounce {
+  animation: bounce var(--animation-duration-slow) ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s linear infinite;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
+}
+
+/* ================================================
+   HOVER & INTERACTION ANIMATIONS
+   ================================================ */
+
+.hover-scale {
+  transition: transform var(--animation-duration-fast) var(--animation-timing);
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-lift {
+  transition: transform var(--animation-duration-fast) var(--animation-timing),
+              box-shadow var(--animation-duration-fast) var(--animation-timing);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.hover-glow {
+  transition: box-shadow var(--animation-duration-fast) var(--animation-timing);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+.hover-rotate {
+  transition: transform var(--animation-duration-fast) var(--animation-timing);
+}
+
+.hover-rotate:hover {
+  transform: rotate(5deg);
+}
+
+/* ================================================
+   PAGE TRANSITION ANIMATIONS
+   ================================================ */
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition {
+  animation: pageEnter var(--animation-duration-normal) var(--animation-timing);
+}
+
+/* ================================================
+   LOADING & SKELETON ANIMATIONS
+   ================================================ */
+
+@keyframes skeletonLoading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 0%,
+    hsl(var(--muted-foreground) / 0.1) 50%,
+    hsl(var(--muted)) 100%
+  );
+  background-size: 200px 100%;
+  animation: skeletonLoading 1.5s ease-in-out infinite;
+}
+
+/* ================================================
+   MODAL & DIALOG ANIMATIONS
+   ================================================ */
+
+@keyframes modalOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalContentSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+[data-modal-overlay] {
+  animation: modalOverlayFadeIn var(--animation-duration-normal) var(--animation-timing);
+}
+
+[data-modal-content] {
+  animation: modalContentSlideIn var(--animation-duration-normal) var(--animation-timing);
+}
+
+/* ================================================
+   TOAST & NOTIFICATION ANIMATIONS
+   ================================================ */
+
+@keyframes toastSlideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+[data-toast] {
+  animation: toastSlideIn var(--animation-duration-normal) var(--animation-timing);
+}
+
+[data-toast][data-state="closing"] {
+  animation: toastSlideOut var(--animation-duration-normal) var(--animation-timing);
+}
+
+/* ================================================
+   ACCESSIBILITY: RESPECT PREFERS-REDUCED-MOTION
+   ================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}

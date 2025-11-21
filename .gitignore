@@ -1,32 +1,8 @@
-# ============================================
-# UNS-ClaudeJP 6.0.0 - .gitignore
-# ============================================
-
-# ==========================================
-# SECURITY - NEVER COMMIT THESE
-# ==========================================
-.env
-.env.local
-.env.development
-.env.production
-.env.test
-*.key
-*.pem
-*.p12
-credentials.json
-secrets.json
-config/secrets/
-
-# ==========================================
-# Python Backend
-# ==========================================
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
-
-# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -35,343 +11,143 @@ downloads/
 eggs/
 .eggs/
 lib/
+!frontend/lib/
+!frontend/lib/**
 lib64/
 parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 MANIFEST
-
-# PyInstaller
-*.manifest
-*.spec
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-
-# Flask instance folder
-instance/
-
-# Scrapy stuff
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-.python-version
-
-# pipenv
-Pipfile.lock
-
-# PEP 582
-__pypackages__/
-
-# Celery
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.venv
-env/
 venv/
+env/
 ENV/
-env.bak/
-venv.bak/
 
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# ==========================================
-# Node.js Frontend
-# ==========================================
-# Dependencies
+# Node.js
 node_modules/
-jspm_packages/
-bower_components/
-
-# Testing
-coverage/
-*.lcov
-.nyc_output
-
-# Next.js
-.next/
-out/
-.vercel
-
-# Production
-build/
-dist/
-
-# Misc
-.DS_Store
-*.pem
-.swc/
-
-# Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
-lerna-debug.log*
+.pnp
+.pnp.js
+.next/
+out/
+.turbo/
 
-# Local env files
-.env*.local
+# ===============================
+# ENVIRONMENT & SECRETS
+# ===============================
+# ⚠️ CRÍTICO: Contiene passwords, API keys, secrets
+# En PC nueva: copiar .env.example a .env y configurar
+.env
+.env.local
+.env.*.local
+*.env
 
-# Turbo
-.turbo
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
+# OS
+.DS_Store
+Thumbs.db
 
-# ==========================================
 # Docker
-# ==========================================
-# Docker volumes
-postgres_data/
-pgadmin_data/
-redis_data/
-grafana_data/
-prometheus_data/
-tempo_data/
-backups/
-
-# Docker files
 docker-compose.override.yml
 
-# ==========================================
 # Database
-# ==========================================
-# PostgreSQL
-*.sql
-*.dump
-*.backup
 *.db
 *.sqlite
 *.sqlite3
 
-# Exceptions - keep schema files
-!backend/alembic/versions/*.sql
-!docs/database/*.sql
-
-# ==========================================
-# IDEs and Editors
-# ==========================================
-# VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
-.history/
-*.vsix
-
-# Cursor
-.cursor/
-
-# JetBrains IDEs
-.idea/
-*.iml
-*.iws
-*.ipr
-out/
-
-# Vim
-*.swp
-*.swo
-*~
-.vim/
-
-# Emacs
-*~
-\#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
-*.elc
-auto-save-list
-tramp
-
-# Sublime Text
-*.sublime-workspace
-*.sublime-project
-
-# ==========================================
-# Operating System
-# ==========================================
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-._*
-
-# Windows
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-[Dd]esktop.ini
-$RECYCLE.BIN/
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-*.lnk
-
-# Linux
-*~
-.fuse_hidden*
-.directory
-.Trash-*
-.nfs*
-
-# ==========================================
 # Logs
-# ==========================================
-logs/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-pip-log.txt
-pip-delete-this-directory.txt
+logs/
+*.pid
+*.seed
+*.pid.lock
 
-# ==========================================
-# Temporary Files
-# ==========================================
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.playwright/
+
+# Backups
+*.bak
+*.backup
+backups/
+
+# Temporary
 tmp/
 temp/
 *.tmp
-*.temp
-*.bak
-*.swp
-*.cache
 
-# ==========================================
-# OCR and Uploads
-# ==========================================
-# Uploaded files (keep structure, ignore content)
-backend/uploads/*
-!backend/uploads/.gitkeep
-frontend/public/uploads/*
-!frontend/public/uploads/.gitkeep
+# Research cache (optional, if you want to exclude)
+# .research-cache/
 
-# OCR temporary files
-backend/ocr_temp/
-backend/temp_photos/
+# Git LFS
+.git/lfs/
 
-# ==========================================
-# Testing
-# ==========================================
-# Playwright
-test-results/
-playwright-report/
-playwright/.cache/
+# ===============================
+# ARCHIVOS GRANDES Y DATOS SENSIBLES
+# ===============================
 
-# ==========================================
-# Documentation (Generated)
-# ==========================================
-# Keep markdown files but ignore generated docs
-docs/api-generated/
-docs/_site/
+# Archivos Excel con datos reales
+# ⚠️ Contienen datos personales de empleados
+# En PC nueva: Solicitar al administrador o usar datos de demo
+*.mdb
+*.xlsx
 
-# ==========================================
-# Project Specific
-# ==========================================
-# Import data (Excel files with real data)
-backend/data/employee_master.xlsm
-backend/data/candidates/
-!backend/data/candidates/.gitkeep
+# Base de Datos Access
+# ⚠️ Contiene datos personales reales
+# ⚠️ Solo necesario para extracción de fotos
+# Excluir TODOS los .accdb (permitir carpeta BASEDATEJP pero no el archivo)
+*.accdb
+!BASEDATEJP/
+BASEDATEJP/*.accdb
 
-# Backup files
-*.backup
-backup_*.sql
-restore_*.sql
+# Archivos problemáticos temporales
+nul
+temp_importer_logs.txt
 
-# Local scripts (personal automation)
-scripts/local/
+# Archivos de Fotos (465 MB)
+# ⚠️ CRÍTICO: Excede límite GitHub (100 MB)
+# ⚠️ Contiene fotos de personas reales
+# En PC nueva: Descargar de Google Drive/Dropbox O usar Git LFS
+# Ver REQUIRED_FILES.md para instrucciones
+config/access_photo_mappings.json
+access_photo_mappings.json
 
-# ==========================================
-# AI Tools
-# ==========================================
-# Keep .claude/ but ignore some generated files
-.claude/cache/
-.claude/logs/
+# Otros archivos grandes
+config/access_candidates_data.json
+UNS-ClaudeJP-5.2/
 
-# Copilot
-.github/copilot-chat/
+# Carpeta de archivos temporales (para limpieza segura)
+LIXO/
 
-# ==========================================
-# Exceptions - Force Include
-# ==========================================
-# Keep important config examples
-!.env.example
-!config/.env.example
-!backend/.env.example
-!frontend/.env.example
+# Logs temporales
+docker_output.txt
+reinstall_log.txt
+*.log.txt
 
-# Keep important empty directories
-!backend/uploads/.gitkeep
-!frontend/public/uploads/.gitkeep
-!backend/data/candidates/.gitkeep
+# Large backup files (exceed GitHub 100MB limit)
+backup_*/
+*.tar.gz
+access_photo_mappings.json
+BASEDATEJP/*.pdf
 
-# Keep alembic versions
-!backend/alembic/versions/
-
-# Keep documentation
-!docs/**/*.md
-!*.md
-
-# Keep scripts
-!scripts/*.bat
-!scripts/*.ps1
-!scripts/*.sh
+# ===============================
+# BASEDATEJP - Archivos Grandes
+# ===============================
+# Contienen datos de Access y JSONs grandes (>100MB)
+BASEDATEJP/*.json
+BASEDATEJP/*.txt
+BASEDATEJP/*.md
+.env.production

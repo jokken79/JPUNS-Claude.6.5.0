@@ -1,0 +1,72 @@
+{
+  "factory_id": "ユアサ工機株式会社_新城工場",
+  "client_company": {
+    "name": "ユアサ工機株式会社",
+    "address": "岡山県岡山市北区久米６番地",
+    "phone": "086-241-2592",
+    "responsible_person": {
+      "department": "",
+      "name": "代表取締役　湯浅　博文",
+      "phone": "086-241-2592"
+    },
+    "complaint_handler": {
+      "department": "総務経理課",
+      "name": "為西　清作",
+      "phone": "086-241-2592"
+    }
+  },
+  "plant": {
+    "name": "新城工場",
+    "address": "愛知県新城市八名井字赤松1-8",
+    "phone": "0536-24-8018"
+  },
+  "assignment": {
+    "department": "製造部",
+    "line": "製造3課",
+    "supervisor": {
+      "department": "製造部",
+      "name": "工場　森　正俊",
+      "phone": "0536-24-8018"
+    }
+  },
+  "job": {
+    "description": "クランクシャフトの旋盤、マシニング、研磨、仕上げ加工など",
+    "description2": "",
+    "hourly_rate": 1900.0
+  },
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "営業部",
+      "name": "取締役 部長　中山　欣英",
+      "phone": "052-938-8840"
+    },
+    "complaint_handler": {
+      "department": "営業部",
+      "name": "取締役 部長　中山　欣英",
+      "phone": "052-938-8840"
+    }
+  },
+  "schedule": {
+    "work_hours": "昼勤：8時00分～17時00分　夜勤：19時00分～4時00分",
+    "break_time": "昼勤：12時00分～12時45分・15時00分～15時15分    夜勤：23時00分～23時45分・02時00分～02時15分",
+    "calendar": "派遣先勤務カレンダーによる",
+    "start_date": "2023-10-01 00:00:00",
+    "end_date": "2024-09-30 00:00:00",
+    "conflict_date": "2023-11-28 00:00:00",
+    "non_work_day_labor": "１ヶ月に２日の範囲内で命ずることができる。",
+    "overtime_labor": "5時間/日、45時間/月、360時間/年迄とする。但し、特別条項の申請により、6時間/日、80時間/月、720時間/年迄延長できる。申請は6回/年迄とする。",
+    "time_unit": "15.0"
+  },
+  "payment": {
+    "closing_date": "月末日",
+    "payment_date": "翌月末日",
+    "bank_account": "碧海信用金庫　刈谷支店　普通　6072767　名義人　ユニバーサル企画(株)",
+    "worker_closing_date": "20日",
+    "worker_payment_date": "15日",
+    "worker_calendar": "土曜日・日曜日・年末年始（12月30日～1月7日)・GW(4月28日～5月5日)・夏季休暇（8月11日～8月18日)"
+  },
+  "agreement": {
+    "period": "2025-03-31 00:00:00",
+    "explainer": ""
+  }
+}

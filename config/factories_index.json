@@ -1,0 +1,574 @@
+{
+  "total_factories": 71,
+  "last_updated": "2025-10-25 20:26:30",
+  "factories": [
+    {
+      "factory_id": "ユアサ工機株式会社__本社工場",
+      "client_company": "ユアサ工機株式会社",
+      "plant_name": "本社工場",
+      "department": "製造部",
+      "line": "製造1課",
+      "hourly_rate": 1900.0
+    },
+    {
+      "factory_id": "ユアサ工機株式会社__本社工場",
+      "client_company": "ユアサ工機株式会社",
+      "plant_name": "本社工場",
+      "department": "製造部",
+      "line": "製造1課",
+      "hourly_rate": 1900.0
+    },
+    {
+      "factory_id": "三幸技研株式会社__本社工場",
+      "client_company": "三幸技研株式会社",
+      "plant_name": "本社工場",
+      "department": "製造部",
+      "line": "内研",
+      "hourly_rate": 1750.0
+    },
+    {
+      "factory_id": "三幸技研株式会社__本社工場",
+      "client_company": "三幸技研株式会社",
+      "plant_name": "本社工場",
+      "department": "製造部",
+      "line": "外研",
+      "hourly_rate": 1750.0
+    },
+    {
+      "factory_id": "加藤木材工業株式会社__春日井工場",
+      "client_company": "加藤木材工業株式会社",
+      "plant_name": "春日井工場",
+      "department": "春日井工場生産部",
+      "line": "加工課",
+      "hourly_rate": 1700.0
+    },
+    {
+      "factory_id": "加藤木材工業株式会社__春日井工場",
+      "client_company": "加藤木材工業株式会社",
+      "plant_name": "春日井工場",
+      "department": "春日井工場金物事業部",
+      "line": "生産課",
+      "hourly_rate": 1700.0
+    },
+    {
+      "factory_id": "加藤木材工業株式会社__本社工場",
+      "client_company": "加藤木材工業株式会社",
+      "plant_name": "本社工場",
+      "department": "生産企画部",
+      "line": "資材課",
+      "hourly_rate": 1700.0
+    },
+    {
+      "factory_id": "加藤木材工業株式会社__本社工場",
+      "client_company": "加藤木材工業株式会社",
+      "plant_name": "本社工場",
+      "department": "資材供給部",
+      "line": "基材課",
+      "hourly_rate": 1700.0
+    },
+    {
+      "factory_id": "加藤木材工業株式会社__本社工場",
+      "client_company": "加藤木材工業株式会社",
+      "plant_name": "本社工場",
+      "department": "資材供給部",
+      "line": "メラミン課",
+      "hourly_rate": 1700.0
+    },
+    {
+      "factory_id": "加藤木材工業株式会社__本社工場",
+      "client_company": "加藤木材工業株式会社",
+      "plant_name": "本社工場",
+      "department": "生産1部",
+      "line": "1課",
+      "hourly_rate": 1700.0
+    },
+    {
+      "factory_id": "加藤木材工業株式会社__本社工場",
+      "client_company": "加藤木材工業株式会社",
+      "plant_name": "本社工場",
+      "department": "生産1部",
+      "line": "2課",
+      "hourly_rate": 1700.0
+    },
+    {
+      "factory_id": "加藤木材工業株式会社__本社工場",
+      "client_company": "加藤木材工業株式会社",
+      "plant_name": "本社工場",
+      "department": "生産1部",
+      "line": "3課",
+      "hourly_rate": 1700.0
+    },
+    {
+      "factory_id": "加藤木材工業株式会社__本社工場",
+      "client_company": "加藤木材工業株式会社",
+      "plant_name": "本社工場",
+      "department": "生産2部",
+      "line": "生産課",
+      "hourly_rate": 1700.0
+    },
+    {
+      "factory_id": "加藤木材工業株式会社__本社工場",
+      "client_company": "加藤木材工業株式会社",
+      "plant_name": "本社工場",
+      "department": "生産2部",
+      "line": "J加工1課",
+      "hourly_rate": 1700.0
+    },
+    {
+      "factory_id": "加藤木材工業株式会社__本社工場",
+      "client_company": "加藤木材工業株式会社",
+      "plant_name": "本社工場",
+      "department": "生産2部",
+      "line": "J加工2課",
+      "hourly_rate": 1700.0
+    },
+    {
+      "factory_id": "加藤木材工業株式会社__本社工場",
+      "client_company": "加藤木材工業株式会社",
+      "plant_name": "本社工場",
+      "department": "生産管理部",
+      "line": "品質安全環境管理課",
+      "hourly_rate": 1700.0
+    },
+    {
+      "factory_id": "株式会社オーツカ__関ケ原工場",
+      "client_company": "株式会社オーツカ",
+      "plant_name": "関ケ原工場",
+      "department": "第3製造課",
+      "line": "第5工場",
+      "hourly_rate": 1872.0
+    },
+    {
+      "factory_id": "株式会社オーツカ__関ケ原工場",
+      "client_company": "株式会社オーツカ",
+      "plant_name": "関ケ原工場",
+      "department": "第3製造課",
+      "line": "第7工場",
+      "hourly_rate": 1872.0
+    },
+    {
+      "factory_id": "株式会社オーツカ__関ケ原工場",
+      "client_company": "株式会社オーツカ",
+      "plant_name": "関ケ原工場",
+      "department": "第2製造課",
+      "line": "第2工場",
+      "hourly_rate": 1872.0
+    },
+    {
+      "factory_id": "瑞陵精機株式会社__恵那工場",
+      "client_company": "瑞陵精機株式会社",
+      "plant_name": "恵那工場",
+      "department": "製造課",
+      "line": "等速ジョイント",
+      "hourly_rate": 1600.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__岡山工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "岡山工場",
+      "department": "製作課",
+      "line": "CVJ 清掃",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__岡山工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "岡山工場",
+      "department": "製作課",
+      "line": "CVJ短軸旋盤係",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__岡山工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "岡山工場",
+      "department": "製作課",
+      "line": "CVJ長軸旋盤係",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__岡山工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "岡山工場",
+      "department": "製作課",
+      "line": "CVJ研磨係.",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__岡山工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "岡山工場",
+      "department": "製作課",
+      "line": "CVJ研磨係",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__岡山工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "岡山工場",
+      "department": "製作課",
+      "line": "CVJ転造係",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__岡山工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "岡山工場",
+      "department": "製作課",
+      "line": "CVJﾊﾞﾘ取りﾁｬﾝﾌｧ係",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__岡山工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "岡山工場",
+      "department": "製作課",
+      "line": "CVJ切欠きｺｯﾀ係",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__岡山工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "岡山工場",
+      "department": "製作1課",
+      "line": "1次旋係.",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__岡山工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "岡山工場",
+      "department": "製作1課",
+      "line": "1次旋係",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__岡山工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "岡山工場",
+      "department": "岡山HUB品証課",
+      "line": "HUB 検査課係.",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__岡山工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "岡山工場",
+      "department": "岡山HUB品証課",
+      "line": "HUB 検査課係",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__岡山工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "岡山工場",
+      "department": "岡山営業課",
+      "line": "材料管理係",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__本社工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "本社工場",
+      "department": "第一営業部本社営業課",
+      "line": "リフト作業",
+      "hourly_rate": 1750.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__本社工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "本社工場",
+      "department": "製作課",
+      "line": "Aライン",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__本社工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "本社工場",
+      "department": "製作課",
+      "line": "Tライン",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__本社工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "本社工場",
+      "department": "製作課",
+      "line": "バリ取り",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__本社工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "本社工場",
+      "department": "製作課",
+      "line": "切紛回収",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__本社工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "本社工場",
+      "department": "製作課",
+      "line": "Fライン",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__本社工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "本社工場",
+      "department": "製作課",
+      "line": "六面加工",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__本社工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "本社工場",
+      "department": "製作課",
+      "line": "Gライン",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第一工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第一工場",
+      "department": "第二営業部海南HUB営業課",
+      "line": "リフト作業",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第一工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第一工場",
+      "department": "製作1課",
+      "line": "E",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第一工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第一工場",
+      "department": "製作1課",
+      "line": "段取",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第一工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第一工場",
+      "department": "製作1課",
+      "line": "ブローチ",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第一工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第一工場",
+      "department": "製作1課",
+      "line": "スタブ",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第一工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第一工場",
+      "department": "製作1課",
+      "line": "HUB",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第一工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第一工場",
+      "department": "製作1課",
+      "line": "H_2次旋",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第一工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第一工場",
+      "department": "製作1課",
+      "line": "清掃",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第一工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第一工場",
+      "department": "製作1課",
+      "line": "切紛・材料",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第一工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第一工場",
+      "department": "製作2課",
+      "line": "熱処理",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第一工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第一工場",
+      "department": "海南第一品証課",
+      "line": "検査",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第一工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第一工場",
+      "department": "TKE事業部",
+      "line": "TKE第一営",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第一工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第一工場",
+      "department": "製作1課",
+      "line": "HUB。",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第二工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第二工場",
+      "department": "営業課",
+      "line": "リフト作業",
+      "hourly_rate": 0.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第二工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第二工場",
+      "department": "製作課",
+      "line": "P研磨",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第二工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第二工場",
+      "department": "製作課",
+      "line": "ト精密",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第二工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第二工場",
+      "department": "製作課",
+      "line": "W研磨",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第二工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第二工場",
+      "department": "製作課",
+      "line": "組立",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__海南第二工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "海南第二工場",
+      "department": "海南第二品証課",
+      "line": "検査",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__静岡工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "静岡工場",
+      "department": "製作課",
+      "line": "清掃作業・切子回収",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__静岡工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "静岡工場",
+      "department": "製作課",
+      "line": "材料投入",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__静岡工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "静岡工場",
+      "department": "製作課",
+      "line": "自動旋削",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__静岡工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "静岡工場",
+      "department": "製作課",
+      "line": "手動旋削",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__静岡工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "静岡工場",
+      "department": "製作課",
+      "line": "チャンファー",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__静岡工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "静岡工場",
+      "department": "製作課",
+      "line": "転造",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__静岡工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "静岡工場",
+      "department": "製作課",
+      "line": "PTJ",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__静岡工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "静岡工場",
+      "department": "製作課",
+      "line": "ナット",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__静岡工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "静岡工場",
+      "department": "製作課",
+      "line": "内輪",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__静岡工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "静岡工場",
+      "department": "製作課",
+      "line": "トラニオン",
+      "hourly_rate": 1650.0
+    },
+    {
+      "factory_id": "高雄工業株式会社__静岡工場",
+      "client_company": "高雄工業株式会社",
+      "plant_name": "静岡工場",
+      "department": "製作課",
+      "line": "長軸バリ取り",
+      "hourly_rate": 1650.0
+    }
+  ]
+}

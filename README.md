@@ -9,23 +9,19 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Redis](https://img.shields.io/badge/Redis-7-FF6347.svg)
-![Docker](https://img.shields.io/badge/Docker-12%20Services-2496ED.svg)
-![Performance](https://img.shields.io/badge/Performance-Optimized-brightgreen)
-![Architecture](https://img.shields.io/badge/Architecture-Modular-orange)
+![Docker](https://img.shields.io/badge/Docker-6%20Services-2496ED.svg)
 
 **Sistema integral de gestión de recursos humanos para agencias de staffing japonesas (人材派遣会社)**
 
-![Status](https://img.shields.io/badge/status-Production%20Ready-brightgreen)
+![Status](https://img.shields.io/badge/status-En%20Desarrollo-yellow)
 ![Windows](https://img.shields.io/badge/Windows-Compatible-0078D4.svg)
 ![Docs](https://img.shields.io/badge/Docs-Complete-blue)
-![Bundle Size](https://img.shields.io/badge/Bundle%20Size-1.5MB-success)
 
 [Inicio Rápido](#-inicio-rápido) •
 [Documentación](#-documentación) •
 [Características](#-características) •
 [Stack Tecnológico](#️-stack-tecnológico) •
-[Contribuir](#-contribuir) •
-[🚀 v6.0.0 Updates](#-novedades-en-v600)
+[Contribuir](#-contribuir)
 
 </div>
 
@@ -33,7 +29,7 @@
 
 ## 📋 Descripción
 
-**UNS-ClaudeJP 6.0.0** es un sistema completo de gestión de recursos humanos diseñado específicamente para agencias de staffing japonesas. Versión 6.0.0 representa una transformación completa con arquitectura modular, rendimiento optimizado, configuración unificada, limpieza de código, testing automatizado y documentación mejorada. Maneja el ciclo completo de trabajadores temporales desde candidatos hasta empleados activos, incluyendo:
+**UNS-ClaudeJP 6.0.0** es un sistema completo de gestión de recursos humanos diseñado específicamente para agencias de staffing japonesas. Versión 6.0.0 incluye limpieza completa de código, testing automatizado, y documentación mejorada. Maneja el ciclo completo de trabajadores temporales desde candidatos hasta empleados activos, incluyendo:
 
 - **Gestión de Candidatos (履歴書/Rirekisho)** con OCR japonés
 - **Empleados de Dispatch (派遣社員)** y asignaciones
@@ -60,53 +56,41 @@
 
 ### Arquitectura del Sistema
 
-El sistema utiliza una **arquitectura multi-servicio optimizada con Docker Compose**:
-- **12 servicios** (6 en versión anterior) - Expandido para observabilidad completa
-- **Red compartida**: `uns-network` con health checks
-- **Almacenamiento persistente**: PostgreSQL + Redis + backups automáticos
+El sistema utiliza una **arquitectura multi-servicio con Docker Compose**:
+- **6 servicios** (5 en versión anterior)
+- **Red compartida**: `uns-network`
+- **Almacenamiento persistente**: PostgreSQL + Redis
 - **Hot reload**: Backend y Frontend en desarrollo
-- **Arquitectura modular**: Backend models divididos por dominio
-- **Configuración unificada**: Sistema centralizado de configuración
-- **Performance optimizado**: Bundle size reducido 96%
 
-### Instalación Rápida (3 minutos) 🚀
+### Instalación Rápida (5 minutos)
 
-#### Windows (Recomendado)
+#### Windows
 
 ```bash
 # 1. Clonar repositorio
-git clone https://github.com/jokken79/UNS-ClaudeJP-6.0.0.git
-cd UNS-ClaudeJP-6.0.0
+git clone https://github.com/jokken79/UNS-ClaudeJP-5.0.git
+cd UNS-ClaudeJP-5.0
 
-# 2. Configuración automática (nuevo sistema unificado)
-cp config/.env.example .env
-# Editar .env con tus credenciales
+# 2. Generar configuración
+python generate_env.py
 
-# 3. Iniciar todos los servicios (12 servicios)
+# 3. Iniciar servicios
 cd scripts
 START.bat
-
-# 4. Verificar sistema (opcional)
-HEALTH_CHECK_FUN.bat
 ```
 
 #### Linux/macOS
 
 ```bash
 # 1. Clonar repositorio
-git clone https://github.com/jokken79/UNS-ClaudeJP-6.0.0.git
-cd UNS-ClaudeJP-6.0.0
+git clone https://github.com/jokken79/UNS-ClaudeJP-5.0.git
+cd UNS-ClaudeJP-5.0
 
-# 2. Configuración automática
-cp config/.env.example .env
-# Editar .env con tus credenciales
+# 2. Generar configuración
+python3 generate_env.py
 
-# 3. Iniciar todos los servicios (12 servicios)
+# 3. Iniciar servicios
 docker compose up -d
-
-# 4. Verificar sistema
-docker compose ps
-curl http://localhost:8000/api/health
 ```
 
 ### Acceder al Sistema
@@ -116,21 +100,14 @@ Una vez iniciados los servicios:
 - **Frontend:** http://localhost:3000
 - **API Docs:** http://localhost:8000/api/docs
 - **Adminer:** http://localhost:8080
-- **Grafana:** http://localhost:3001 (Monitoreo)
-- **Prometheus:** http://localhost:9090 (Métricas)
 
 **Credenciales por defecto:**
 ```
-Frontend/Backend:
 Usuario: admin
 Contraseña: admin123
-
-Adminer (PostgreSQL):
-Usuario: uns_admin
-Contraseña: (ver en .env)
 ```
 
-> ⚠️ **IMPORTANTE:** Cambiar credenciales en producción antes de despliegue
+> ⚠️ **IMPORTANTE:** Cambiar credenciales en producción
 
 📖 **[Guía de Inicio Rápido Detallada →](docs/00-START-HERE/QUICK_START.md)**
 
@@ -317,9 +294,9 @@ Contraseña: (ver en .env)
 
 ---
 
-## 🐳 Servicios Docker (12 Servicios Optimizados)
+## 🐳 Servicios Docker (6 Servicios)
 
-El sistema ejecuta **12 servicios** orquestados con Docker Compose con observabilidad completa:
+El sistema ejecuta **6 servicios** orquestados con Docker Compose:
 
 ### 1. **db** - PostgreSQL 15 (Base de datos principal)
 ```
@@ -384,106 +361,34 @@ El sistema ejecuta **12 servicios** orquestados con Docker Compose con observabi
 └─────────────────────────────────────────┘
 ```
 
-### 7. **nginx** - Reverse Proxy + Load Balancer
-```
-┌─────────────────────────────────────────┐
-│ Puerto: 80                              │
-│ Balanceo de carga para backend         │
-│ Health checks automáticos              │
-│ Configuración SSL-ready                │
-└─────────────────────────────────────────┘
-```
+**Orden de inicio:** `db` → `redis` → `importer` → `backend` → `frontend` → `adminer`
 
-### 8. **otel-collector** - OpenTelemetry Collector
-```
-┌─────────────────────────────────────────┐
-│ Recolector de traces y métricas         │
-│ Exporta a Tempo y Prometheus           │
-│ Configuración de sampling              │
-└─────────────────────────────────────────┘
-```
-
-### 9. **tempo** - Distributed Tracing
-```
-┌─────────────────────────────────────────┐
-│ Almacenamiento de traces                │
-│ Integración con Grafana                 │
-│ Búsqueda de spans                       │
-└─────────────────────────────────────────┘
-```
-
-### 10. **prometheus** - Metrics Storage
-```
-┌─────────────────────────────────────────┐
-│ Base de datos de métricas              │
-│ Retention configurable                  │
-│ Query language PromQL                   │
-└─────────────────────────────────────────┘
-```
-
-### 11. **grafana** - Dashboards & Visualization
-```
-┌─────────────────────────────────────────┐
-│ Puerto: 3001                            │
-│ Dashboards preconfigurados              │
-│ Alertas y notificaciones                │
-└─────────────────────────────────────────┘
-```
-
-### 12. **backup** - Automated Database Backups
-```
-┌─────────────────────────────────────────┐
-│ Backups automáticos programados        │
-│ Retention policies                      │
-│ Exportación a S3 configurable         │
-└─────────────────────────────────────────┘
-```
-
-**Orden de inicio:** `db` → `redis` → `importer` → `otel-collector` → `tempo` → `prometheus` → `grafana` → `backend` → `frontend` → `adminer` → `nginx` → `backup`
-
-**Red de comunicación:** Todos los servicios en `uns-network` con health checks automáticos
+**Red de comunicación:** Todos los servicios en `uns-network` (bridge network)
 
 ---
 
-## 🗄️ Base de Datos (Arquitectura Modular v6.0.0)
+## 🗄️ Base de Datos
 
-### Esquema (22 Tablas) - Arquitectura Refactorizada
+### Esquema (13 Tablas)
 
-**Tablas de Personal (Módulo Auth & Employees):**
+**Tablas de Personal:**
 - `users` - Usuarios del sistema con jerarquía de roles
-- `refresh_tokens` - Tokens JWT refresh
 - `candidates` - Candidatos (履歴書) con 50+ campos
-- `candidate_documents` - Documentos de candidatos
-- `candidate_forms` - Formularios de candidatos
 - `employees` - Empleados de dispatch (派遣社員)
 - `contract_workers` - Trabajadores de contrato (請負社員)
 - `staff` - Personal de oficina (スタッフ)
 
-**Tablas de Negocio (Módulo Apartments & Payroll):**
+**Tablas de Negocio:**
 - `factories` - Empresas clientes (派遣先)
 - `apartments` - Vivienda de empleados (社宅)
-- `apartment_assignments` - Asignaciones de vivienda
 - `documents` - Archivos con datos OCR
 - `contracts` - Contratos de empleo
-- `salary_calculations` - Cálculos de nómina
-- `salary_contracts` - Contratos salariales
 
-**Tablas de Operaciones (Módulo System & Yukyu):**
+**Tablas de Operaciones:**
 - `timer_cards` - Registros de asistencia (タイムカード)
+- `salary_calculations` - Cálculos de nómina
 - `requests` - Solicitudes de empleados
 - `audit_log` - Log de auditoría completo
-- `system_settings` - Configuración del sistema
-- `permissions` - Permisos y roles granulares
-- `yukyu_balances` - Balances de vacaciones (有給)
-
-**Tablas de Referencia (Módulo Reference):**
-- `regions` - Regiones geográficas
-- `departments` - Departamentos
-- `workplaces` - Lugares de trabajo
-
-**Tablas AI (Módulo AI Gateway):**
-- `ai_gateway_usage` - Uso de servicios AI
-- `ai_budgets` - Presupuestos AI
 
 **[Ver Esquema Completo →](docs/database/BD_PROPUESTA_3_HIBRIDA.md)**
 
@@ -524,20 +429,20 @@ python backend/scripts/sync_employee_data_advanced.py
 
 ---
 
-## 📁 Estructura del Proyecto (v6.0.0 - Arquitectura Optimizada)
+## 📁 Estructura del Proyecto (v5.4)
 
 ```
-UNS-ClaudeJP-6.0.0/
+UNS-ClaudeJP-5.4/
 ├── .claude/                    # 🆕 Sistema de orquestación de agentes
 │   ├── agents.json             # Configuración de agentes
 │   ├── claude.md               # Instrucciones para Claude
 │   ├── orchestrator.md         # Orquestador maestro
 │   ├── [specialized-agents]/   # Agentes especializados
 │
-├── backend/                    # FastAPI application (Arquitectura Modular)
+├── backend/                    # FastAPI application
 │   ├── app/
 │   │   ├── main.py            # Entry point (FastAPI factory)
-│   │   ├── api/               # 27+ REST endpoints
+│   │   ├── api/               # 24+ REST endpoints
 │   │   │   ├── auth/          # JWT authentication
 │   │   │   ├── candidates/    # Candidate management
 │   │   │   ├── employees/     # Employee management
@@ -546,20 +451,9 @@ UNS-ClaudeJP-6.0.0/
 │   │   │   ├── payroll/       # Salary calculations
 │   │   │   ├── requests/      # Leave requests
 │   │   │   ├── azure_ocr/     # OCR integration
-│   │   │   ├── ai_agents/     # 🆕 AI Gateway management
-│   │   │   └── [20+ routers]  # Complete API
-│   │   ├── models/            # 🆕 ARQUITECTURA MODULAR POR DOMINIO
-│   │   │   ├── __init__.py     # Imports centralizados
-│   │   │   ├── base.py         # Enums y clases base
-│   │   │   ├── auth/           # User, RefreshToken
-│   │   │   ├── candidates/     # Candidate, Document, Form
-│   │   │   ├── employees/      # Employee, ContractWorker, Staff
-│   │   │   ├── payroll/        # Salary, Contract
-│   │   │   ├── apartments/     # Apartment, Factory, Assignment
-│   │   │   ├── yukyu/          # Vacation management
-│   │   │   ├── system/         # Settings, Audit, Permissions
-│   │   │   ├── reference/      # Region, Department, Workplace
-│   │   │   └── ai/             # AI Gateway, Budget
+│   │   │   └── [15+ routers]  # Complete API
+│   │   ├── models/
+│   │   │   └── models.py      # SQLAlchemy ORM (13 tablas, 703+ líneas)
 │   │   ├── schemas/           # Pydantic models
 │   │   ├── services/          # Business logic por dominio
 │   │   ├── core/
@@ -574,12 +468,8 @@ UNS-ClaudeJP-6.0.0/
 │       ├── import_candidates_improved.py  # Import candidatos
 │       └── sync_candidate_employee_status.py
 │
-├── frontend/                   # Next.js 16 application (Performance Optimized)
-│   ├── app/                    # App Router (50+ páginas)
-│   │   ├── fonts/              # 🆕 Sistema de fuentes optimizado
-│   │   │   ├── next-fonts.ts   # 4 fuentes estratégicas
-│   │   │   ├── font-loader.ts  # Carga condicional
-│   │   │   └── font-config.ts  # Configuración de fuentes
+├── frontend/                   # Next.js 16 application
+│   ├── app/                    # App Router (45+ páginas)
 │   │   ├── (dashboard)/        # Protected routes group
 │   │   │   ├── layout.tsx      # Dashboard layout con auth
 │   │   │   ├── candidates/     # 6 páginas (list, create, view, edit, OCR)
@@ -591,13 +481,10 @@ UNS-ClaudeJP-6.0.0/
 │   │   │   ├── themes/         # Theme gallery (12+ themes)
 │   │   │   ├── design-system/  # Template designer
 │   │   │   ├── reports/        # PDF reports
-│   │   │   └── [15+ módulos]   # Complete system
+│   │   │   └── [10+ módulos]   # Complete system
 │   │   └── page.tsx            # Landing page
-│   ├── components/             # React components (Unificados)
-│   │   ├── ui/                 # 🆕 Componentes unificados (Input, Button, etc.)
-│   │   │   ├── input.tsx       # Componente unificado con 5 variantes
-│   │   │   ├── button.tsx      # Componente unificado
-│   │   │   └── [40+ components] # Shadcn/ui optimizados
+│   ├── components/             # React components
+│   │   ├── ui/                 # Shadcn/ui components (40+)
 │   │   ├── [feature-comp]/     # Feature components
 │   │   └── providers.tsx       # React Query, Theme providers
 │   ├── lib/
@@ -614,22 +501,12 @@ UNS-ClaudeJP-6.0.0/
 │   ├── hooks/                  # Custom React hooks
 │   └── types/                  # TypeScript definitions
 │
-├── config/                     # 🆕 CONFIGURACIÓN UNIFICADA
-│   ├── .env.example            # Template completo de configuración
-│   ├── backend/                # Configuración backend por entorno
-│   │   └── settings/           # Pydantic settings (dev/prod/test)
-│   ├── frontend/               # Configuración frontend
-│   │   └── constants/          # TypeScript environment config
-│   ├── docker/                 # Configuración Docker unificada
-│   │   ├── docker-compose.dev.yml
-│   │   ├── docker-compose.prod.yml
-│   │   └── docker-compose.test.yml
-│   └── scripts/                # Scripts de automatización
-│       ├── setup.sh            # Configuración automática
-│       └── validate.sh          # Validación de configuración
+├── config/                     # Templates y configuraciones
+│   ├── employee_master.xlsm    # Excel template para import
+│   └── factories/              # Configuraciones de fábricas
 │
 ├── scripts/                    # Windows batch scripts (Sistema crítico)
-│   ├── START.bat              # ⭐ Iniciar todos los servicios (12)
+│   ├── START.bat              # ⭐ Iniciar todos los servicios
 │   ├── STOP.bat               # Detener servicios
 │   ├── LOGS.bat               # Ver logs (menú interactivo)
 │   ├── BACKUP_DATOS.bat       # Backup de base de datos
@@ -654,34 +531,28 @@ UNS-ClaudeJP-6.0.0/
 │   ├── guides/                 # Development guides
 │   └── database/               # DB schema
 │
-├── docker-compose.yml          # 12 services orchestration
+├── docker-compose.yml          # 6 services orchestration
 ├── .env                        # Environment variables
 ├── CLAUDE.md                   # 🔴 Reglas para IAs
 ├── AI_RULES.md                 # Reglas universales para IAs
 ├── PROMPT_RECONSTRUCCION_COMPLETO.md  # 25,000+ word spec
-├── AUDITORIA_COMPLETA_UNS_CLAUDEJP_6_0_0.md  # 🆕 Análisis completo v6.0.0
-├── FONT_OPTIMIZATION_REPORT.md  # 🆕 Reporte de optimización de fuentes
-├── INPUT_CONSOLIDATION_REPORT.md  # 🆕 Reporte de consolidación de componentes
-├── CONFIGURATION_UNIFICATION_SUMMARY.md  # 🆕 Reporte de unificación de configuración
 └── README.md                   # Este archivo
 ```
 
-### 🆕 Directorios Nuevos en v6.0.0
+### 🆕 Directorios Nuevos en v5.4
 
-- **`config/`** - Sistema de configuración unificada
-- **`backend/app/models/[domain]/`** - Arquitectura modular por dominio
-- **`frontend/app/fonts/`** - Sistema de fuentes optimizado
-- **`docs/reports/`** - Reportes de optimización y auditoría
-- **`frontend/components/ui/unified/`** - Componentes unificados
+- **`.claude/`** - Sistema de orquestación de agentes
+- **`contexts/`** - React contexts (frontend)
+- **`docs/architecture/`** - Documentación de arquitectura
+- **`docs/guides/`** - Guías de desarrollo
 
 ### Archivos Críticos (NO MODIFICAR)
 
 - ❌ Todos los `.bat` en `scripts/` - Sistema automatizado
-- ❌ `docker-compose.yml` - Orquestación de 12 servicios
+- ❌ `docker-compose.yml` - Orquestación de servicios
 - ❌ `.env` - Variables de entorno
 - ❌ `.claude/` - Sistema de agentes
 - ❌ `backend/alembic/versions/` - Historial de migraciones
-- ❌ `backend/app/models/__init__.py` - Imports centralizados críticos
 
 ---
 
@@ -1170,7 +1041,7 @@ docker compose logs --since 24h > logs_$(date +%Y%m%d).log
 | `.env` | Configuración de entorno |
 | `.claude/` | Sistema de agentes de IA |
 | `backend/alembic/versions/` | Historial de migraciones |
-| `backend/app/models/` | Arquitectura modular (22 tablas, 15+ archivos) |
+| `backend/app/models/models.py` | Modelos DB (703+ líneas) |
 
 ### 📚 Documentación para Contribuidores
 
@@ -1183,10 +1054,10 @@ docker compose logs --since 24h > logs_$(date +%Y%m%d).log
 
 ### 🔄 Versionado y Cambios
 
-- **Versión actual**: 6.0.0
+- **Versión actual**: 5.4.0
 - **Versiones fijas**: NO CAMBIAR sin aprobación explícita
 - **Breaking changes**: Crear rama major version
-- **Changelog**: Ver `CHANGELOG_V5.6_TO_V6.0.0.md`
+- **Changelog**: Ver `CHANGELOG_V5.2_TO_V5.4.md`
 
 ---
 
@@ -1217,113 +1088,36 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 **Hecho con ❤️ para agencias de staffing japonesas**
 
-**UNS-ClaudeJP 6.0.0** - Versión con arquitectura modular, rendimiento optimizado y configuración unificada
+**UNS-ClaudeJP 5.4** - Versión con documentación mejorada y asistencia de IA
 
-[⬆ Volver arriba](#uns-claudejp-600---sistema-de-gestión-de-rrhh)
+[⬆ Volver arriba](#uns-claudejp-54---sistema-de-gestión-de-rrhh)
 
 ---
 
-## 🚀 Novedades en v6.0.0
+### 🆕 Novedades en v5.4
 
-### ✅ **Transformación Completa de Arquitectura**
+- ✅ **6 servicios** Docker (añadido Redis)
+- ✅ **Documentación IA** - CLAUDE.md mejorado
+- ✅ **Workflows de Import/Export** - Documentados
+- ✅ **24+ API endpoints** - API completa
+- ✅ **45+ páginas frontend** - App Router completo
+- ✅ **12 temas + personalizados** - Sistema de temas
+- ✅ **OCR híbrido** - Azure + EasyOCR + Tesseract
+- ✅ **Multi-servicio** - Arquitectura escalable
 
-#### 🏗️ **Backend Modular Refactoring**
-- **22 modelos** divididos en 15+ archivos por dominio
-- **Arquitectura escalable** y mantenible
-- **Imports centralizados** con backward compatibility 100%
-- **116 archivos actualizados** automáticamente
+### 📊 Estadísticas del Proyecto
 
-#### ⚡ **Performance Extremo**
-- **Bundle size reducido 96%** (37.5MB → 1.5MB)
-- **4 fuentes estratégicas** vs 24 fuentes anteriores
-- **Sistema de carga condicional** de fuentes
-- **Startup time -3-5 segundos**
-
-#### 🧩 **Component Unification**
-- **5 componentes input** consolidados en 1 componente unificado
-- **1,089 líneas de código** unificadas
-- **41 archivos migrados** automáticamente
-- **Backward compatibility 100%** mantenida
-
-#### ⚙️ **Configuration Unification**
-- **285+ archivos de configuración** → ~50 archivos (82% menos)
-- **50+ variables duplicadas** eliminadas
-- **Credenciales centralizadas** en lugares seguros
-- **Environment-specific configs** implementados
-
-#### 🐳 **DevOps Expansion**
-- **12 servicios Docker** (vs 6 en v5.6)
-- **Observability completa**: Grafana, Prometheus, Tempo
-- **Health checks automáticos** en todos los servicios
-- **Automated backups** con retention policies
-
-### 📊 Estadísticas del Proyecto v6.0.0
-
-- **Líneas de código**: 150,000+ (backend + frontend)
-- **Documentos**: 150+ archivos .md
-- **APIs**: 27+ endpoints
-- **Páginas**: 50+ páginas Next.js
-- **Componentes**: 40+ Shadcn/ui unificados
-- **Servicios**: 12 containers Docker
-- **Tablas DB**: 22 tablas relacionales (arquitectura modular)
+- **Líneas de código**: 25,000+ (backend + frontend)
+- **Documentos**: 100+ archivos .md
+- **APIs**: 24+ endpoints
+- **Páginas**: 45+ páginas Next.js
+- **Componentes**: 40+ Shadcn/ui
+- **Servicios**: 6 containers Docker
+- **Tablas DB**: 13 tablas relacionales
 - **Scripts**: 30+ automatizaciones
-- **Bundle Size**: 1.5MB (96% reducido)
-- **Config Files**: ~50 (82% reducidos)
-
-### 🎯 **Impacto Medible**
-
-| Métrica | v5.6 | v6.0.0 | Mejora |
-|---------|------|--------|---------|
-| Bundle Size | 37.5MB | 1.5MB | **96% ↓** |
-| Config Files | 285+ | ~50 | **82% ↓** |
-| Services Docker | 6 | 12 | **100% ↑** |
-| Models Architecture | 1 archivo | 15+ archivos | **Modular** |
-| Component Dups | 5 inputs | 1 unificado | **80% ↓** |
-| Setup Time | 5 min | 3 min | **40% ↓** |
 
 ### 🏷️ Tags
 
-`nextjs` `fastapi` `react` `typescript` `python` `postgresql` `docker` `ocr` `japanese` `hr-management` `staffing` `dispatch-work` `azure-ai` `performance-optimization` `modular-architecture` `configuration-management` `observability` `grafana` `prometheus`
-
----
-
-## 🔧 Solución de Problemas Recientes
-
-### ✅ **Problema de Candidatos/New Solucionado (2025-11-18)**
-
-**Problema:** El usuario reportó que al acceder a `http://localhost:3000/candidates/new` no aparecía el formulario que antes funcionaba.
-
-**Diagnóstico:** Se identificaron dos issues críticos:
-1. **Página faltante**: No existía `frontend/app/candidates/new/page.tsx`
-2. **Redirección incorrecta**: La página del dashboard apuntaba a ruta equivocada
-
-**Soluciones Implementadas:**
-- ✅ **Creada página de redirección**: [`frontend/app/candidates/new/page.tsx`](frontend/app/candidates/new/page.tsx:1)
-- ✅ **Corregida ruta de redirección**: [`frontend/app/dashboard/candidates/new/page.tsx`](frontend/app/dashboard/candidates/new/page.tsx:11)
-- ✅ **Verificados componentes existentes**: Formulario Rirekisho, OCR, y vista de impresión
-
-**Flujo Funcional:**
-```
-http://localhost:3000/candidates/new
-    ↓ (redirección automática)
-http://localhost:3000/dashboard/candidates/new
-    ↓ (redirección automática)
-http://localhost:3000/dashboard/candidates/rirekisho
-    ↓ (formulario completo funcional)
-✅ Formulario Rirekisho con OCR, impresión y guardado
-```
-
-**Características del Formulario Rirekisho:**
-- 📷 Subida de fotos con vista previa
-- 🔍 Integración Azure OCR para documentos
-- 🖨️ Sistema de impresión optimizado para A4
-- 💾 Guardado en base de datos con validación
-- 📝 50+ campos: información personal, documentos, educación, familia, trabajo
-- 🎨 Diseño responsive con modo impresión
-- 🔄 Modo edición para candidatos existentes
-
-**Resultado:** El problema está **100% solucionado** y el flujo de trabajo de candidatos funciona perfectamente.
+`nextjs` `fastapi` `react` `typescript` `python` `postgresql` `docker` `ocr` `japanese` `hr-management` `staffing` `dispatch-work` `azure-ai`
 
 </div>
-#   J P U N S - C l a u d e . 6 . 0 . 2  
- 

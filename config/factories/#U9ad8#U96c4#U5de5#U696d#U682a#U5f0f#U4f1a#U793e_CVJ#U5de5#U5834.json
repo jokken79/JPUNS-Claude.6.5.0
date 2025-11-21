@@ -1,0 +1,196 @@
+{
+  "factory_id": "高雄工業株式会社_CVJ工場",
+  "client_company": {
+    "name": "高雄工業株式会社",
+    "address": "愛知県弥富市楠三丁目13番地2",
+    "phone": "0567-68-8110",
+    "responsible_person": {
+      "department": "岡山事業所",
+      "name": "課長　大治 国利",
+      "phone": "086-724-5330"
+    },
+    "complaint_handler": {
+      "department": "管理部 管理課",
+      "name": "課長　大治 国利",
+      "phone": "086-724-5330"
+    }
+  },
+  "plant": {
+    "name": "CVJ工場",
+    "address": "岡山県岡山市北区御津伊田1028-19",
+    "phone": "086-724-5330"
+  },
+  "lines": [
+    {
+      "line_id": "Factory-84",
+      "assignment": {
+        "department": "製作課",
+        "line": "CVJ 清掃",
+        "supervisor": {
+          "department": "",
+          "name": "課長　井上 雅支",
+          "phone": "086-724-5330"
+        }
+      },
+      "job": {
+        "description": "自動機の旋削機械及び周辺機器等の清掃メンテナンス",
+        "description2": "",
+        "hourly_rate": 0.0
+      }
+    },
+    {
+      "line_id": "Factory-85",
+      "assignment": {
+        "department": "製作課",
+        "line": "CVJ短軸旋盤係",
+        "supervisor": {
+          "department": "",
+          "name": "リーダー　高橋 幸宏",
+          "phone": "086-724-5330"
+        }
+      },
+      "job": {
+        "description": "ＣＶＪ短軸等速ジョイント旋削加工、ＮＣプログラム修正",
+        "description2": "",
+        "hourly_rate": 0.0
+      }
+    },
+    {
+      "line_id": "Factory-86",
+      "assignment": {
+        "department": "製作課",
+        "line": "CVJ長軸旋盤係",
+        "supervisor": {
+          "department": "",
+          "name": "リーダー　三村 延芳",
+          "phone": "086-724-5330"
+        }
+      },
+      "job": {
+        "description": "ＣＶＪ長軸等速ジョイント旋削加工、ＮＣプログラム修正",
+        "description2": "",
+        "hourly_rate": 0.0
+      }
+    },
+    {
+      "line_id": "Factory-87",
+      "assignment": {
+        "department": "製作課",
+        "line": "CVJ研磨係.",
+        "supervisor": {
+          "department": "",
+          "name": "サブリーダー　山下　 裕督",
+          "phone": "086-724-5330"
+        }
+      },
+      "job": {
+        "description": "ＣＶＪ研磨等速ジョイント旋削加工",
+        "description2": "",
+        "hourly_rate": 0.0
+      }
+    },
+    {
+      "line_id": "Factory-88",
+      "assignment": {
+        "department": "製作課",
+        "line": "CVJ研磨係",
+        "supervisor": {
+          "department": "",
+          "name": "サブリーダー　山下　 裕督",
+          "phone": "086-724-5330"
+        }
+      },
+      "job": {
+        "description": "ＣＶＪ研磨等速ジョイント旋削加工、ＮＣプログラム修正",
+        "description2": "",
+        "hourly_rate": 0.0
+      }
+    },
+    {
+      "line_id": "Factory-89",
+      "assignment": {
+        "department": "製作課",
+        "line": "CVJ転造係",
+        "supervisor": {
+          "department": "",
+          "name": "サブリーダー　山下　 裕督",
+          "phone": "086-724-5330"
+        }
+      },
+      "job": {
+        "description": "ＣＶＪ転造等速ジョイント旋削加工、ＮＣプログラム修正",
+        "description2": "",
+        "hourly_rate": 0.0
+      }
+    },
+    {
+      "line_id": "Factory-95",
+      "assignment": {
+        "department": "製作課",
+        "line": "CVJﾊﾞﾘ取りﾁｬﾝﾌｧ係",
+        "supervisor": {
+          "department": "",
+          "name": "リーダー 有吉 秀人",
+          "phone": "086-724-5330"
+        }
+      },
+      "job": {
+        "description": "CVJバリ取りチャンファ等速ジョイント旋削加工",
+        "description2": "",
+        "hourly_rate": 0.0
+      }
+    },
+    {
+      "line_id": "Factory-96",
+      "assignment": {
+        "department": "製作課",
+        "line": "CVJ切欠きｺｯﾀ係",
+        "supervisor": {
+          "department": "",
+          "name": "リーダー 有吉 秀人",
+          "phone": "086-724-5330"
+        }
+      },
+      "job": {
+        "description": "ＣＶＪ切欠きコッタ等速ジョイント旋削加工",
+        "description2": "",
+        "hourly_rate": 0.0
+      }
+    }
+  ],
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "岡山事業部",
+      "name": "部長　景森　敦士",
+      "phone": "052-938-8840"
+    },
+    "complaint_handler": {
+      "department": "営業部",
+      "name": "取締役部長 中山　欣英",
+      "phone": "052-938-8840"
+    }
+  },
+  "schedule": {
+    "work_hours": "昼勤：7時00分～15時30分　夜勤：19時00分～3時30分",
+    "break_time": "昼勤：11時00分～11時45分 まで    夜勤：23時00分～23時45分　まで　（45分）",
+    "calendar": "月～金　(シフトに準ずる）休日は、土曜日・日曜日・年末年始（12月29日～1月5日)・GW(4月27日～5月4日)・夏季休暇（8月10日～8月17日)",
+    "start_date": "2024-10-01 00:00:00",
+    "end_date": "2025-09-30 00:00:00",
+    "conflict_date": "2027-10-01 00:00:00",
+    "non_work_day_labor": "１ヶ月に２日の範囲内で命ずることができる。",
+    "overtime_labor": "3時間/日、42時間/月、320時間/年迄とする。但し、特別条項の申請により、80時間/月、720時間/年迄延長できる。申請は6回/年迄とする。",
+    "time_unit": "15.0"
+  },
+  "payment": {
+    "closing_date": "15日",
+    "payment_date": "当月末日",
+    "bank_account": "愛知銀行　当知支店　普通2075479　名義人　ユニバーサル企画（株）",
+    "worker_closing_date": "１５日",
+    "worker_payment_date": "１５日",
+    "worker_calendar": "土曜日・日曜日・年末年始（12月31日～1月8日)・GW(4月29日～5月7日)・夏季休暇（8月12日～8月20日)"
+  },
+  "agreement": {
+    "period": "2025-03-31 00:00:00",
+    "explainer": ""
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "factory_id": "瑞陵精機株式会社_恵那工場",
+  "client_company": {
+    "name": "\t瑞陵精機株式会社",
+    "address": "岐阜県恵那市武並町新竹折８９番地",
+    "phone": "(0573)28-3153",
+    "responsible_person": {
+      "department": "製作課",
+      "name": "主任　山口　アデルソン",
+      "phone": "(0573)28-3153"
+    },
+    "complaint_handler": {
+      "department": "製作課",
+      "name": "主任　山口　アデルソン",
+      "phone": "(0573)28-3153"
+    }
+  },
+  "plant": {
+    "name": "恵那工場",
+    "address": "岐阜県恵那市武並町新竹折８９番地",
+    "phone": "(0573)28-3153"
+  },
+  "lines": [
+    {
+      "line_id": "Factory-01",
+      "assignment": {
+        "department": "製造課",
+        "line": "等速ジョイント",
+        "supervisor": {
+          "department": "恵那工場",
+          "name": "工場長　山田　浩二",
+          "phone": "(0573)28-3153"
+        }
+      },
+      "job": {
+        "description": "ＮＣ旋盤、マシニングセンター等の工作機械を使いオペレーターとして製造ラインで製品を加工",
+        "description2": "",
+        "hourly_rate": 1600.0
+      }
+    },
+    {
+      "line_id": "Factory-02",
+      "assignment": {
+        "department": "製造課",
+        "line": "等速ジョイント",
+        "supervisor": {
+          "department": "恵那工場",
+          "name": "工場長　住田　貴雄",
+          "phone": "(0573)28-3153"
+        }
+      },
+      "job": {
+        "description": "ＮＣ旋盤、マシニングセンター等の工作機械を使いオペレーターとして製造ラインで製品を加工",
+        "description2": "",
+        "hourly_rate": 1600.0
+      }
+    }
+  ],
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "営業部",
+      "name": "取締役 ブウ　ティ　サウ",
+      "phone": "052-938-8840"
+    },
+    "complaint_handler": {
+      "department": "営業部",
+      "name": "取締役部長 中山　欣英",
+      "phone": "052-938-8840"
+    }
+  },
+  "schedule": {
+    "work_hours": "昼勤：7時00分～15時30分　夜勤：19時00分～3時30分",
+    "break_time": "昼勤：11時00分～11時45分 まで    夜勤：23時00分～23時45分　まで　（45分）",
+    "calendar": "月～金　（祝日、年末年始、夏季休業を除く。）　4勤2休シフト　　別紙ｶﾚﾝﾀﾞｰの通り",
+    "start_date": "2021-10-01 00:00:00",
+    "end_date": "2022-09-30 00:00:00",
+    "conflict_date": "2023-09-30 00:00:00",
+    "non_work_day_labor": "１ヶ月に２日の範囲内で命ずることができる。",
+    "overtime_labor": "3時間/日、42時間/月、320時間/年迄とする。但し、特別条項の申請により、80時間/月、720時間/年迄延長できる。申請は6回/年迄とする。",
+    "time_unit": "15.0"
+  },
+  "payment": {
+    "closing_date": "20日",
+    "payment_date": "当月末日",
+    "bank_account": "愛知銀行　当知支店　普通2075479　名義人　ユニバーサル企画（株）",
+    "worker_closing_date": "20日",
+    "worker_payment_date": "15日",
+    "worker_calendar": "土曜日・日曜日・年末年始（12月30日～1月7日)・GW(4月28日～5月5日)・夏季休暇（8月11日～8月18日)"
+  },
+  "agreement": {
+    "period": "2025-03-31 00:00:00",
+    "explainer": ""
+  }
+}

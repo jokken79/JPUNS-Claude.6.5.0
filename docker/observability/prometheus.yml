@@ -1,0 +1,66 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'uns-claudejp'
+    environment: 'docker-compose'
+
+# Load alerting rules
+rule_files:
+  - '/etc/prometheus/prometheus-alerts.yml'
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+  # Backend FastAPI application
+  - job_name: 'backend'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['backend:8000']
+        labels:
+          service: 'backend'
+    metrics_path: '/metrics'
+
+  # OpenTelemetry Collector metrics
+  - job_name: 'otel-collector'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['otel-collector:8888']
+        labels:
+          service: 'otel-collector'
+    metrics_path: '/metrics'
+
+  # Tempo metrics
+  - job_name: 'tempo'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['tempo:3200']
+        labels:
+          service: 'tempo'
+    metrics_path: '/metrics'
+
+  # PostgreSQL metrics (via postgres_exporter if added)
+  # - job_name: 'postgres'
+  #   static_configs:
+  #     - targets: ['postgres-exporter:9187']
+  #       labels:
+  #         service: 'postgres'
+
+  # Redis metrics (via redis_exporter if added)
+  # - job_name: 'redis'
+  #   static_configs:
+  #     - targets: ['redis-exporter:9121']
+  #       labels:
+  #         service: 'redis'
+
+# Alertmanager configuration (optional)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets: ['alertmanager:9093']

@@ -1,0 +1,148 @@
+{
+  "factory_id": "Factory-01",
+  "name": "Toyota Aichi Factory",
+  "contact": {
+    "address": "愛知県豊田市トヨタ町1番地",
+    "phone": "0565-28-2121",
+    "contact_person": "田中太郎",
+    "email": "contact@toyota-factory.jp"
+  },
+  "working_hours": {
+    "shifts": [
+      {
+        "shift_id": "asa",
+        "shift_name": "朝番",
+        "start_time": "08:00",
+        "end_time": "17:00",
+        "break_minutes": 60,
+        "jikyu_tanka": 1500,
+        "night_premium": false
+      },
+      {
+        "shift_id": "hiru",
+        "shift_name": "昼番",
+        "start_time": "16:00",
+        "end_time": "01:00",
+        "break_minutes": 60,
+        "jikyu_tanka": 1650,
+        "night_premium": true,
+        "night_start": "22:00",
+        "night_end": "05:00"
+      },
+      {
+        "shift_id": "yoru",
+        "shift_name": "夜番",
+        "start_time": "00:00",
+        "end_time": "09:00",
+        "break_minutes": 60,
+        "jikyu_tanka": 1800,
+        "night_premium": true,
+        "night_start": "22:00",
+        "night_end": "05:00"
+      }
+    ]
+  },
+  "overtime_rules": {
+    "overtime_25": {
+      "description": "Horas extras normales (25%)",
+      "rate": 0.25,
+      "applies_after_hours": 8
+    },
+    "overtime_35": {
+      "description": "Horas extras festivos (35%)",
+      "rate": 0.35,
+      "applies_on": ["sunday", "national_holiday"]
+    },
+    "night_shift": {
+      "description": "深夜手当 (25%)",
+      "rate": 0.25,
+      "time_range": {
+        "start": "22:00",
+        "end": "05:00"
+      }
+    }
+  },
+  "bonuses": {
+    "attendance_bonus": {
+      "enabled": true,
+      "description": "Bono de asistencia perfecta",
+      "amount": 10000,
+      "conditions": {
+        "no_absences": true,
+        "full_month": true
+      }
+    },
+    "gasoline_allowance": {
+      "enabled": true,
+      "description": "Subsidio de gasolina",
+      "amount_per_day": 500,
+      "applies_to_positions": ["driver", "technician"]
+    },
+    "production_bonus": {
+      "enabled": false,
+      "description": "Bono de producción",
+      "calculation": "based_on_output"
+    }
+  },
+  "holidays": {
+    "national_holidays": true,
+    "company_holidays": [
+      "2025-12-29",
+      "2025-12-30",
+      "2025-12-31",
+      "2026-01-01",
+      "2026-01-02",
+      "2026-01-03"
+    ],
+    "holiday_work_premium": 0.35
+  },
+  "attendance_rules": {
+    "late_penalty": {
+      "enabled": true,
+      "grace_minutes": 5,
+      "penalty_per_occurrence": 1000
+    },
+    "early_leave_penalty": {
+      "enabled": true,
+      "penalty_per_occurrence": 1000
+    },
+    "absence_policy": {
+      "advance_notice_hours": 24,
+      "penalty_no_notice": 5000
+    }
+  },
+  "apartment_support": {
+    "enabled": true,
+    "subsidy_percentage": 50,
+    "max_subsidy_amount": 30000,
+    "conditions": {
+      "min_work_days_per_month": 20,
+      "min_employment_months": 3
+    }
+  },
+  "transportation": {
+    "company_bus": true,
+    "bus_routes": ["Route A - Nagoya Station", "Route B - Okazaki"],
+    "bicycle_parking": true,
+    "car_parking": true,
+    "parking_fee": 0
+  },
+  "payroll_settings": {
+    "pay_day": 25,
+    "pay_calculation_cutoff": 20,
+    "minimum_work_hours_for_full_pay": 160,
+    "deductions": {
+      "social_insurance": true,
+      "health_insurance": true,
+      "unemployment_insurance": true,
+      "income_tax": true
+    }
+  },
+  "timer_card_format": {
+    "type": "pdf_table",
+    "columns": ["date", "employee_id", "name", "clock_in", "clock_out", "break", "total_hours", "notes"],
+    "date_format": "YYYY/MM/DD",
+    "time_format": "HH:MM"
+  },
+  "notes": "Esta fábrica tiene 3 turnos rotativos. Los empleados deben llegar 10 minutos antes del inicio del turno."
+}

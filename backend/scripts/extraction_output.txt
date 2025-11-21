@@ -1,0 +1,132 @@
+2025-11-17 19:23:53,267 - INFO - ================================================================================
+2025-11-17 19:23:53,267 - INFO - URGENT PHOTO EXTRACTION - ALL CANDIDATES
+2025-11-17 19:23:53,267 - INFO - ================================================================================
+2025-11-17 19:23:53,268 - INFO - Database: D:\UNS-ClaudeJP-6.0.0\BASEDATEJP\ユニバーサル企画㈱データベースv25.3.24_be.accdb
+2025-11-17 19:23:53,268 - INFO - Table: T_履歴書
+2025-11-17 19:23:53,268 - INFO - Photo field: 写真
+2025-11-17 19:23:53,268 - INFO - 
+2025-11-17 19:23:53,268 - INFO - Initializing COM...
+2025-11-17 19:23:53,268 - INFO - Creating Access application...
+2025-11-17 19:23:54,250 - INFO - Opening database: D:\UNS-ClaudeJP-6.0.0\BASEDATEJP\ユニバーサル企画㈱データベースv25.3.24_be.accdb
+2025-11-17 19:23:54,548 - INFO - Successfully connected to Access database
+2025-11-17 19:23:54,548 - INFO - Executing: SELECT * FROM [T_履歴書]
+2025-11-17 19:23:54,559 - INFO - Total records: 1,156
+2025-11-17 19:23:54,559 - INFO - 
+2025-11-17 19:23:55,113 - INFO - Total fields: 172
+2025-11-17 19:23:55,113 - INFO - 
+2025-11-17 19:23:55,113 - INFO - Photo field found at index: 8
+2025-11-17 19:23:55,113 - INFO - 
+2025-11-17 19:23:55,113 - INFO - Processing records...
+2025-11-17 19:23:55,113 - INFO - 
+2025-11-17 19:25:45,148 - INFO - Progress: 10% (116 / 1,156)
+2025-11-17 19:27:23,121 - INFO - Progress: 20% (232 / 1,156)
+2025-11-17 19:29:04,488 - INFO - Progress: 30% (347 / 1,156)
+2025-11-17 19:30:42,854 - INFO - Progress: 40% (463 / 1,156)
+2025-11-17 19:32:28,415 - INFO - Progress: 50% (578 / 1,156)
+2025-11-17 19:34:18,649 - INFO - Progress: 60% (694 / 1,156)
+2025-11-17 19:36:08,917 - INFO - Progress: 70% (810 / 1,156)
+2025-11-17 19:37:59,338 - INFO - Progress: 80% (925 / 1,156)
+2025-11-17 19:39:47,579 - INFO - Progress: 90% (1,041 / 1,156)
+2025-11-17 19:41:33,813 - INFO - Progress: 100% (1,156 / 1,156)
+2025-11-17 19:41:34,733 - INFO - 
+2025-11-17 19:41:34,733 - INFO - ================================================================================
+2025-11-17 19:41:34,733 - INFO - EXTRACTION SUMMARY
+2025-11-17 19:41:34,733 - INFO - ================================================================================
+2025-11-17 19:41:34,733 - INFO - Total records: 1,156
+2025-11-17 19:41:34,733 - INFO - Processed: 1,156
+2025-11-17 19:41:34,733 - INFO - With photos: 1,139
+2025-11-17 19:41:34,733 - INFO - Without photos: 17
+2025-11-17 19:41:34,733 - INFO - Extraction successful: 1,139
+2025-11-17 19:41:34,733 - INFO - Extraction failed: 0
+2025-11-17 19:41:34,733 - INFO - Errors: 0
+2025-11-17 19:41:34,733 - INFO - Success rate: 100.0%
+2025-11-17 19:41:34,733 - INFO - ================================================================================
+2025-11-17 19:41:34,733 - INFO - Closing Access...
+2025-11-17 19:41:37,251 - INFO - 
+2025-11-17 19:41:37,251 - INFO - Saving to JSON...
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'cp932' codec can't encode character '\u2713' in position 33: illegal multibyte sequence
+Call stack:
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 496, in <module>
+    exit_code = main()
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 462, in main
+    if not extractor.save_to_json():
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 372, in save_to_json
+    logger.info(f"\u2713 Saved to: {OUTPUT_JSON}")
+Message: '\u2713 Saved to: D:\\UNS-ClaudeJP-6.0.0\\config\\all_candidates_with_photos.json'
+Arguments: ()
+2025-11-17 19:41:39,237 - INFO - \u2713 Saved to: D:\UNS-ClaudeJP-6.0.0\config\all_candidates_with_photos.json
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'cp932' codec can't encode character '\u2713' in position 33: illegal multibyte sequence
+Call stack:
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 496, in <module>
+    exit_code = main()
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 462, in main
+    if not extractor.save_to_json():
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 373, in save_to_json
+    logger.info(f"\u2713 File size: {file_size_mb:.2f} MB")
+Message: '\u2713 File size: 483.25 MB'
+Arguments: ()
+2025-11-17 19:41:39,246 - INFO - \u2713 File size: 483.25 MB
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'cp932' codec can't encode character '\u2713' in position 33: illegal multibyte sequence
+Call stack:
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 496, in <module>
+    exit_code = main()
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 462, in main
+    if not extractor.save_to_json():
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 374, in save_to_json
+    logger.info(f"\u2713 Total candidates: {len(self.candidates):,}")
+Message: '\u2713 Total candidates: 1,156'
+Arguments: ()
+2025-11-17 19:41:39,247 - INFO - \u2713 Total candidates: 1,156
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'cp932' codec can't encode character '\u2713' in position 33: illegal multibyte sequence
+Call stack:
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 496, in <module>
+    exit_code = main()
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 468, in main
+    extractor.generate_report()
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 428, in generate_report
+    logger.info(f"\u2713 Report saved to: {REPORT_FILE}")
+Message: '\u2713 Report saved to: D:\\UNS-ClaudeJP-6.0.0\\config\\extraction_report.txt'
+Arguments: ()
+2025-11-17 19:41:39,248 - INFO - \u2713 Report saved to: D:\UNS-ClaudeJP-6.0.0\config\extraction_report.txt
+
+================================================================================
+URGENT PHOTO EXTRACTION - ALL 1,156 CANDIDATES
+================================================================================
+
+
+================================================================================
+Traceback (most recent call last):
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 496, in <module>
+    exit_code = main()
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 473, in main
+    print("\u2705 EXTRACTION COMPLETED SUCCESSFULLY")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'cp932' codec can't encode character '\u2705' in position 0: illegal multibyte sequence
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\UNS-ClaudeJP-6.0.0\backend\scripts\extract_all_photos_urgente.py", line 502, in <module>
+    print(f"\n\n\u274c FATAL ERROR: {e}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'cp932' codec can't encode character '\u274c' in position 4: illegal multibyte sequence

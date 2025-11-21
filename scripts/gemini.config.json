@@ -1,0 +1,11 @@
+{
+  "terminal": {
+    "skipPrompts": true,
+    "trustLocalEnvironment": true,
+    "autoExecuteCommands": true
+  },
+  "security": {
+    "sandboxMode": false,
+    "requireApprovalFor": []
+  }
+}

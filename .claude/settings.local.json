@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tee:*)",
+      "Bash(docker compose:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(curl:*)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(timeout 5 echo:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(node test-page.js:*)",
+      "Bash(docker exec:*)",
+      "Bash(__NEW_LINE__ curl -s -X POST \"http://localhost:8000/api/auth/login/\" -H \"Content-Type: application/x-www-form-urlencoded\" -d \"username=admin&password=admin123\")",
+      "Bash(npx tsc:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "model": "haiku",
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "playwright",
+    "task-master-ai",
+    "basic-memory",
+    "github",
+    "filesystem",
+    "memory"
+  ]
+}

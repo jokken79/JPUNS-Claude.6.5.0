@@ -1,0 +1,111 @@
+{
+  "version": "6.0.0",
+  "updated": "2025-11-19",
+  "description": "Rate limiting configuration for UNS-ClaudeJP endpoints",
+  "storage": {
+    "backend": "redis",
+    "url": "redis://redis:6379/0",
+    "strategy": "fixed-window"
+  },
+  "defaults": {
+    "global_limit": "100/minute",
+    "description": "Default limit applied to all endpoints unless overridden"
+  },
+  "critical_endpoints": [
+    {
+      "endpoint": "/api/auth/login",
+      "method": "POST",
+      "limit": "5/minute",
+      "burst_limit": null,
+      "reason": "Brute force protection for authentication",
+      "file": "backend/app/api/auth.py",
+      "line": 73,
+      "retry_after_seconds": 60,
+      "priority": "CRITICAL"
+    },
+    {
+      "endpoint": "/api/salary/calculate",
+      "method": "POST",
+      "limit": "10/hour",
+      "burst_limit": null,
+      "reason": "Expensive salary calculation operation",
+      "file": "backend/app/api/salary.py",
+      "line": 146,
+      "retry_after_seconds": 3600,
+      "priority": "HIGH"
+    },
+    {
+      "endpoint": "/api/timer-cards/upload",
+      "method": "POST",
+      "limit": "20/hour",
+      "burst_limit": null,
+      "reason": "OCR processing is expensive",
+      "file": "backend/app/api/timer_cards.py",
+      "line": 314,
+      "retry_after_seconds": 3600,
+      "priority": "HIGH"
+    }
+  ],
+  "ai_gateway_endpoints": [
+    {
+      "endpoint": "/api/ai/gemini",
+      "method": "POST",
+      "daily_limit": "100/day",
+      "burst_limit": "10/minute",
+      "reason": "Gemini API quota management",
+      "priority": "MEDIUM"
+    },
+    {
+      "endpoint": "/api/ai/openai",
+      "method": "POST",
+      "daily_limit": "50/day",
+      "burst_limit": "5/minute",
+      "reason": "OpenAI API quota management",
+      "priority": "MEDIUM"
+    },
+    {
+      "endpoint": "/api/ai/claude",
+      "method": "POST",
+      "daily_limit": "50/day",
+      "burst_limit": "5/minute",
+      "reason": "Claude API quota management",
+      "priority": "MEDIUM"
+    },
+    {
+      "endpoint": "/api/ai/cli",
+      "method": "POST",
+      "daily_limit": "200/day",
+      "burst_limit": "20/minute",
+      "reason": "Local CLI - no external cost",
+      "priority": "LOW"
+    },
+    {
+      "endpoint": "/api/ai/batch",
+      "method": "POST",
+      "daily_limit": "20/day",
+      "burst_limit": null,
+      "reason": "Batch operations are resource intensive",
+      "priority": "HIGH"
+    }
+  ],
+  "monitoring": {
+    "log_violations": true,
+    "log_level": "WARNING",
+    "metrics_enabled": true,
+    "prometheus_counter": "rate_limit_exceeded_total",
+    "alert_threshold": 100,
+    "alert_window": "5m"
+  },
+  "whitelist": {
+    "enabled": false,
+    "ips": [],
+    "comment": "Add trusted IPs here to bypass rate limiting"
+  },
+  "error_response": {
+    "include_retry_after": true,
+    "include_reset_timestamp": true,
+    "include_endpoint": true,
+    "include_documentation_link": true,
+    "documentation_url": "https://github.com/jokken79/UNS-ClaudeJP-6.0.0/blob/main/RATE_LIMITING_IMPLEMENTATION.md"
+  }
+}

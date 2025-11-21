@@ -1,0 +1,32 @@
+# Nginx Reverse Proxy Dockerfile
+# UNS-ClaudeJP 6.0.0
+#
+# Purpose: Reverse proxy and load balancer for multi-service architecture
+# - Routes /api/* to FastAPI backend (with load balancing)
+# - Routes / to Next.js frontend
+# - Routes /grafana/* to Grafana observability
+# - Routes /prometheus/* to Prometheus metrics
+#
+# CRITICAL: Does NOT add CORS headers - FastAPI handles CORS
+#
+
+FROM nginx:1.25-alpine
+
+# Install basic utilities for debugging
+RUN apk add --no-cache curl
+
+# Copy nginx configuration
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+
+# Create log directory
+RUN mkdir -p /var/log/nginx
+
+# Expose HTTP and HTTPS ports
+EXPOSE 80 443
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost/nginx-health || exit 1
+
+# Start nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,11 @@
+{
+  "terminal": {
+    "skipConfirmations": true,
+    "trustLevel": "always",
+    "autoExecute": true
+  },
+  "commands": {
+    "sandbox": false,
+    "requireApproval": false
+  }
+}

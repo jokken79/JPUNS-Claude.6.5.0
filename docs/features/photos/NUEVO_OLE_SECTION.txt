@@ -1,0 +1,41 @@
+
+---
+
+## NUEVO: Solucion Fotos OLE (2025-11-11)
+
+### Problema Critico Resuelto
+
+**Documento**: SOLUCION_FOTOS_OLE_2025-11-11.md (6.1 KB)
+
+**CONTEXTO CRITICO:**
+- 1,931 fotos reparadas (1,116 candidatos + 815 empleados)
+- Bytes basura de Microsoft Access OLE removidos
+- Frontend TypeScript interface actualizado
+- Scripts de limpieza creados y documentados
+- Proceso de reinstalacion actualizado
+
+**Para**: Todos los que necesiten entender el problema de fotos OLE
+
+**Contenido**:
+- Problema y sintomas (fotos no visualizaban)
+- Causa raiz (bytes OLE antes de marcador JPEG/PNG)
+- Solucion frontend (TypeScript interface)
+- Scripts de limpieza (fix_photo_data.py, fix_employee_photos.py)
+- Proceso de verificacion completo
+- Checklist de reinstalacion
+- Prevencion futura (modificar importacion, tests)
+- Referencias tecnicas (JPEG, PNG, OLE formats)
+
+**IMPORTANTE**: Si reinstalaste el sistema y las fotos no aparecen, este es tu documento.
+
+**Ejecutar scripts:**
+```bash
+docker exec -it uns-claudejp-backend python scripts/fix_photo_data.py
+docker exec -it uns-claudejp-backend python scripts/fix_employee_photos.py
+```
+
+**Verificacion:**
+- Candidatos: http://localhost:3000/candidates (12 fotos en pagina 1)
+- Empleados: http://localhost:3000/employees (fotos en tabla virtual)
+
+---

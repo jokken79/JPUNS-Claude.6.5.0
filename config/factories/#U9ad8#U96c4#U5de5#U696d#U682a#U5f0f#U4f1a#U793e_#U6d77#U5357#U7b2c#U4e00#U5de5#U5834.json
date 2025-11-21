@@ -1,0 +1,281 @@
+{
+  "factory_id": "高雄工業株式会社_海南第一工場",
+  "client_company": {
+    "name": "高雄工業株式会社",
+    "address": "愛知県弥富市楠三丁目13番地2",
+    "phone": "0567-68-8110",
+    "responsible_person": {
+      "department": "愛知事業所",
+      "name": "部長　安藤　忍　",
+      "phone": "0567-56-6681"
+    },
+    "complaint_handler": {
+      "department": "人事広報管理部",
+      "name": "部長　山田　茂",
+      "phone": "0567-68-8110"
+    }
+  },
+  "plant": {
+    "name": "海南第一工場",
+    "address": "愛知県弥富市五斗山三丁目22番地",
+    "phone": "0567-56-6681"
+  },
+  "lines": [
+    {
+      "line_id": "Factory-48",
+      "assignment": {
+        "department": "第二営業部海南HUB営業課",
+        "line": "リフト作業",
+        "supervisor": {
+          "department": "",
+          "name": "課長　吉田　健太郎",
+          "phone": "0567-56-6681"
+        }
+      },
+      "job": {
+        "description": "鋳造材料の工場内加工ラインへの供給",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-49",
+      "assignment": {
+        "department": "製作1課",
+        "line": "E",
+        "supervisor": {
+          "department": "",
+          "name": "主任　照屋　寛国",
+          "phone": "0567-56-6681"
+        }
+      },
+      "job": {
+        "description": "中間軸ブラケットの穴あけ加工、NCプログラム修正",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-50",
+      "assignment": {
+        "department": "製作1課",
+        "line": "段取",
+        "supervisor": {
+          "department": "",
+          "name": "課長　山本　大介",
+          "phone": "0567-56-6681"
+        }
+      },
+      "job": {
+        "description": "加工機や治具・装置の設定を変更する作業",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-51",
+      "assignment": {
+        "department": "製作1課",
+        "line": "ブローチ",
+        "supervisor": {
+          "department": "",
+          "name": "主任　照屋　寛国",
+          "phone": "0567-56-6681"
+        }
+      },
+      "job": {
+        "description": "MCU部品の施削加工",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-52",
+      "assignment": {
+        "department": "製作1課",
+        "line": "スタブ",
+        "supervisor": {
+          "department": "",
+          "name": "主任　照屋　寛国",
+          "phone": "0567-56-6681"
+        }
+      },
+      "job": {
+        "description": "スタブシャフト部品の施削加工、NCプログラム修正",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-53",
+      "assignment": {
+        "department": "製作1課",
+        "line": "HUB",
+        "supervisor": {
+          "department": "",
+          "name": "課長　山本　大介",
+          "phone": "0567-56-6681"
+        }
+      },
+      "job": {
+        "description": "ハブ加工　自動ラインの機械オペレーター、NCプログラム修正",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-54",
+      "assignment": {
+        "department": "製作1課",
+        "line": "H_2次旋",
+        "supervisor": {
+          "department": "",
+          "name": "課長　山本　大介",
+          "phone": "0567-56-6681"
+        }
+      },
+      "job": {
+        "description": "ハブ加工品の2次施削、手動機械オペレーターNCプログラム修正",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-55",
+      "assignment": {
+        "department": "製作1課",
+        "line": "清掃",
+        "supervisor": {
+          "department": "",
+          "name": "課長　山本　大介",
+          "phone": "0567-56-6681"
+        }
+      },
+      "job": {
+        "description": "工場内の清掃作業",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-56",
+      "assignment": {
+        "department": "製作1課",
+        "line": "切紛・材料",
+        "supervisor": {
+          "department": "",
+          "name": "課長　山本　大介",
+          "phone": "0567-56-6681"
+        }
+      },
+      "job": {
+        "description": "金属くずの回収、自動ラインへの材料投入",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-57",
+      "assignment": {
+        "department": "製作2課",
+        "line": "熱処理",
+        "supervisor": {
+          "department": "",
+          "name": "課長　堂口　達也",
+          "phone": "0567-56-6681"
+        }
+      },
+      "job": {
+        "description": "ハブ加工品への熱処理加工作業。",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-58",
+      "assignment": {
+        "department": "海南第一品証課",
+        "line": "検査",
+        "supervisor": {
+          "department": "",
+          "name": "主任　松崎　信尚",
+          "phone": "0567-56-6681"
+        }
+      },
+      "job": {
+        "description": "施削加工品の抜き取り検査",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-59",
+      "assignment": {
+        "department": "TKE事業部",
+        "line": "TKE第一営",
+        "supervisor": {
+          "department": "",
+          "name": "課長　杉浦 勉",
+          "phone": "0567-56-6681"
+        }
+      },
+      "job": {
+        "description": "書類作成やデータ入力、電話・来客応対など",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    },
+    {
+      "line_id": "Factory-60",
+      "assignment": {
+        "department": "製作1課",
+        "line": "HUB。",
+        "supervisor": {
+          "department": "",
+          "name": "課長　堂口　達也",
+          "phone": "0567-56-6681"
+        }
+      },
+      "job": {
+        "description": "ハブ加工品の2次施削、手動機械オペレーターNCプログラム修正,梱包作業",
+        "description2": "",
+        "hourly_rate": 1650.0
+      }
+    }
+  ],
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "営業部",
+      "name": "取締役 ブウ　ティ　サウ",
+      "phone": "052-938-8840"
+    },
+    "complaint_handler": {
+      "department": "営業部",
+      "name": "取締役部長 中山　欣英",
+      "phone": "052-938-8840"
+    }
+  },
+  "schedule": {
+    "work_hours": "昼勤：7時00分～15時30分　夜勤：19時00分～3時30分",
+    "break_time": "昼勤：11時00分～11時45分 まで    夜勤：23時00分～23時45分　まで　（45分）",
+    "calendar": "月～金　(シフトに準ずる）休日は、土曜日・日曜日・年末年始（12月29日～1月5日)・GW(4月27日～5月4日)・夏季休暇（8月10日～8月17日)",
+    "start_date": "2024-10-01 00:00:00",
+    "end_date": "2025-09-30 00:00:00",
+    "conflict_date": "2026-09-30 00:00:00",
+    "non_work_day_labor": "１ヶ月に２日の範囲内で命ずることができる。",
+    "overtime_labor": "3時間/日、42時間/月、320時間/年迄とする。但し、特別条項の申請により、80時間/月、720時間/年迄延長できる。申請は6回/年迄とする。",
+    "time_unit": "15.0"
+  },
+  "payment": {
+    "closing_date": "15日",
+    "payment_date": "当月末日",
+    "bank_account": "愛知銀行　当知支店　普通2075479　名義人　ユニバーサル企画（株）",
+    "worker_closing_date": "１５日",
+    "worker_payment_date": "１５日",
+    "worker_calendar": "土曜日・日曜日・年末年始（12月30日～1月7日)・GW(4月28日～5月5日)・夏季休暇（8月11日～8月18日)"
+  },
+  "agreement": {
+    "period": "2025-03-31 00:00:00",
+    "explainer": ""
+  }
+}

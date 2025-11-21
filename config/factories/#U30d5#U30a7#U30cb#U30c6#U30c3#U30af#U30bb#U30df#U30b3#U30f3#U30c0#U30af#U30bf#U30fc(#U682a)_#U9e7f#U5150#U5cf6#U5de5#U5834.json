@@ -1,0 +1,72 @@
+{
+  "factory_id": "フェニテックセミコンダクター(株)_鹿児島工場",
+  "client_company": {
+    "name": "フェニテックセミコンダクター(株)",
+    "address": "岡山県井原市木之子町6833番地",
+    "phone": "0866-62-4121",
+    "responsible_person": {
+      "department": "管理部",
+      "name": "次長　東　真一郎",
+      "phone": "0995-74-3611"
+    },
+    "complaint_handler": {
+      "department": "製造部",
+      "name": "次長　小林　勝也",
+      "phone": "0995-74-3611"
+    }
+  },
+  "plant": {
+    "name": "鹿児島工場",
+    "address": "鹿児島県姶良郡湧水町北方1770番地1",
+    "phone": "0995-74-3611"
+  },
+  "assignment": {
+    "department": "製造部",
+    "line": "製造ライン",
+    "supervisor": {
+      "department": "製造部",
+      "name": "次長　小林　勝也",
+      "phone": "0995-74-3611"
+    }
+  },
+  "job": {
+    "description": "ウエハ製造に伴う装置オペレーション及び検査業務",
+    "description2": "",
+    "hourly_rate": 2000.0
+  },
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "営業部",
+      "name": "取締役 部長　中山　欣英",
+      "phone": "052-938-8840"
+    },
+    "complaint_handler": {
+      "department": "営業部",
+      "name": "所長　浜本　和法",
+      "phone": "086-259-4117"
+    }
+  },
+  "schedule": {
+    "work_hours": "昼勤：8時00分～17時00分　夜勤：20時00分～5時00分",
+    "break_time": "昼勤：12時05分～13時00分・15時00分～15時10分    夜勤：00時05分～01時00分・03時00分～03時10分",
+    "calendar": "",
+    "start_date": "2021-05-24 00:00:00",
+    "end_date": "2022-05-23 00:00:00",
+    "conflict_date": "2025-01-01 00:00:00",
+    "non_work_day_labor": "",
+    "overtime_labor": "",
+    "time_unit": "15.0"
+  },
+  "payment": {
+    "closing_date": "月末日",
+    "payment_date": "翌月25日",
+    "bank_account": "碧海信用金庫　刈谷支店　普通　6072767　名義人　ユニバーサル企画(株)",
+    "worker_closing_date": "20日",
+    "worker_payment_date": "15日",
+    "worker_calendar": "土曜日・日曜日・年末年始（12月30日～1月7日)・GW(4月28日～5月5日)・夏季休暇（8月11日～8月18日)"
+  },
+  "agreement": {
+    "period": "2025-03-31 00:00:00",
+    "explainer": ""
+  }
+}

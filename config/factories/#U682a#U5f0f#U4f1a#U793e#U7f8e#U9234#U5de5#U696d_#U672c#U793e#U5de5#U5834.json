@@ -1,0 +1,72 @@
+{
+  "factory_id": "株式会社美鈴工業_本社工場",
+  "client_company": {
+    "name": "株式会社美鈴工業",
+    "address": "愛知県小牧市大字上末969",
+    "phone": "0568-79-4145",
+    "responsible_person": {
+      "department": "厚膜事業部",
+      "name": "部長　山本雅典",
+      "phone": "0568-79-4145"
+    },
+    "complaint_handler": {
+      "department": "企画総務部　企画総務2課",
+      "name": "安達ちえみ",
+      "phone": "0568-79-4145"
+    }
+  },
+  "plant": {
+    "name": "本社工場",
+    "address": "愛知県小牧市大字上末969",
+    "phone": "0568-79-4145"
+  },
+  "assignment": {
+    "department": "SH製造課",
+    "line": "厚膜事業部",
+    "supervisor": {
+      "department": "厚膜事業部",
+      "name": "課長　高木正則",
+      "phone": "0568-79-4145"
+    }
+  },
+  "job": {
+    "description": "機械オペレーター",
+    "description2": "",
+    "hourly_rate": 1850.0
+  },
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "営業部",
+      "name": "取締役 部長　中山　欣英",
+      "phone": "052-938-8840"
+    },
+    "complaint_handler": {
+      "department": "営業部",
+      "name": "取締役 部長　中山　欣英",
+      "phone": "052-938-8840"
+    }
+  },
+  "schedule": {
+    "work_hours": "昼勤  8時30分　～ 17時30分　   　　　夜勤　19時30分　～ 4時30分",
+    "break_time": "昼勤 10:30~10:40・12:40~13:20・15:20~15:30・17:30~17:40　  　　                    夜勤 21:30~21:40・23:40~00:20・2:20~2:30・4:30~4:40",
+    "calendar": "月～金　(シフトに準ずる）休日は、土曜日・日曜日・GW(5月2日～5月6日)・夏季休暇（8月13日～8月17日)・年末年始（12月29日～1月5日)",
+    "start_date": "2025-10-08 00:00:00",
+    "end_date": "2025-11-07 00:00:00",
+    "conflict_date": "2027-10-01 00:00:00",
+    "non_work_day_labor": "１ヶ月に２日の範囲内で命ずることができる。",
+    "overtime_labor": "5時間/日、45時間/月、360時間/年迄とする。但し、特別条項の申請により、6時間/日、80時間/月、720時間/年迄延長できる。申請は6回/年迄とする。",
+    "time_unit": "15.0"
+  },
+  "payment": {
+    "closing_date": "月末日",
+    "payment_date": "翌月25日",
+    "bank_account": "あいち銀行　大曽根支店　普通2166499　名義人　ユニバーサル企画（株）",
+    "worker_closing_date": "１５日",
+    "worker_payment_date": "１５日",
+    "worker_calendar": "土曜日・日曜日・年末年始（12月30日～1月7日)・GW(4月28日～5月5日)・夏季休暇（8月11日～8月18日)"
+  },
+  "agreement": {
+    "period": "2026-03-31 00:00:00",
+    "explainer": ""
+  }
+}

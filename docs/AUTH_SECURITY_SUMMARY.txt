@@ -1,0 +1,259 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║          ANÁLISIS DE SEGURIDAD: AUTENTICACIÓN Y RBAC - RESUMEN EJECUTIVO      ║
+║                           UNS-ClaudeJP 5.4.1                                  ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. ESTADO GENERAL                                                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Críticos:      4 problemas                                                  │
+│ Altos:         4 problemas                                                  │
+│ Medios:        4 problemas                                                  │
+│ Puntuación:    5.2/10 (Requiere atención urgente)                          │
+│ Recomendación: FIX CRÍTICOS antes de usar en producción                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 2. HALLAZGOS CRÍTICOS (URGENTES)                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 🔴 AUTH-001: DEV TOKEN BYPASS                                              │
+│    Ubicación: backend/app/services/auth_service.py (líneas 451-455)        │
+│    Problema: Token "dev-admin-token-*" bypassa autenticación en dev        │
+│    Impacto:  Acceso no autorizado a endpoints protegidos                   │
+│    Acción:   ELIMINAR CÓDIGO INMEDIATAMENTE                                │
+│                                                                              │
+│ 🔴 AUTH-002: DOBLE ALMACENAMIENTO DE TOKENS                                │
+│    Ubicación: auth.py (líneas 138-143) + auth-store.ts (línea 89)         │
+│    Problema: Token en cookies + localStorage crea riesgo XSS               │
+│    Impacto:  XSS puede robar token del localStorage                        │
+│    Acción:   Usar SOLO HttpOnly cookies (no localStorage)                  │
+│                                                                              │
+│ 🔴 AUTH-003: ROLES LEGACY SIN INTEGRACIÓN                                  │
+│    Ubicación: models.py (líneas 24-25)                                     │
+│    Problema: KEITOSAN, TANTOSHA no están en jerarquía principal            │
+│    Impacto:  Inconsistencia en validación de permisos                      │
+│    Acción:   Integrar en require_role() o deprecar                         │
+│                                                                              │
+│ 🔴 AUTH-004: DIRECT ROLE COMPARISONS                                       │
+│    Ubicación: Múltiples archivos (apartments_v2.py, employees.py, etc.)   │
+│    Problema: Comparaciones de rol sin usar require_role()                  │
+│    Impacto:  Inconsistencia y posibles bypasses                            │
+│    Acción:   Reemplazar con require_role() centralizado                    │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 3. HALLAZGOS ALTOS (IMPORTANTE)                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 🟠 AUTH-005: REGISTRO ABIERTO SIN VALIDACIÓN                               │
+│    Endpoint:  POST /api/auth/register                                      │
+│    Problema:  Permite registro sin restricciones ni validación              │
+│    Impacto:   Spam, cuentas maliciosas, abuso                              │
+│    Acción:    Agregar validación de contraseña + email verification        │
+│                                                                              │
+│ 🟠 AUTH-006: RATE LIMIT DÉBIL EN LOGIN                                     │
+│    Límite:    5/minuto = 7200 intentos/día                                 │
+│    Problema:  Vulnerable a fuerza bruta                                    │
+│    Impacto:   Posibilidad de comprometer cuentas débiles                   │
+│    Acción:    Aumentar a 2-3/minuto, agregar cuenta de intentos fallidos   │
+│                                                                              │
+│ 🟠 AUTH-007: ROLES LEGACY NO EN HIERARCHY                                  │
+│    Roles:     KEITOSAN (finance), TANTOSHA (HR)                            │
+│    Problema:  No se pueden comparar en require_role()                      │
+│    Impacto:   Permisos inconsistentes entre usuarios legacy y nuevos       │
+│    Acción:    Documentar, deprecar, o integrar formalmente                 │
+│                                                                              │
+│ 🟠 AUTH-008: require_admin() SIMPLIFICADO                                  │
+│    Ubicación: deps.py (líneas 30-41)                                       │
+│    Problema:  Solo compara strings, no utiliza enums                       │
+│    Impacto:   Diferente de require_role("admin")                           │
+│    Acción:    Unificar con require_role() o usar enums                     │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 4. MATRIZ DE ROLES Y JERARQUÍA                                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ Nivel 0: SUPER_ADMIN        - Control total del sistema                   │
+│ Nivel 1: ADMIN              - Administración casi completa                 │
+│ Nivel 2: COORDINATOR        - Coordinación de recursos                    │
+│ Nivel 3: KANRININSHA        - Gerencia de oficina/HR                      │
+│ Nivel 4: EMPLOYEE           - Empleado estándar                           │
+│ Nivel 5: CONTRACT_WORKER    - Trabajador por contrato                     │
+│                                                                              │
+│ Legacy:  KEITOSAN           - Finanzas (no integrado)                      │
+│ Legacy:  TANTOSHA           - RR.HH. (no integrado)                        │
+│                                                                              │
+│ Total:   8 roles (6 estándar + 2 legacy)                                   │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 5. ENDPOINTS DE AUTENTICACIÓN                                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ ABIERTOS (Sin protección):                                                  │
+│   POST   /api/auth/register             (3/hora rate limit)                │
+│   POST   /api/auth/login                (5/min rate limit) ⚠️ DÉBIL       │
+│   POST   /api/auth/refresh              (10/min rate limit)                │
+│   GET    /                              (root endpoint)                     │
+│   GET    /api/health                    (health check)                      │
+│                                                                              │
+│ PROTEGIDOS (Requieren autenticación):                                       │
+│   GET    /api/auth/me                   ✓ OK                              │
+│   PUT    /api/auth/me                   ✓ OK                              │
+│   POST   /api/auth/change-password      ✓ OK                              │
+│   POST   /api/auth/logout               ✓ OK                              │
+│                                                                              │
+│ PROTEGIDOS (Requieren admin):                                               │
+│   GET    /api/auth/users                ✓ require_role("admin")           │
+│                                                                              │
+│ PROTEGIDOS (Requieren super_admin):                                         │
+│   DELETE /api/auth/users/{id}           ✓ require_role("super_admin")     │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 6. FLUJO DE AUTENTICACIÓN                                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ Login:                                                                       │
+│   1. POST /api/auth/login {username, password}                             │
+│   2. Backend verifica con bcrypt                                           │
+│   3. Genera access_token (8 horas)                                         │
+│   4. Genera refresh_token (30 días, guardado en DB)                        │
+│   5. Retorna en JSON + HttpOnly cookies                                    │
+│                                                                              │
+│ Requests Posteriores:                                                       │
+│   1. Frontend envía token en:                                               │
+│      - Authorization header: "Bearer {token}"                              │
+│      - O HttpOnly cookie                                                    │
+│   2. Backend valida JWT (firma, expiración, issuer, audience)              │
+│   3. Busca usuario en DB                                                   │
+│   4. Verifica is_active = True                                             │
+│   5. Ejecuta endpoint                                                       │
+│                                                                              │
+│ Refresh:                                                                     │
+│   1. POST /api/auth/refresh {refresh_token}                                │
+│   2. Backend verifica refresh_token en DB                                  │
+│   3. Revoca token viejo                                                    │
+│   4. Genera nuevo access_token y refresh_token                             │
+│   5. Token rotation (ambos renovados)                                       │
+│                                                                              │
+│ Logout:                                                                      │
+│   1. POST /api/auth/logout {refresh_token}                                 │
+│   2. Backend marca refresh_token como revocado                             │
+│   3. Limpia cookies                                                        │
+│   4. Usuario debe volver a hacer login                                     │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 7. VERIFICACIÓN DE SEGURIDAD (CHECKLIST)                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ JWT & TOKENS                                                                 │
+│   ✓ Algoritmo seguro (HS256)                                               │
+│   ✓ Claims completos (exp, iat, iss, aud, jti)                             │
+│   ✓ Verificación de firma                                                  │
+│   ✓ Verificación de expiración                                             │
+│   ✓ Refresh token en DB para revocación                                    │
+│   ✓ Token rotation (token anterior se revoca)                              │
+│   ✗ Dev token bypass activo                                                │
+│   ✗ Doble almacenamiento (localStorage + cookie)                           │
+│   ✗ Sin MFA/2FA                                                            │
+│                                                                              │
+│ CONTRASEÑAS                                                                  │
+│   ✓ Hash bcrypt (resistente a fuerza bruta)                                │
+│   ✓ Verificación segura (timing attack resistant)                          │
+│   ✓ Cambio de contraseña disponible                                        │
+│   ✗ Registro sin validación de fortaleza                                    │
+│   ✗ Sin requisitos mínimos de complejidad                                   │
+│                                                                              │
+│ ROLES Y PERMISOS                                                             │
+│   ✓ Jerarquía clara (6 roles)                                              │
+│   ✓ RBAC en base de datos                                                  │
+│   ✓ Endpoints protegidos con require_role()                                │
+│   ✓ Auditoría de tokens (user_agent, ip_address)                           │
+│   ✓ 54 páginas con control granular                                        │
+│   ✗ Roles legacy sin integración                                           │
+│   ✗ Direct role checks en algunos endpoints                                │
+│   ✗ Inconsistencia string vs enum                                          │
+│   ✗ Permisos DB vs hardcoded pueden desincronizarse                        │
+│                                                                              │
+│ ENDPOINTS                                                                    │
+│   ✓ Rate limiting en login y registro                                      │
+│   ✓ Logout revoca refresh tokens                                           │
+│   ✓ Logout from all devices disponible                                     │
+│   ✓ Health check sin autenticación (normal)                                │
+│   ✗ Registro abierto sin validación                                        │
+│   ✗ Rate limit débil (5/min = 7200/día)                                    │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 8. PLAN DE CORRECCIÓN (PRIORIDAD)                                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ INMEDIATO (Hoy):                                                             │
+│   [ ] Eliminar dev token bypass (auth_service.py:451-455)                  │
+│   [ ] Remover token de localStorage (guardar solo en cookies)              │
+│   [ ] Documentar roles legacy y su estado                                  │
+│                                                                              │
+│ CORTO PLAZO (Esta semana):                                                  │
+│   [ ] Unificar validación de roles (usar require_role)                     │
+│   [ ] Aumentar rate limit login a 2-3/minuto                               │
+│   [ ] Agregar validación de contraseña en registro                         │
+│   [ ] Agregar email verification                                           │
+│                                                                              │
+│ MEDIANO PLAZO (Este mes):                                                   │
+│   [ ] Integrar roles legacy en jerarquía                                    │
+│   [ ] Sincronizar permisos DB vs hardcoded                                  │
+│   [ ] Agregar audit log de autenticación                                   │
+│   [ ] Implementar MFA/2FA                                                  │
+│                                                                              │
+│ LARGO PLAZO (Este trimestre):                                               │
+│   [ ] OAuth2 integración                                                    │
+│   [ ] Session management mejorado                                          │
+│   [ ] Análisis de seguridad profundo                                       │
+│   [ ] Penetration testing                                                  │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 9. ARCHIVOS CLAVE A REVISAR                                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ Críticos:                                                                    │
+│   /home/user/UNS-ClaudeJP-5.4.1/backend/app/services/auth_service.py      │
+│   /home/user/UNS-ClaudeJP-5.4.1/backend/app/api/auth.py                   │
+│   /home/user/UNS-ClaudeJP-5.4.1/frontend/stores/auth-store.ts              │
+│                                                                              │
+│ Importantes:                                                                 │
+│   /home/user/UNS-ClaudeJP-5.4.1/backend/app/api/role_permissions.py        │
+│   /home/user/UNS-ClaudeJP-5.4.1/backend/app/models/models.py               │
+│   /home/user/UNS-ClaudeJP-5.4.1/backend/app/api/deps.py                    │
+│   /home/user/UNS-ClaudeJP-5.4.1/frontend/lib/api.ts                        │
+│                                                                              │
+│ Por Revisar:                                                                 │
+│   /home/user/UNS-ClaudeJP-5.4.1/backend/app/api/apartments_v2.py           │
+│   /home/user/UNS-ClaudeJP-5.4.1/backend/app/api/employees.py               │
+│   /home/user/UNS-ClaudeJP-5.4.1/backend/app/api/salary.py                  │
+│   /home/user/UNS-ClaudeJP-5.4.1/backend/app/api/timer_cards.py             │
+│   /home/user/UNS-ClaudeJP-5.4.1/backend/app/api/yukyu.py                   │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+
+CONCLUSIÓN: El sistema tiene una arquitectura de autenticación sólida con JWT,
+bcrypt y RBAC, pero presenta vulnerabilidades críticas (dev token bypass, 
+doble almacenamiento de tokens) e inconsistencias (roles legacy, direct checks,
+string vs enum). Requiere correcciones URGENTES antes de usar en producción.
+
+Análisis completo: /home/user/UNS-ClaudeJP-5.4.1/docs/auth_security_analysis.md
+
+═══════════════════════════════════════════════════════════════════════════════

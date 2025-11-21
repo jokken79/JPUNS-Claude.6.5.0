@@ -1,0 +1,31 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Modern gradient background circle -->
+  <circle cx="64" cy="64" r="64" fill="url(#gradient1)"/>
+
+  <!-- Gradient definitions -->
+  <defs>
+    <linearGradient id="gradient1" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#9333EA"/>
+      <stop offset="50%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+    <linearGradient id="textGradient" x1="0" y1="0" x2="100" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F5F3FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- UNS Text with modern typography -->
+  <text x="64" y="75" font-family="Arial, sans-serif" font-size="42" font-weight="bold" text-anchor="middle" fill="url(#textGradient)">
+    UNS
+  </text>
+
+  <!-- Decorative elements - abstract shapes -->
+  <path d="M 30 45 Q 40 35 50 45" stroke="white" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 78 45 Q 88 35 98 45" stroke="white" stroke-width="2" fill="none" opacity="0.6"/>
+
+  <!-- Small accent circles -->
+  <circle cx="64" cy="30" r="3" fill="white" opacity="0.8"/>
+  <circle cx="50" cy="36" r="2" fill="white" opacity="0.6"/>
+  <circle cx="78" cy="36" r="2" fill="white" opacity="0.6"/>
+</svg>
