@@ -1,7 +1,7 @@
 'use client';
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { ErrorDisplay, ChunkLoadError, NetworkError, AuthError } from '@/components/error-display';
+import { ErrorDisplay, ChunkLoadError, NetworkError, AuthError } from '@/components/error-state';
 
 interface ErrorBoundaryProps {
   children: ReactNode;

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { ErrorDisplay } from '@/components/error-display';
+import { ErrorDisplay } from '@/components/error-state';
 
 interface GlobalErrorProps {
   error: Error & { digest?: string };
