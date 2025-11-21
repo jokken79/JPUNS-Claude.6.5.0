@@ -1,0 +1,377 @@
+# ============================================
+# UNS-ClaudeJP 6.0.0 - .gitignore
+# ============================================
+
+# ==========================================
+# SECURITY - NEVER COMMIT THESE
+# ==========================================
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+*.key
+*.pem
+*.p12
+credentials.json
+secrets.json
+config/secrets/
+
+# ==========================================
+# Python Backend
+# ==========================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Flask instance folder
+instance/
+
+# Scrapy stuff
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# ==========================================
+# Node.js Frontend
+# ==========================================
+# Dependencies
+node_modules/
+jspm_packages/
+bower_components/
+
+# Testing
+coverage/
+*.lcov
+.nyc_output
+
+# Next.js
+.next/
+out/
+.vercel
+
+# Production
+build/
+dist/
+
+# Misc
+.DS_Store
+*.pem
+.swc/
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+lerna-debug.log*
+
+# Local env files
+.env*.local
+
+# Turbo
+.turbo
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# ==========================================
+# Docker
+# ==========================================
+# Docker volumes
+postgres_data/
+pgadmin_data/
+redis_data/
+grafana_data/
+prometheus_data/
+tempo_data/
+backups/
+
+# Docker files
+docker-compose.override.yml
+
+# ==========================================
+# Database
+# ==========================================
+# PostgreSQL
+*.sql
+*.dump
+*.backup
+*.db
+*.sqlite
+*.sqlite3
+
+# Exceptions - keep schema files
+!backend/alembic/versions/*.sql
+!docs/database/*.sql
+
+# ==========================================
+# IDEs and Editors
+# ==========================================
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+.history/
+*.vsix
+
+# Cursor
+.cursor/
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# ==========================================
+# Operating System
+# ==========================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ==========================================
+# Logs
+# ==========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ==========================================
+# Temporary Files
+# ==========================================
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.swp
+*.cache
+
+# ==========================================
+# OCR and Uploads
+# ==========================================
+# Uploaded files (keep structure, ignore content)
+backend/uploads/*
+!backend/uploads/.gitkeep
+frontend/public/uploads/*
+!frontend/public/uploads/.gitkeep
+
+# OCR temporary files
+backend/ocr_temp/
+backend/temp_photos/
+
+# ==========================================
+# Testing
+# ==========================================
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# ==========================================
+# Documentation (Generated)
+# ==========================================
+# Keep markdown files but ignore generated docs
+docs/api-generated/
+docs/_site/
+
+# ==========================================
+# Project Specific
+# ==========================================
+# Import data (Excel files with real data)
+backend/data/employee_master.xlsm
+backend/data/candidates/
+!backend/data/candidates/.gitkeep
+
+# Backup files
+*.backup
+backup_*.sql
+restore_*.sql
+
+# Local scripts (personal automation)
+scripts/local/
+
+# ==========================================
+# AI Tools
+# ==========================================
+# Keep .claude/ but ignore some generated files
+.claude/cache/
+.claude/logs/
+
+# Copilot
+.github/copilot-chat/
+
+# ==========================================
+# Exceptions - Force Include
+# ==========================================
+# Keep important config examples
+!.env.example
+!config/.env.example
+!backend/.env.example
+!frontend/.env.example
+
+# Keep important empty directories
+!backend/uploads/.gitkeep
+!frontend/public/uploads/.gitkeep
+!backend/data/candidates/.gitkeep
+
+# Keep alembic versions
+!backend/alembic/versions/
+
+# Keep documentation
+!docs/**/*.md
+!*.md
+
+# Keep scripts
+!scripts/*.bat
+!scripts/*.ps1
+!scripts/*.sh

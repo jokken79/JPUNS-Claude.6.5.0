@@ -33,11 +33,7 @@
 
 ## 📋 Descripción
 
-<<<<<<< HEAD
-**UNS-ClaudeJP 6.0.0** es un sistema completo de gestión de recursos humanos diseñado específicamente para agencias de staffing japonesas. Versión 6.0.0 representa una transformación completa con arquitectura modular, rendimiento optimizado y configuración unificada. Maneja el ciclo completo de trabajadores temporales desde candidatos hasta empleados activos, incluyendo:
-=======
-**UNS-ClaudeJP 6.0.0** es un sistema completo de gestión de recursos humanos diseñado específicamente para agencias de staffing japonesas. Versión 6.0.0 incluye limpieza completa de código, testing automatizado, y documentación mejorada. Maneja el ciclo completo de trabajadores temporales desde candidatos hasta empleados activos, incluyendo:
->>>>>>> 0425cf50ad854eae8a50f90dba466580b3330479
+**UNS-ClaudeJP 6.0.0** es un sistema completo de gestión de recursos humanos diseñado específicamente para agencias de staffing japonesas. Versión 6.0.0 representa una transformación completa con arquitectura modular, rendimiento optimizado, configuración unificada, limpieza de código, testing automatizado y documentación mejorada. Maneja el ciclo completo de trabajadores temporales desde candidatos hasta empleados activos, incluyendo:
 
 - **Gestión de Candidatos (履歴書/Rirekisho)** con OCR japonés
 - **Empleados de Dispatch (派遣社員)** y asignaciones

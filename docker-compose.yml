@@ -1,0 +1,314 @@
+version: '3.8'
+
+# ============================================
+# UNS-ClaudeJP 6.0.0 - Docker Compose
+# 12 Services Architecture
+# ============================================
+
+networks:
+  uns-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  grafana_data:
+  prometheus_data:
+  tempo_data:
+  backup_data:
+
+services:
+  # ==========================================
+  # 1. PostgreSQL Database
+  # ==========================================
+  db:
+    image: postgres:15-alpine
+    container_name: uns-claudejp-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - uns-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # 2. Redis Cache
+  # ==========================================
+  redis:
+    image: redis:7-alpine
+    container_name: uns-claudejp-redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - uns-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # 3. Backend (FastAPI)
+  # ==========================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: uns-claudejp-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      SECRET_KEY: ${SECRET_KEY}
+      FRONTEND_URL: ${FRONTEND_URL}
+      AZURE_CV_ENDPOINT: ${AZURE_CV_ENDPOINT}
+      AZURE_CV_KEY: ${AZURE_CV_KEY}
+    volumes:
+      - ./backend:/app
+      - ./backend/uploads:/app/uploads
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - uns-network
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ==========================================
+  # 4. Frontend (Next.js)
+  # ==========================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: uns-claudejp-frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - uns-network
+    command: npm run dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ==========================================
+  # 5. Adminer (Database UI)
+  # ==========================================
+  adminer:
+    image: adminer:latest
+    container_name: uns-claudejp-adminer
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+      ADMINER_DESIGN: nette
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - uns-network
+
+  # ==========================================
+  # 6. Nginx (Reverse Proxy)
+  # ==========================================
+  nginx:
+    image: nginx:alpine
+    container_name: uns-claudejp-nginx
+    restart: unless-stopped
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - uns-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==========================================
+  # 7. OpenTelemetry Collector
+  # ==========================================
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    container_name: uns-claudejp-otel
+    restart: unless-stopped
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./config/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4317:4317"  # OTLP gRPC
+      - "4318:4318"  # OTLP HTTP
+    networks:
+      - uns-network
+
+  # ==========================================
+  # 8. Tempo (Distributed Tracing)
+  # ==========================================
+  tempo:
+    image: grafana/tempo:latest
+    container_name: uns-claudejp-tempo
+    restart: unless-stopped
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./config/tempo/tempo.yaml:/etc/tempo.yaml
+      - tempo_data:/var/tempo
+    ports:
+      - "3200:3200"  # Tempo
+      - "4317"       # OTLP gRPC
+      - "4318"       # OTLP HTTP
+    networks:
+      - uns-network
+
+  # ==========================================
+  # 9. Prometheus (Metrics)
+  # ==========================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: uns-claudejp-prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=${PROMETHEUS_RETENTION_TIME:-15d}'
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - uns-network
+
+  # ==========================================
+  # 10. Grafana (Dashboards)
+  # ==========================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: uns-claudejp-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      GF_INSTALL_PLUGINS: grafana-clock-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./config/grafana/datasources:/etc/grafana/provisioning/datasources
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+      - tempo
+    networks:
+      - uns-network
+
+  # ==========================================
+  # 11. Backup Service
+  # ==========================================
+  backup:
+    image: postgres:15-alpine
+    container_name: uns-claudejp-backup
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      BACKUP_SCHEDULE: ${BACKUP_SCHEDULE:-0 2 * * *}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-30}
+    volumes:
+      - backup_data:/backups
+      - ./scripts/backup.sh:/backup.sh
+    command: /bin/sh -c "while true; do sleep 86400; done"
+    depends_on:
+      - db
+    networks:
+      - uns-network
+
+  # ==========================================
+  # 12. Importer (Data Initialization)
+  # ==========================================
+  importer:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: uns-claudejp-importer
+    restart: "no"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - uns-network
+    command: >
+      sh -c "
+        echo '⏳ Waiting for database...' &&
+        sleep 10 &&
+        echo '🔧 Running migrations...' &&
+        alembic upgrade head &&
+        echo '👤 Creating admin user...' &&
+        python scripts/create_admin_user.py &&
+        echo '📊 Importing demo data...' &&
+        python scripts/import_data.py &&
+        echo '✅ Initialization complete!'
+      "
+
+# ==========================================
+# NOTES
+# ==========================================
+# Para iniciar todos los servicios:
+#   docker compose up -d
+#
+# Para ver logs:
+#   docker compose logs -f
+#
+# Para detener:
+#   docker compose down
+#
+# Para reiniciar:
+#   docker compose restart
+#
+# Para rebuild:
+#   docker compose up -d --build
