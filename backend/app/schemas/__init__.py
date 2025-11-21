@@ -100,34 +100,22 @@ from app.schemas.timer_card import (
     TimerCardApprove,
 )
 
-# Salary schemas (legacy - use salary_unified for new code)
-from app.schemas.salary import (
-    SalaryCalculationBase,
-    SalaryCalculate,
-    SalaryCalculationResponse,
-    SalaryBulkCalculate,
-    SalaryBulkResult,
-    SalaryMarkPaid,
-    SalaryReport,
-    SalaryStatistics,
-)
-
-# Unified Salary schemas (NEW - recommended for all new code)
+# Salary schemas (consolidated from legacy salary.py and payroll.py)
 from app.schemas.salary_unified import (
     # Enums
     SalaryStatus,
     PayrollRunStatus,
 
     # Helper Models
-    HoursBreakdown as UnifiedHoursBreakdown,
+    HoursBreakdown,
     RatesConfiguration,
     SalaryAmounts,
-    DeductionsDetail as UnifiedDeductionsDetail,
+    DeductionsDetail,
     PayrollSummary,
-    TimerRecord as UnifiedTimerRecord,
+    TimerRecord,
 
     # Core Response
-    SalaryCalculationResponse as UnifiedSalaryCalculationResponse,
+    SalaryCalculationResponse,
 
     # Request Models
     SalaryCalculateRequest,
@@ -141,7 +129,7 @@ from app.schemas.salary_unified import (
     SalaryListResponse,
     BulkCalculateResponse,
     ValidationResult,
-    SalaryStatistics as UnifiedSalaryStatistics,
+    SalaryStatistics,
 
     # Payslip Models
     PayslipGenerateRequest,
