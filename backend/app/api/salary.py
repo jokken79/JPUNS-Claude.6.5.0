@@ -15,13 +15,18 @@ from app.core.database import get_db
 from app.core.config import settings
 from app.core.rate_limiter import limiter
 from app.models.models import SalaryCalculation, Employee, TimerCard, Factory, User
-from app.schemas.salary import (
-    SalaryCalculate, SalaryCalculationResponse, SalaryBulkCalculate,
-    SalaryBulkResult, SalaryMarkPaid, SalaryStatistics
-)
 from app.schemas.salary_unified import (
-    SalaryUpdate, MarkSalaryPaidRequest, SalaryReportFilters,
-    SalaryExportResponse, SalaryReportResponse
+    SalaryCalculateRequest,
+    SalaryCalculationResponse,
+    SalaryBulkCalculateRequest,
+    BulkCalculateResponse,
+    SalaryMarkPaidRequest,
+    SalaryStatistics,
+    SalaryUpdate,
+    MarkSalaryPaidRequest,
+    SalaryReportFilters,
+    SalaryExportResponse,
+    SalaryReportResponse
 )
 from app.schemas.base import PaginatedResponse, create_paginated_response
 from app.services.auth_service import auth_service
@@ -146,7 +151,7 @@ def calculate_employee_salary(db: Session, employee_id: int, month: int, year: i
 @limiter.limit("10/hour")  # Expensive salary calculation operation
 async def calculate_salary(
     request: Request,
-    salary_data: SalaryCalculate,
+    salary_data: SalaryCalculateRequest,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -201,9 +206,9 @@ async def calculate_salary(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.post("/calculate/bulk", response_model=SalaryBulkResult)
+@router.post("/calculate/bulk", response_model=BulkCalculateResponse)
 async def calculate_salaries_bulk(
-    bulk_data: SalaryBulkCalculate,
+    bulk_data: SalaryBulkCalculateRequest,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -248,8 +253,8 @@ async def calculate_salaries_bulk(
             errors.append(f"Employee {employee.hakenmoto_id}: {str(e)}")
     
     db.commit()
-    
-    return SalaryBulkResult(
+
+    return BulkCalculateResponse(
         total_employees=len(employees),
         successful=successful,
         failed=failed,
