@@ -5,7 +5,7 @@ import pytest
 
 
 def test_calculate_monthly_payroll_totals(app):
-    from app.services.payroll_service import payroll_service
+    from app.services.payroll.payroll_service import PayrollService
 
     timer_cards = [
         {"work_date": "2024-01-08", "clock_in": "09:00", "clock_out": "18:00"},

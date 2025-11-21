@@ -14,7 +14,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from sqlalchemy.orm import Session
 
-from app.services.payroll_service import PayrollService
+from app.services.payroll.payroll_service import PayrollService
 from app.services.yukyu_service import YukyuService
 from app.models.payroll_models import PayrollRun as PayrollRunModel
 from app.models.models import (

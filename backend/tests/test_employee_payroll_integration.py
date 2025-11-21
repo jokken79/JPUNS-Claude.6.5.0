@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from app.models.models import (
     Base, Employee, Factory, Apartment, TimerCard
 )
-from app.services.payroll_service import PayrollService
+from app.services.payroll.payroll_service import PayrollService
 
 
 @pytest.fixture

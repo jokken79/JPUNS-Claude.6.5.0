@@ -16,7 +16,7 @@ from app.core.app_exceptions import (
     DatabaseError,
     handle_exception
 )
-from app.services.payroll_service import PayrollService
+from app.services.payroll.payroll_service import PayrollService
 from app.services.config_service import PayrollConfigService, get_payroll_config_service
 from app.models.payroll_models import PayrollRun as PayrollRunModel, EmployeePayroll
 from app.models.models import Employee, YukyuRequest, RequestStatus

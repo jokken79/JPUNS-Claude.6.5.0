@@ -577,3 +577,354 @@ class PayrollService:
                 'success': False,
                 'error': str(e)
             }
+
+    def get_employee_data_for_payroll(self, employee_id: int) -> Dict[str, Any]:
+        """Fetches employee data from database for payroll calculation.
+
+        Retrieves employee information from database including factory and apartment details.
+
+        Args:
+            employee_id: ID of the employee
+
+        Returns:
+            Dictionary with employee data structured for payroll calculation
+
+        Raises:
+            ValueError: If employee not found or database session not available
+        """
+        if not self.db_session:
+            raise ValueError("Database session is required to fetch employee data")
+
+        try:
+            from app.models.models import Employee, Factory, Apartment
+
+            # Fetch employee with relationships
+            employee = (
+                self.db_session.query(Employee)
+                .filter(Employee.id == employee_id)
+                .first()
+            )
+
+            if not employee:
+                raise ValueError(f"Employee with ID {employee_id} not found")
+
+            # Get factory info
+            factory = None
+            if employee.factory_id:
+                factory = (
+                    self.db_session.query(Factory)
+                    .filter(Factory.factory_id == employee.factory_id)
+                    .first()
+                )
+
+            # Get apartment info
+            apartment = None
+            if employee.apartment_id:
+                apartment = (
+                    self.db_session.query(Apartment)
+                    .filter(Apartment.id == employee.apartment_id)
+                    .first()
+                )
+
+            # Calculate dependents from yukyu (simplified - can be enhanced)
+            dependents = 0  # This can be calculated from family data in the future
+
+            # Build structured employee data
+            employee_data = {
+                'employee_id': employee.id,
+                'name': employee.full_name_kanji,
+                'hakenmoto_id': employee.hakenmoto_id,
+                'base_hourly_rate': float(employee.jikyu) if employee.jikyu else 0.0,
+                'jikyu': float(employee.jikyu) if employee.jikyu else 0.0,  # For backward compatibility
+                'factory_id': employee.factory_id,
+                'factory': {
+                    'factory_id': employee.factory_id,
+                    'company_name': employee.company_name or (factory.company_name if factory else None),
+                    'plant_name': employee.plant_name or (factory.plant_name if factory else None),
+                    'address': factory.address if factory else None
+                },
+                'prefecture': None,
+                'apartment_id': employee.apartment_id,
+                'apartment_rent': float(employee.apartment_rent) if employee.apartment_rent else 0.0,
+                'apartment': {
+                    'id': employee.apartment_id,
+                    'apartment_code': apartment.apartment_code if apartment else None,
+                    'address': apartment.address if apartment else None,
+                    'rent': float(employee.apartment_rent) if employee.apartment_rent else 0.0
+                } if apartment else None,
+                'dependents': dependents,
+                'contract_type': employee.contract_type,
+                'hire_date': employee.hire_date.isoformat() if employee.hire_date else None,
+                'current_hire_date': employee.current_hire_date.isoformat() if employee.current_hire_date else None,
+                'hourly_rate_charged': float(employee.hourly_rate_charged) if employee.hourly_rate_charged else 0.0,
+                'position': employee.position,
+                'is_active': employee.is_active,
+                'current_status': employee.current_status,
+                'notes': employee.notes
+            }
+
+            logger.info(f"Retrieved employee data for ID {employee_id}: {employee.full_name_kanji}")
+            return employee_data
+
+        except ValueError:
+            raise
+        except Exception as e:
+            logger.error(f"Error fetching employee data for ID {employee_id}: {e}", exc_info=True)
+            raise ValueError(f"Error retrieving employee data: {str(e)}")
+
+    def get_apartment_deductions_for_month(
+        self,
+        employee_id: int,
+        year: int,
+        month: int
+    ) -> Dict[str, Any]:
+        """Obtiene las deducciones de apartamento para un empleado en un mes específico.
+
+        Consulta la tabla rent_deductions para obtener todas las deducciones de renta
+        del empleado para el mes y año especificados, incluyendo cargos adicionales.
+
+        Args:
+            employee_id: ID del empleado
+            year: Año (ej: 2025)
+            month: Mes (1-12)
+
+        Returns:
+            Diccionario con:
+            - total_amount: Monto total de deducciones de apartamento
+            - base_rent: Renta base (prorrateada o completa)
+            - additional_charges: Suma de cargos adicionales
+            - deductions: Lista detallada de deducciones
+            - apartment_id: ID del apartamento
+            - apartment_info: Información del apartamento
+
+        Raises:
+            ValueError: Si no hay conexión a base de datos
+        """
+        if not self.db_session:
+            logger.warning(f"No DB session for apartment deductions of employee {employee_id}")
+            return {
+                'total_amount': 0,
+                'base_rent': 0,
+                'additional_charges': 0,
+                'deductions': [],
+                'apartment_id': None,
+                'apartment_info': None
+            }
+
+        try:
+            from app.models.models import RentDeduction, DeductionStatus
+
+            # Consultar deducciones para este empleado en este mes
+            deductions = (
+                self.db_session.query(RentDeduction)
+                .filter(
+                    RentDeduction.employee_id == employee_id,
+                    RentDeduction.year == year,
+                    RentDeduction.month == month,
+                    RentDeduction.status.in_([DeductionStatus.PENDING, DeductionStatus.PROCESSED])
+                )
+                .all()
+            )
+
+            if not deductions:
+                logger.info(
+                    f"No apartment deductions found for employee {employee_id}, "
+                    f"period {year}-{month:02d}"
+                )
+                return {
+                    'total_amount': 0,
+                    'base_rent': 0,
+                    'additional_charges': 0,
+                    'deductions': [],
+                    'apartment_id': None,
+                    'apartment_info': None
+                }
+
+            # Sumar todos los montos
+            total_amount = sum(d.total_deduction for d in deductions)
+            total_base_rent = sum(d.base_rent for d in deductions)
+            total_additional = sum(d.additional_charges for d in deductions)
+
+            # Obtener información del apartamento
+            first_deduction = deductions[0]
+            apartment = first_deduction.apartment
+            apartment_info = {
+                'apartment_id': apartment.id if apartment else None,
+                'apartment_code': apartment.apartment_code if apartment else None,
+                'name': apartment.name if apartment else None,
+                'address': apartment.address if apartment else None,
+                'building_name': apartment.building_name if apartment else None
+            } if apartment else None
+
+            # Construir lista de detalles de deducciones
+            deductions_detail = [
+                {
+                    'assignment_id': d.assignment_id,
+                    'period': f"{d.year}-{d.month:02d}",
+                    'base_rent': d.base_rent,
+                    'additional_charges': d.additional_charges,
+                    'total_deduction': d.total_deduction,
+                    'status': d.status.value,
+                    'notes': d.notes
+                }
+                for d in deductions
+            ]
+
+            logger.info(
+                f"Retrieved apartment deductions for employee {employee_id}, "
+                f"period {year}-{month:02d}: total=¥{total_amount:,}"
+            )
+
+            return {
+                'total_amount': int(total_amount),
+                'base_rent': int(total_base_rent),
+                'additional_charges': int(total_additional),
+                'deductions': deductions_detail,
+                'apartment_id': first_deduction.apartment_id,
+                'apartment_info': apartment_info
+            }
+
+        except Exception as e:
+            logger.error(
+                f"Error retrieving apartment deductions for employee {employee_id}, "
+                f"period {year}-{month:02d}: {e}",
+                exc_info=True
+            )
+            raise ValueError(f"Error retrieving apartment deductions: {str(e)}")
+
+    def _calculate_hours(self, timer_cards: List[Dict]) -> Dict:
+        """Calcula el desglose detallado de horas trabajadas.
+
+        Procesa todas las tarjetas de tiempo del mes y categoriza las horas
+        en: normales, extras, nocturnas, festivas.
+
+        Args:
+            timer_cards (List[Dict]): Lista de registros de tiempo con:
+                - work_date: Fecha de trabajo
+                - clock_in: Hora de entrada (HH:MM)
+                - clock_out: Hora de salida (HH:MM)
+
+        Returns:
+            Dict: Desglose de horas:
+                {
+                    'total_hours': Decimal,  # Total horas trabajadas
+                    'normal_hours': Decimal,  # Horas normales (hasta 8h/día)
+                    'overtime_hours': Decimal,  # Horas extras (>8h/día)
+                    'night_hours': Decimal,  # Horas nocturnas (22:00-05:00)
+                    'holiday_hours': Decimal,  # Horas en fin de semana
+                    'work_days': int  # Días trabajados
+                }
+
+        Note:
+            - Maneja turnos nocturnos (si clock_out < clock_in, añade 1 día)
+            - Fin de semana: Sábado (5) y Domingo (6)
+            - Horas extras: solo en días laborables cuando >8h
+            - Horas nocturnas se calculan independientemente
+        """
+        total_hours = Decimal('0')
+        normal_hours = Decimal('0')
+        overtime_hours = Decimal('0')
+        night_hours = Decimal('0')
+        holiday_hours = Decimal('0')
+        work_days = 0
+
+        for card in timer_cards:
+            try:
+                # Parse times
+                work_date = card.get('work_date')
+                clock_in = card.get('clock_in')
+                clock_out = card.get('clock_out')
+
+                if not all([work_date, clock_in, clock_out]):
+                    continue
+
+                # Convert to datetime objects
+                date_obj = datetime.strptime(str(work_date), '%Y-%m-%d')
+                start = datetime.strptime(clock_in, '%H:%M')
+                end = datetime.strptime(clock_out, '%H:%M')
+
+                # Handle overnight shifts
+                if end < start:
+                    end += timedelta(days=1)
+
+                # Calculate total hours for this day
+                hours = Decimal(str((end - start).total_seconds() / 3600))
+                total_hours += hours
+                work_days += 1
+
+                # Check if weekend/holiday
+                is_weekend = date_obj.weekday() >= 5  # Saturday or Sunday
+
+                if is_weekend:
+                    # All hours on weekend are holiday hours
+                    holiday_hours += hours
+                else:
+                    # Normal weekday
+                    if hours > 8:
+                        normal_hours += Decimal('8')
+                        overtime_hours += (hours - Decimal('8'))
+                    else:
+                        normal_hours += hours
+
+                # Calculate night hours (22:00 - 05:00)
+                night_hrs = self._calculate_night_hours(start, end)
+                if night_hrs > 0:
+                    night_hours += Decimal(str(night_hrs))
+
+            except Exception as e:
+                logger.error(f"Error processing timer card: {e}")
+                continue
+
+        return {
+            'total_hours': total_hours,
+            'normal_hours': normal_hours,
+            'overtime_hours': overtime_hours,
+            'night_hours': night_hours,
+            'holiday_hours': holiday_hours,
+            'work_days': work_days
+        }
+
+    def _calculate_night_hours(self, start: datetime, end: datetime) -> float:
+        """Calcula las horas trabajadas en horario nocturno.
+
+        Horario nocturno japonés: 22:00 - 05:00 (siguiente día)
+
+        Args:
+            start (datetime): Hora de inicio del turno
+            end (datetime): Hora de fin del turno (puede ser día siguiente)
+
+        Returns:
+            float: Horas trabajadas en período nocturno
+
+        Examples:
+            >>> # Turno 08:00 - 17:00 (sin horario nocturno)
+            >>> night_hours = service._calculate_night_hours(
+            ...     datetime(2025, 10, 1, 8, 0),
+            ...     datetime(2025, 10, 1, 17, 0)
+            ... )
+            >>> assert night_hours == 0.0
+
+            >>> # Turno 22:00 - 05:00 (7 horas nocturnas)
+            >>> night_hours = service._calculate_night_hours(
+            ...     datetime(2025, 10, 1, 22, 0),
+            ...     datetime(2025, 10, 2, 5, 0)
+            ... )
+            >>> assert night_hours == 7.0
+
+        Note:
+            - Calcula solapamiento entre período de trabajo y 22:00-05:00
+            - Retorna 0.0 si no hay solapamiento
+        """
+        night_start = start.replace(hour=22, minute=0, second=0)
+        night_end = (start + timedelta(days=1)).replace(hour=5, minute=0, second=0)
+
+        # Find overlap between work period and night period
+        work_start = start
+        work_end = end
+
+        overlap_start = max(work_start, night_start)
+        overlap_end = min(work_end, night_end)
+
+        if overlap_start < overlap_end:
+            return (overlap_end - overlap_start).total_seconds() / 3600
+        return 0.0
