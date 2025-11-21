@@ -59,7 +59,7 @@ import {
   groupRolesByCategory,
   isLegacyRole,
   type RoleCategory,
-} from '@/lib/role-categories';
+} from '@/lib/roles';
 
 // Enhanced components
 import { LegacyRoleBadge } from '@/components/admin/legacy-role-badge';

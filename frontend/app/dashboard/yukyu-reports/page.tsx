@@ -23,7 +23,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import api from '@/lib/api';
 import { useAuthStore } from '@/stores/auth-store';
-import { canViewYukyuReports } from '@/lib/yukyu-roles';
+import { canViewYukyuReports } from '@/lib/roles';
 import { ErrorState } from '@/components/error-state';
 
 interface YukyuSummary {

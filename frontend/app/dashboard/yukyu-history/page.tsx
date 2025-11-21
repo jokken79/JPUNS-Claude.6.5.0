@@ -20,7 +20,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import api from '@/lib/api';
 import { useAuthStore } from '@/stores/auth-store';
-import { canViewAllYukyuHistory } from '@/lib/yukyu-roles';
+import { canViewAllYukyuHistory } from '@/lib/roles';
 
 interface YukyuUsageDetail {
   id: number;

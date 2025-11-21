@@ -12,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuthStore } from '@/stores/auth-store';
-import { canCreateYukyuRequest } from '@/lib/yukyu-roles';
+import { canCreateYukyuRequest } from '@/lib/roles';
 import { ErrorState } from '@/components/error-state';
 
 interface Employee {
