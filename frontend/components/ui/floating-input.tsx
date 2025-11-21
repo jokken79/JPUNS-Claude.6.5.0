@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { formAnimations } from '@/lib/form-animations';
+import { formAnimations } from '@/lib/animations';
+import { ErrorShakeContainer, ErrorMessage, ClearButton } from './input-parts';
 
 export interface FloatingInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -63,13 +64,9 @@ const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputProps>(
     return (
       <div className="relative w-full">
         {/* Input Container */}
-        <motion.div
-          className={cn(
-            'relative flex items-center',
-            error && 'animate-shake'
-          )}
-          animate={error ? 'animate' : 'initial'}
-          variants={error ? formAnimations.shake : undefined}
+        <ErrorShakeContainer
+          error={error}
+          className="relative flex items-center"
         >
           {/* Leading Icon */}
           {leadingIcon && (
@@ -145,69 +142,19 @@ const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputProps>(
 
           {/* Trailing Icon / Clear Button */}
           <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-            {onClear && hasValue && !disabled && (
-              <motion.button
-                type="button"
-                onClick={onClear}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="m15 9-6 6" />
-                  <path d="m9 9 6 6" />
-                </svg>
-              </motion.button>
-            )}
+            <AnimatePresence>
+              {onClear && hasValue && !disabled && (
+                <ClearButton onClick={onClear} disabled={disabled} ariaLabel="Clear input" />
+              )}
+            </AnimatePresence>
             {trailingIcon && (
               <div className="text-muted-foreground">{trailingIcon}</div>
             )}
           </div>
-        </motion.div>
+        </ErrorShakeContainer>
 
         {/* Error Message */}
-        <AnimatePresence>
-          {error && (
-            <motion.div
-              className="text-xs text-red-600 mt-1.5 flex items-center gap-1"
-              variants={formAnimations.slideDown}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-              {error}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <ErrorMessage error={error} className="mt-1.5" />
       </div>
     );
   }
