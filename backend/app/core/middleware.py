@@ -92,7 +92,18 @@ class SecurityMiddleware(BaseHTTPMiddleware):
 
 
 class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
-    """Convert internal exceptions into JSON responses."""
+    """
+    DEPRECATED: Legacy exception handler middleware.
+
+    This middleware is kept for backward compatibility but is deprecated.
+    Use ErrorHandlerMiddleware from app.core.error_middleware instead.
+
+    The new ErrorHandlerMiddleware provides:
+    - Request ID tracking
+    - Standardized error response format
+    - Better error code mapping
+    - Security-conscious error messages
+    """
 
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         try:
@@ -109,5 +120,5 @@ __all__ = [
     "AuditContextMiddleware",
     "LoggingMiddleware",
     "SecurityMiddleware",
-    "ExceptionHandlerMiddleware",
+    "ExceptionHandlerMiddleware",  # Deprecated - use ErrorHandlerMiddleware instead
 ]

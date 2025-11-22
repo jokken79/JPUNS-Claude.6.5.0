@@ -24,10 +24,10 @@ from app.core.observability import configure_observability
 from app.core.scheduler import start_scheduler, stop_scheduler
 from app.core.middleware import (
     AuditContextMiddleware,
-    ExceptionHandlerMiddleware,
     LoggingMiddleware,
     SecurityMiddleware,
 )
+from app.core.error_middleware import ErrorHandlerMiddleware
 
 # Initialize rate limiter
 limiter = Limiter(key_func=get_remote_address)
@@ -100,11 +100,12 @@ configure_observability(app)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, handle_rate_limit_error)
 
-# Add custom middlewares (order matters: audit context first)
+# Add custom middlewares (order matters: audit context first, error handler last)
 app.add_middleware(AuditContextMiddleware)
 app.add_middleware(SecurityMiddleware)
-app.add_middleware(ExceptionHandlerMiddleware)
 app.add_middleware(LoggingMiddleware)
+# Error handler middleware should be added last to catch all exceptions
+app.add_middleware(ErrorHandlerMiddleware)
 
 # Global rate limiting middleware
 @app.middleware("http")
