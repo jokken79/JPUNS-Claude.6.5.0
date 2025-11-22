@@ -46,6 +46,9 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
 from app.core.database import SessionLocal
+from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.rate_limiter import limiter, RateLimitConfig
 from app.core.error_handlers import handle_errors
 from app.core.app_exceptions import ExternalServiceError, ValidationError
@@ -212,49 +215,49 @@ class HealthResponse(BaseModel):
 # Dependency to get AI Gateway
 async def get_ai_gateway() -> AIGateway:
     """Get AI Gateway instance"""
-    return AIGateway()
+    return success_response(data=AIGateway(), request=request)
 
 
 # Dependency to get AI Usage Service
 def get_ai_usage_service(db: Session = Depends(SessionLocal)) -> AIUsageService:
     """Get AI usage service with database session"""
-    return AIUsageService(db)
+    return success_response(data=AIUsageService(db), request=request)
 
 
 # Dependency to get AI Budget Service
 def get_ai_budget_service(db: Session = Depends(SessionLocal)) -> AIBudgetService:
     """Get AI budget service with database session"""
-    return AIBudgetService(db)
+    return success_response(data=AIBudgetService(db), request=request)
 
 
 # Dependency to get Cache Service
 def get_cache_service() -> CacheService:
     """Get cache service"""
-    return CacheService()
+    return success_response(data=CacheService(), request=request)
 
 
 # Dependency to get Prompt Optimizer
 def get_prompt_optimizer(aggressive: bool = False) -> PromptOptimizer:
     """Get prompt optimizer service"""
-    return PromptOptimizer(aggressive=aggressive)
+    return success_response(data=PromptOptimizer(aggressive=aggressive), request=request)
 
 
 # Dependency to get Batch Optimizer
 def get_batch_optimizer(similarity_threshold: float = 0.85) -> BatchOptimizer:
     """Get batch optimizer service"""
-    return BatchOptimizer(similarity_threshold=similarity_threshold)
+    return success_response(data=BatchOptimizer(similarity_threshold=similarity_threshold), request=request)
 
 
 # Dependency to get Streaming Service
 def get_streaming_service() -> StreamingService:
     """Get streaming service"""
-    return StreamingService()
+    return success_response(data=StreamingService(), request=request)
 
 
 # Dependency to get Analytics Service
 def get_analytics_service() -> AnalyticsService:
     """Get analytics service"""
-    return AnalyticsService()
+    return success_response(data=AnalyticsService(), request=request)
 
 
 # Endpoints
@@ -292,11 +295,11 @@ async def invoke_gemini(
         system_instruction=request.system_instruction,
     )
 
-    return AIResponse(
+    return success_response(data=AIResponse(
         status="success",
         provider="gemini",
         response=response,
-    )
+    ), request=request)
 
 
 @router.post("/openai", response_model=AIResponse)
@@ -334,11 +337,11 @@ async def invoke_openai(
         system_message=request.system_message,
     )
 
-    return AIResponse(
+    return success_response(data=AIResponse(
         status="success",
         provider="openai",
         response=response,
-    )
+    ), request=request)
 
 
 @router.post("/claude", response_model=AIResponse)
@@ -376,11 +379,11 @@ async def invoke_claude_api(
             system_prompt=request.system_prompt,
         )
 
-        return AIResponse(
+        return success_response(data=AIResponse(
             status="success",
             provider="claude_api",
             response=response,
-        )
+        ), request=request)
 
     except AIGatewayError as e:
         logger.error(f"Claude API invocation failed: {str(e)}")
@@ -429,11 +432,11 @@ async def invoke_local_cli(
             timeout=request.timeout,
         )
 
-        return AIResponse(
+        return success_response(data=AIResponse(
             status="success",
             provider="local_cli",
             response=response,
-        )
+        ), request=request)
 
     except AIGatewayError as e:
         logger.error(f"CLI invocation failed: {str(e)}")
@@ -505,13 +508,13 @@ async def batch_invoke(
         else:
             overall_status = "partial"
 
-        return BatchResponse(
+        return success_response(data=BatchResponse(
             status=overall_status,
             results=results,
             total_tasks=len(results),
             successful=successful,
             failed=failed,
-        )
+        ), request=request)
 
     except Exception as e:
         logger.error(f"Batch invocation failed: {str(e)}")
@@ -522,6 +525,7 @@ async def batch_invoke(
 
 
 @router.get("/health", response_model=HealthResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def health_check(
     gateway: AIGateway = Depends(get_ai_gateway),
 ) -> HealthResponse:
@@ -558,10 +562,10 @@ async def health_check(
         else:
             overall_status = "unhealthy"
 
-        return HealthResponse(
+        return success_response(data=HealthResponse(
             status=overall_status,
             providers=health.get("providers", {}),
-        )
+        ), request=request)
 
     except Exception as e:
         logger.error(f"Health check failed: {str(e)}")
@@ -576,6 +580,7 @@ async def health_check(
 # ============================================
 
 @router.get("/budget", response_model=AIBudgetResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_budget(
     service: AIBudgetService = Depends(get_ai_budget_service),
     current_user: User = Depends(get_current_user),
@@ -593,7 +598,7 @@ async def get_budget(
     """
     try:
         budget_status = service.get_budget_status(current_user.id)
-        return AIBudgetResponse(**budget_status)
+        return success_response(data=AIBudgetResponse(**budget_status), request=request)
     except Exception as e:
         logger.error(f"Error fetching budget: {str(e)}")
         raise HTTPException(
@@ -644,7 +649,7 @@ async def create_or_update_budget(
             )
 
         budget_status = service.get_budget_status(current_user.id)
-        return AIBudgetResponse(**budget_status)
+        return success_response(data=AIBudgetResponse(**budget_status), request=request)
     except Exception as e:
         logger.error(f"Error creating/updating budget: {str(e)}")
         raise HTTPException(
@@ -688,7 +693,7 @@ async def update_budget(
         )
 
         budget_status = service.get_budget_status(current_user.id)
-        return AIBudgetResponse(**budget_status)
+        return success_response(data=AIBudgetResponse(**budget_status), request=request)
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -703,6 +708,7 @@ async def update_budget(
 
 
 @router.get("/budget/validate", response_model=BudgetValidationResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def validate_budget(
     cost: float = 0.0,
     service: AIBudgetService = Depends(get_ai_budget_service),
@@ -725,14 +731,14 @@ async def validate_budget(
     try:
         from decimal import Decimal
         validation = service.validate_spending(current_user.id, Decimal(str(cost)))
-        return BudgetValidationResponse(**validation)
+        return success_response(data=BudgetValidationResponse(**validation), request=request)
     except BudgetExceededException as e:
-        return BudgetValidationResponse(
+        return success_response(data=BudgetValidationResponse(
             allowed=False,
             reason=str(e),
             monthly_remaining=0.0,
             monthly_percentage_used=100.0,
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error validating budget: {str(e)}")
         raise HTTPException(
@@ -746,6 +752,7 @@ async def validate_budget(
 # ============================================
 
 @router.get("/usage/stats", response_model=UsageStatsResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_usage_stats(
     days: int = 1,
     provider: Optional[str] = None,
@@ -769,7 +776,7 @@ async def get_usage_stats(
     """
     try:
         stats = service.get_usage_stats(current_user.id, days=days, provider=provider)
-        return UsageStatsResponse(**stats)
+        return success_response(data=UsageStatsResponse(**stats), request=request)
     except Exception as e:
         logger.error(f"Error fetching usage stats: {str(e)}")
         raise HTTPException(
@@ -779,6 +786,7 @@ async def get_usage_stats(
 
 
 @router.get("/usage/daily", response_model=DailyUsageResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_daily_usage(
     days: int = 7,
     service: AIUsageService = Depends(get_ai_usage_service),
@@ -800,7 +808,7 @@ async def get_daily_usage(
     """
     try:
         daily_stats = service.get_daily_usage(current_user.id, days=days)
-        return DailyUsageResponse(user_id=current_user.id, data=daily_stats)
+        return success_response(data=DailyUsageResponse(user_id=current_user.id, data=daily_stats), request=request)
     except Exception as e:
         logger.error(f"Error fetching daily usage: {str(e)}")
         raise HTTPException(
@@ -810,6 +818,7 @@ async def get_daily_usage(
 
 
 @router.get("/usage/logs", response_model=UsageLogsResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_usage_logs(
     limit: int = 100,
     offset: int = 0,
@@ -846,7 +855,7 @@ async def get_usage_logs(
             provider=provider,
             status=status_filter,
         )
-        return UsageLogsResponse(**logs)
+        return success_response(data=UsageLogsResponse(**logs), request=request)
     except Exception as e:
         logger.error(f"Error fetching usage logs: {str(e)}")
         raise HTTPException(
@@ -856,6 +865,7 @@ async def get_usage_logs(
 
 
 @router.get("/usage/cost", response_model=TotalCostResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_total_cost(
     days: int = 30,
     service: AIUsageService = Depends(get_ai_usage_service),
@@ -877,7 +887,7 @@ async def get_total_cost(
     """
     try:
         cost = service.get_user_total_cost(current_user.id, days=days)
-        return TotalCostResponse(**cost)
+        return success_response(data=TotalCostResponse(**cost), request=request)
     except Exception as e:
         logger.error(f"Error fetching total cost: {str(e)}")
         raise HTTPException(
@@ -891,6 +901,7 @@ async def get_total_cost(
 # ============================================
 
 @router.get("/cache/stats", response_model=CacheStatsResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_cache_stats(
     service: CacheService = Depends(get_cache_service),
     current_user: User = Depends(get_current_user),
@@ -908,7 +919,7 @@ async def get_cache_stats(
     """
     try:
         stats = service.get_stats()
-        return CacheStatsResponse(**stats)
+        return success_response(data=CacheStatsResponse(**stats), request=request)
     except Exception as e:
         logger.error(f"Error fetching cache stats: {str(e)}")
         raise HTTPException(
@@ -918,6 +929,7 @@ async def get_cache_stats(
 
 
 @router.get("/cache/memory", response_model=CacheMemoryResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_cache_memory(
     service: CacheService = Depends(get_cache_service),
     current_user: User = Depends(get_current_user),
@@ -935,7 +947,7 @@ async def get_cache_memory(
     """
     try:
         memory = service.get_memory_usage()
-        return CacheMemoryResponse(**memory)
+        return success_response(data=CacheMemoryResponse(**memory), request=request)
     except Exception as e:
         logger.error(f"Error fetching cache memory: {str(e)}")
         raise HTTPException(
@@ -945,6 +957,7 @@ async def get_cache_memory(
 
 
 @router.get("/cache/health", response_model=CacheHealthResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_cache_health(
     service: CacheService = Depends(get_cache_service),
     current_user: User = Depends(get_current_user),
@@ -962,7 +975,7 @@ async def get_cache_health(
     """
     try:
         health = service.health_check()
-        return CacheHealthResponse(**health)
+        return success_response(data=CacheHealthResponse(**health), request=request)
     except Exception as e:
         logger.error(f"Error checking cache health: {str(e)}")
         raise HTTPException(
@@ -990,11 +1003,11 @@ async def flush_cache(
     """
     try:
         service.flush_all()
-        return CacheInvalidationResponse(
+        return success_response(data=CacheInvalidationResponse(
             success=True,
             deleted_count=0,  # We don't count in flush_all
             message="All AI cache entries have been flushed"
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error flushing cache: {str(e)}")
         raise HTTPException(
@@ -1033,11 +1046,11 @@ async def invalidate_cache_by_provider(
             )
 
         deleted = service.invalidate_by_provider(provider)
-        return CacheInvalidationResponse(
+        return success_response(data=CacheInvalidationResponse(
             success=True,
             deleted_count=deleted,
             message=f"Deleted {deleted} cached responses from {provider}"
-        )
+        ), request=request)
     except HTTPException:
         raise
     except Exception as e:
@@ -1079,11 +1092,11 @@ async def invalidate_cache_by_model(
             )
 
         deleted = service.invalidate_by_model(provider, model)
-        return CacheInvalidationResponse(
+        return success_response(data=CacheInvalidationResponse(
             success=True,
             deleted_count=deleted,
             message=f"Deleted {deleted} cached responses from {provider}/{model}"
-        )
+        ), request=request)
     except HTTPException:
         raise
     except Exception as e:
@@ -1131,7 +1144,7 @@ async def optimize_prompt(
             request.system_message,
         )
 
-        return OptimizedPromptResponse(
+        return success_response(data=OptimizedPromptResponse(
             optimized_prompt=optimized_prompt,
             optimized_system_message=optimized_system_message,
             stats=OptimizationStatsResponse(
@@ -1141,7 +1154,7 @@ async def optimize_prompt(
                 reduction_percentage=stats.reduction_percentage,
                 strategies_applied=stats.strategies_applied,
             ),
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error optimizing prompt: {str(e)}")
         raise HTTPException(
@@ -1178,11 +1191,11 @@ async def get_optimization_recommendations(
     try:
         recommendations = optimizer.get_optimization_recommendations(request.prompt)
 
-        return OptimizationRecommendationsResponse(
+        return success_response(data=OptimizationRecommendationsResponse(
             prompt=request.prompt,
             recommendations=recommendations,
             has_optimization_opportunities=len(recommendations) > 0,
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error getting recommendations: {str(e)}")
         raise HTTPException(
@@ -1223,7 +1236,7 @@ async def estimate_savings(
             request.system_message,
         )
 
-        return OptimizationEstimateResponse(**estimate)
+        return success_response(data=OptimizationEstimateResponse(**estimate), request=request)
     except Exception as e:
         logger.error(f"Error estimating savings: {str(e)}")
         raise HTTPException(
@@ -1313,12 +1326,12 @@ async def batch_optimize(
             f"(saved {result.stats.api_calls_saved} calls)"
         )
 
-        return BatchOptimizedResponse(
+        return success_response(data=BatchOptimizedResponse(
             optimization_map=result.optimization_map,
             grouped_prompts=result.grouped_prompts,
             representative_prompts=result.representative_prompts,
             stats=stats_dict,
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error optimizing batch: {str(e)}")
         raise HTTPException(
@@ -1364,7 +1377,7 @@ async def estimate_batch_savings(
             f"({savings['api_calls_saved']} calls saved)"
         )
 
-        return BatchSavingsEstimate(**savings)
+        return success_response(data=BatchSavingsEstimate(**savings), request=request)
     except Exception as e:
         logger.error(f"Error estimating batch savings: {str(e)}")
         raise HTTPException(
@@ -1432,12 +1445,12 @@ async def analyze_similarity(
             f"{total_matches} matches above {request.similarity_threshold:.0%}"
         )
 
-        return PromptSimilarityResponse(
+        return success_response(data=PromptSimilarityResponse(
             similarity_threshold=request.similarity_threshold,
             prompt_count=len(request.prompts),
             matches=matches,
             total_matches=total_matches,
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error analyzing similarity: {str(e)}")
         raise HTTPException(
@@ -1548,7 +1561,7 @@ async def stream_response(
             f"chunk_size={request.chunk_size}"
         )
 
-        return StreamingResponse(
+        return success_response(data=StreamingResponse(
             _stream_generator(request, streaming_service, gateway),
             media_type="text/event-stream",
             headers={
@@ -1556,7 +1569,7 @@ async def stream_response(
                 "X-Accel-Buffering": "no",
                 "Connection": "keep-alive",
             },
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error starting stream: {str(e)}")
         raise HTTPException(
@@ -1606,14 +1619,14 @@ async def create_streaming_session(
 
         logger.info(f"Created streaming session: {session_id}")
 
-        return StreamingSessionResponse(
+        return success_response(data=StreamingSessionResponse(
             session_id=session_id,
             prompt=request.prompt,
             provider=request.provider,
             model=request.model or "default",
             streaming_url=f"/api/ai/stream?session_id={session_id}",
             expected_duration_ms=estimated_duration,
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error creating streaming session: {str(e)}")
         raise HTTPException(
@@ -1623,6 +1636,7 @@ async def create_streaming_session(
 
 
 @router.get("/stream/health", response_model=Dict[str, Any])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def streaming_health_check(
     streaming_service: StreamingService = Depends(get_streaming_service),
     current_user: User = Depends(get_current_user),
@@ -1644,13 +1658,13 @@ async def streaming_health_check(
             "active_streams": 5
         }
     """
-    return {
+    return success_response(data={
         "streaming_available": True,
         "supported_providers": ["gemini", "openai"],
         "max_concurrent_streams": 100,
         "active_streams": 0,  # Would track in production
         "message": "Streaming service is operational",
-    }
+    }, request=request)
 
 
 # ============================================================================
@@ -1696,22 +1710,22 @@ async def invoke_anthropic(
         )
 
         logger.info(f"Anthropic response: {len(response)} chars")
-        return ProviderResponse(
+        return success_response(data=ProviderResponse(
             status="success",
             provider="anthropic",
             model=request.model,
             response=response,
             tokens_used=len(response) // 4,
             estimated_cost=float(cost),
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error invoking Anthropic: {str(e)}")
-        return ProviderResponse(
+        return success_response(data=ProviderResponse(
             status="error",
             provider="anthropic",
             model=request.model,
             error=str(e),
-        )
+        ), request=request)
 
 
 @router.post("/cohere", response_model=ProviderResponse)
@@ -1751,22 +1765,22 @@ async def invoke_cohere(
         )
 
         logger.info(f"Cohere response: {len(response)} chars")
-        return ProviderResponse(
+        return success_response(data=ProviderResponse(
             status="success",
             provider="cohere",
             model=request.model,
             response=response,
             tokens_used=len(response) // 4,
             estimated_cost=float(cost),
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error invoking Cohere: {str(e)}")
-        return ProviderResponse(
+        return success_response(data=ProviderResponse(
             status="error",
             provider="cohere",
             model=request.model,
             error=str(e),
-        )
+        ), request=request)
 
 
 @router.post("/huggingface", response_model=ProviderResponse)
@@ -1801,22 +1815,22 @@ async def invoke_huggingface(
         )
 
         logger.info(f"Hugging Face response: {len(response)} chars")
-        return ProviderResponse(
+        return success_response(data=ProviderResponse(
             status="success",
             provider="huggingface",
             model=request.model,
             response=response,
             tokens_used=len(response) // 4,
             estimated_cost=0.0,  # Free tier
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error invoking Hugging Face: {str(e)}")
-        return ProviderResponse(
+        return success_response(data=ProviderResponse(
             status="error",
             provider="huggingface",
             model=request.model,
             error=str(e),
-        )
+        ), request=request)
 
 
 @router.post("/ollama", response_model=ProviderResponse)
@@ -1855,22 +1869,22 @@ async def invoke_ollama(
         )
 
         logger.info(f"Ollama response: {len(response)} chars")
-        return ProviderResponse(
+        return success_response(data=ProviderResponse(
             status="success",
             provider="ollama",
             model=request.model,
             response=response,
             tokens_used=len(response) // 4,
             estimated_cost=0.0,  # Local, no cost
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error invoking Ollama: {str(e)}")
-        return ProviderResponse(
+        return success_response(data=ProviderResponse(
             status="error",
             provider="ollama",
             model=request.model,
             error=str(e),
-        )
+        ), request=request)
 
 
 @router.post("/zhipu", response_model=ProviderResponse)
@@ -1912,25 +1926,26 @@ async def invoke_zhipu(
         )
 
         logger.info(f"Zhipu response: {len(response)} chars")
-        return ProviderResponse(
+        return success_response(data=ProviderResponse(
             status="success",
             provider="zhipu",
             model=request.model,
             response=response,
             tokens_used=len(response) // 4,
             estimated_cost=float(cost),
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error invoking Zhipu: {str(e)}")
-        return ProviderResponse(
+        return success_response(data=ProviderResponse(
             status="error",
             provider="zhipu",
             model=request.model,
             error=str(e),
-        )
+        ), request=request)
 
 
 @router.get("/providers", response_model=ProviderListResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def list_providers(
     current_user: User = Depends(get_current_user),
 ) -> ProviderListResponse:
@@ -1961,11 +1976,11 @@ async def list_providers(
         available = ProviderFactory.get_available_providers()
         logger.info(f"Listing {len(available)} providers")
 
-        return ProviderListResponse(
+        return success_response(data=ProviderListResponse(
             available_providers=available,
             provider_details=PROVIDER_DEFAULTS,
             total_providers=len(available),
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error listing providers: {str(e)}")
         raise HTTPException(
@@ -1975,6 +1990,7 @@ async def list_providers(
 
 
 @router.get("/providers/health", response_model=Dict[str, Any])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def check_providers_health(
     current_user: User = Depends(get_current_user),
 ) -> Dict[str, Any]:
@@ -2033,7 +2049,7 @@ async def check_providers_health(
     }
 
     logger.info("Checked health of all providers")
-    return health_status
+    return success_response(data=health_status, request=request)
 
 
 @router.post("/multi-provider", response_model=MultiProviderResponse)
@@ -2105,13 +2121,13 @@ async def invoke_multiple_providers(
         f"{error_count} failed, ${total_cost:.4f} cost"
     )
 
-    return MultiProviderResponse(
+    return success_response(data=MultiProviderResponse(
         prompt=request.prompt,
         responses=responses,
         success_count=success_count,
         error_count=error_count,
         total_estimated_cost=total_cost,
-    )
+    ), request=request)
 
 
 # ============================================================================
@@ -2120,6 +2136,7 @@ async def invoke_multiple_providers(
 
 
 @router.get("/analytics/dashboard", response_model=Dict[str, Any])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_analytics_dashboard(
     analytics: AnalyticsService = Depends(get_analytics_service),
     current_user: User = Depends(get_current_user),
@@ -2157,7 +2174,7 @@ async def get_analytics_dashboard(
     try:
         dashboard = analytics.get_dashboard_summary()
         logger.info("Dashboard analytics retrieved")
-        return dashboard
+        return success_response(data=dashboard, request=request)
     except Exception as e:
         logger.error(f"Error retrieving dashboard: {str(e)}")
         raise HTTPException(
@@ -2167,6 +2184,7 @@ async def get_analytics_dashboard(
 
 
 @router.get("/analytics/summary", response_model=AnalyticsSummaryResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_summary(
     analytics: AnalyticsService = Depends(get_analytics_service),
     current_user: User = Depends(get_current_user),
@@ -2186,12 +2204,12 @@ async def get_summary(
     """
     try:
         metrics = analytics.get_overall_metrics()
-        return AnalyticsSummaryResponse(
+        return success_response(data=AnalyticsSummaryResponse(
             total_api_calls=metrics.total_api_calls,
             total_tokens_used=metrics.total_tokens_used,
             total_cost_usd=float(metrics.total_cost),
             average_cost_per_call=float(metrics.average_cost_per_call),
-        )
+        ), request=request)
     except Exception as e:
         logger.error(f"Error retrieving summary: {str(e)}")
         raise HTTPException(
@@ -2201,6 +2219,7 @@ async def get_summary(
 
 
 @router.get("/analytics/providers", response_model=Dict[str, Any])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_provider_analytics(
     analytics: AnalyticsService = Depends(get_analytics_service),
     current_user: User = Depends(get_current_user),
@@ -2232,7 +2251,7 @@ async def get_provider_analytics(
     try:
         breakdown = analytics.get_provider_breakdown()
         logger.info("Provider analytics retrieved")
-        return breakdown
+        return success_response(data=breakdown, request=request)
     except Exception as e:
         logger.error(f"Error retrieving provider analytics: {str(e)}")
         raise HTTPException(
@@ -2242,6 +2261,7 @@ async def get_provider_analytics(
 
 
 @router.get("/analytics/trends", response_model=Dict[str, Any])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_cost_trends(
     days: int = 7,
     analytics: AnalyticsService = Depends(get_analytics_service),
@@ -2264,7 +2284,7 @@ async def get_cost_trends(
     try:
         trends = analytics.get_cost_trends(days=days)
         logger.info(f"Cost trends retrieved for {days} days")
-        return trends
+        return success_response(data=trends, request=request)
     except Exception as e:
         logger.error(f"Error retrieving trends: {str(e)}")
         raise HTTPException(
@@ -2274,6 +2294,7 @@ async def get_cost_trends(
 
 
 @router.get("/analytics/optimization", response_model=OptimizationImpactResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_optimization_impact(
     analytics: AnalyticsService = Depends(get_analytics_service),
     current_user: User = Depends(get_current_user),
@@ -2305,7 +2326,7 @@ async def get_optimization_impact(
     try:
         impact = analytics.get_optimization_impact()
         logger.info("Optimization impact retrieved")
-        return OptimizationImpactResponse(**impact)
+        return success_response(data=OptimizationImpactResponse(**impact), request=request)
     except Exception as e:
         logger.error(f"Error retrieving optimization impact: {str(e)}")
         raise HTTPException(
@@ -2315,6 +2336,7 @@ async def get_optimization_impact(
 
 
 @router.get("/analytics/performance", response_model=Dict[str, Any])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_performance_report(
     analytics: AnalyticsService = Depends(get_analytics_service),
     current_user: User = Depends(get_current_user),
@@ -2335,7 +2357,7 @@ async def get_performance_report(
     try:
         report = analytics.get_performance_report()
         logger.info("Performance report retrieved")
-        return report
+        return success_response(data=report, request=request)
     except Exception as e:
         logger.error(f"Error retrieving performance report: {str(e)}")
         raise HTTPException(
@@ -2385,11 +2407,11 @@ async def export_analytics(
             }
 
         logger.info(f"Analytics exported for {request.provider or 'all providers'}")
-        return {
+        return success_response(data={
             "status": "success",
             "data": dashboard,
             "export_time": datetime.utcnow().isoformat(),
-        }
+        }, request=request)
     except Exception as e:
         logger.error(f"Error exporting analytics: {str(e)}")
         raise HTTPException(
@@ -2420,7 +2442,7 @@ async def reset_analytics(
     try:
         analytics.clear_metrics()
         logger.warning(f"Analytics reset by {current_user.username if current_user else 'unknown'}")
-        return {"status": "success", "message": "All analytics data reset"}
+        return success_response(data={"status": "success", "message": "All analytics data reset"}, request=request)
     except Exception as e:
         logger.error(f"Error resetting analytics: {str(e)}")
         raise HTTPException(

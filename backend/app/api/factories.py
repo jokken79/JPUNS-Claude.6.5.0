@@ -6,6 +6,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from app.core.database import get_db
+from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.redis_client import redis_client, invalidate_cache
 from app.models.models import Factory, User, Employee
 from app.schemas.factory import (
@@ -23,7 +26,8 @@ router = APIRouter()
 
 
 @router.post("/", response_model=FactoryResponse, status_code=status.HTTP_201_CREATED)
-@limiter.limit("60/minute")async def create_factory(
+@limiter.limit("60/minute")
+async def create_factory(
     factory: FactoryCreate,
     current_user: User = Depends(auth_service.require_role("super_admin")),
     db: Session = Depends(get_db)
@@ -45,7 +49,9 @@ router = APIRouter()
 
 
 @router.get("/", response_model=list[FactoryResponse])
-@limiter.limit("60/minute")async def list_factories(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("60/minute")
+async def list_factories(
     is_active: bool = True,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -86,7 +92,9 @@ router = APIRouter()
 
 
 @router.get("/stats", response_model=FactoryStats)
-@limiter.limit("60/minute")async def get_factories_stats(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("60/minute")
+async def get_factories_stats(
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
 ):
@@ -96,7 +104,7 @@ router = APIRouter()
     # Intentar obtener del cache
     cached = redis_client.get(cache_key)
     if cached:
-        return FactoryStats(**cached)
+        return success_response(data=FactoryStats(**cached), request=request)
 
     # Si no está en cache, calcular estadísticas
     # Total factories
@@ -135,7 +143,9 @@ router = APIRouter()
 
 
 @router.get("/{factory_id}", response_model=FactoryResponse)
-@limiter.limit("60/minute")async def get_factory(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("60/minute")
+async def get_factory(
     factory_id: str,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -148,7 +158,8 @@ router = APIRouter()
 
 
 @router.put("/{factory_id}", response_model=FactoryResponse)
-@limiter.limit("60/minute")async def update_factory(
+@limiter.limit("60/minute")
+async def update_factory(
     factory_id: str,
     factory_update: FactoryUpdate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -172,7 +183,8 @@ router = APIRouter()
 
 
 @router.delete("/{factory_id}")
-@limiter.limit("60/minute")async def delete_factory(
+@limiter.limit("60/minute")
+async def delete_factory(
     factory_id: str,
     current_user: User = Depends(auth_service.require_role("super_admin")),
     db: Session = Depends(get_db)
@@ -188,13 +200,15 @@ router = APIRouter()
     # Invalidar cache de factories
     invalidate_cache("factories:*")
 
-    return {"message": "Factory deleted successfully"}
+    return no_content_response(data={"message": "Factory deleted successfully"}, request=request)
 
 
 # ============ Configuration Management Endpoints ============
 
 @router.get("/{factory_id}/config", response_model=FactoryConfig)
-@limiter.limit("60/minute")async def get_factory_config(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("60/minute")
+async def get_factory_config(
     factory_id: str,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -206,13 +220,14 @@ router = APIRouter()
 
     # Return config or empty config with defaults
     if factory.config:
-        return FactoryConfig(**factory.config)
+        return success_response(data=FactoryConfig(**factory.config), request=request)
     else:
-        return FactoryConfig()
+        return success_response(data=FactoryConfig(), request=request)
 
 
 @router.put("/{factory_id}/config", response_model=FactoryResponse)
-@limiter.limit("60/minute")async def update_factory_config(
+@limiter.limit("60/minute")
+async def update_factory_config(
     factory_id: str,
     config: FactoryConfig,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -232,7 +247,8 @@ router = APIRouter()
 
 
 @router.post("/{factory_id}/config/validate", response_model=dict)
-@limiter.limit("60/minute")async def validate_factory_config(
+@limiter.limit("60/minute")
+async def validate_factory_config(
     factory_id: str,
     config: FactoryConfig,
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -251,7 +267,9 @@ router = APIRouter()
     }
 
 @router.get("/{factory_id}/employees", response_model=FactoryWithEmployees)
-@limiter.limit("60/minute")async def get_factory_with_employees(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("60/minute")
+async def get_factory_with_employees(
     factory_id: str,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -294,4 +312,4 @@ router = APIRouter()
         ]
     }
 
-    return FactoryWithEmployees(**factory_dict)
+    return success_response(data=FactoryWithEmployees(**factory_dict), request=request)

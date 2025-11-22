@@ -9,6 +9,9 @@ from datetime import datetime
 import logging
 
 from app.core.database import get_db
+from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.app_exceptions import (
     PayrollCalculationError,
     ResourceNotFoundError,
@@ -47,12 +50,13 @@ from app.schemas.payroll import (
     ValidationResult,
 )
 from app.schemas.salary_unified import PayrollRunUpdate, MarkPayrollPaidRequest
+from app.core.rate_limiter import limiter
 
 router = APIRouter(prefix="/api/payroll", tags=["payroll"])
 
 # Dependency to get PayrollService
 def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
-    return PayrollService(db_session=db)
+    return success_response(data=PayrollService(db_session=db), request=request)
 
 # ============================================================================
 # Payroll Runs Endpoints
@@ -65,7 +69,8 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
     summary="Create a new payroll run",
     description="Creates a new payroll run for a specific pay period"
 )
-@limiter.limit("30/minute")def create_payroll_run(
+@limiter.limit("30/minute")
+def create_payroll_run(
     payroll_data: PayrollRunCreate,
     service: PayrollService = Depends(get_payroll_service),
     db: Session = Depends(get_db)
@@ -102,7 +107,7 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
         db.refresh(payroll_run)
 
         # Convert to schema with proper type conversions
-        return PayrollRun(
+        return success_response(data=PayrollRun(
             id=payroll_run.id,
             pay_period_start=datetime.combine(payroll_run.pay_period_start, datetime.min.time()),
             pay_period_end=datetime.combine(payroll_run.pay_period_end, datetime.min.time()),
@@ -114,7 +119,7 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
             created_by=payroll_run.created_by,
             created_at=payroll_run.created_at,
             updated_at=payroll_run.updated_at
-        )
+        ), request=request)
 
     except Exception as e:
         db.rollback()
@@ -130,7 +135,9 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
     summary="Get all payroll runs",
     description="Retrieves a list of all payroll runs with pagination"
 )
-@limiter.limit("30/minute")def get_payroll_runs(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("30/minute")
+def get_payroll_runs(
     skip: int = Query(0, ge=0, description="Number of items to skip"),
     limit: int = Query(100, ge=1, le=1000, description="Maximum number of items to return"),
     status_filter: Optional[str] = Query(None, description="Filter by status"),
@@ -164,7 +171,7 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
         payroll_runs = query.order_by(PayrollRunModel.created_at.desc()).offset(skip).limit(limit).all()
 
         # Convert to PayrollRunSummary schemas
-        return [
+        return success_response(data=[
             PayrollRunSummary(
                 id=run.id,
                 pay_period_start=datetime.combine(run.pay_period_start, datetime.min.time()),
@@ -176,7 +183,7 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
                 created_at=run.created_at
             )
             for run in payroll_runs
-        ]
+        ], request=request)
 
     except Exception as e:
         raise HTTPException(
@@ -191,7 +198,9 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
     summary="Get payroll run details",
     description="Retrieves detailed information about a specific payroll run"
 )
-@limiter.limit("30/minute")def get_payroll_run(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("30/minute")
+def get_payroll_run(
     payroll_run_id: int,
     service: PayrollService = Depends(get_payroll_service),
     db: Session = Depends(get_db)
@@ -220,7 +229,7 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
             )
 
         # Convert to schema with proper type conversions
-        return PayrollRun(
+        return success_response(data=PayrollRun(
             id=payroll_run.id,
             pay_period_start=datetime.combine(payroll_run.pay_period_start, datetime.min.time()),
             pay_period_end=datetime.combine(payroll_run.pay_period_end, datetime.min.time()),
@@ -232,7 +241,7 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
             created_by=payroll_run.created_by,
             created_at=payroll_run.created_at,
             updated_at=payroll_run.updated_at
-        )
+        ), request=request)
 
     except HTTPException:
         raise
@@ -249,7 +258,8 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
     summary="Calculate payroll for all employees",
     description="Calculates payroll for all employees in a payroll run"
 )
-@limiter.limit("30/minute")def calculate_payroll_run(
+@limiter.limit("30/minute")
+def calculate_payroll_run(
     payroll_run_id: int,
     request: BulkPayrollRequest,
     service: PayrollService = Depends(get_payroll_service)
@@ -279,7 +289,7 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
                 detail="No employee data provided"
             )
 
-        return BulkPayrollResult(**result)
+        return success_response(data=BulkPayrollResult(**result), request=request)
 
     except HTTPException:
         raise
@@ -296,7 +306,9 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
     summary="Get employees in payroll run",
     description="Retrieves all employees and their payroll calculations for a run"
 )
-@limiter.limit("30/minute")def get_payroll_run_employees(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("30/minute")
+def get_payroll_run_employees(
     payroll_run_id: int,
     service: PayrollService = Depends(get_payroll_service),
     db: Session = Depends(get_db)
@@ -393,7 +405,7 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
                 calculated_at=emp_payroll.created_at
             ))
 
-        return results
+        return success_response(data=results, request=request)
 
     except Exception as e:
         raise HTTPException(
@@ -408,7 +420,8 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
     summary="Approve a payroll run",
     description="Approves a payroll run for payment"
 )
-@limiter.limit("30/minute")def approve_payroll_run(
+@limiter.limit("30/minute")
+def approve_payroll_run(
     payroll_run_id: int,
     request: PayrollApprovalRequest,
     service: PayrollService = Depends(get_payroll_service),
@@ -454,13 +467,13 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
         db.refresh(payroll_run)
 
         # Return approval response
-        return PayrollApprovalResponse(
+        return success_response(data=PayrollApprovalResponse(
             success=True,
             payroll_run_id=payroll_run_id,
             status=payroll_run.status,
             approved_by=request.approved_by,
             approved_at=payroll_run.updated_at
-        )
+        ), request=request)
 
     except HTTPException:
         raise
@@ -477,7 +490,8 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
     summary="Delete a payroll run",
     description="Deletes a payroll run. Only allowed if status is DRAFT or CALCULATED."
 )
-@limiter.limit("30/minute")def delete_payroll_run(
+@limiter.limit("30/minute")
+def delete_payroll_run(
     payroll_run_id: int,
     service: PayrollService = Depends(get_payroll_service),
     db: Session = Depends(get_db)
@@ -526,10 +540,10 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
         db.delete(payroll_run)
         db.commit()
 
-        return {
+        return success_response(data={
             "success": True,
             "message": f"Payroll run {payroll_run_id} deleted successfully"
-        }
+        }, request=request)
 
     except HTTPException:
         raise
@@ -547,7 +561,8 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
     summary="Update a payroll run",
     description="Updates a payroll run. Only allowed if status is DRAFT."
 )
-@limiter.limit("30/minute")def update_payroll_run(
+@limiter.limit("30/minute")
+def update_payroll_run(
     payroll_run_id: int,
     data: PayrollRunUpdate,
     service: PayrollService = Depends(get_payroll_service),
@@ -607,7 +622,7 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
         db.refresh(payroll_run)
 
         # Convert to schema with proper type conversions
-        return PayrollRun(
+        return success_response(data=PayrollRun(
             id=payroll_run.id,
             pay_period_start=datetime.combine(payroll_run.pay_period_start, datetime.min.time()),
             pay_period_end=datetime.combine(payroll_run.pay_period_end, datetime.min.time()),
@@ -619,7 +634,7 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
             created_by=payroll_run.created_by,
             created_at=payroll_run.created_at,
             updated_at=payroll_run.updated_at
-        )
+        ), request=request)
 
     except HTTPException:
         raise
@@ -637,7 +652,8 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
     summary="Mark payroll run as paid",
     description="Marks a payroll run as paid. Updates status and all employee payroll records."
 )
-@limiter.limit("30/minute")def mark_payroll_run_paid(
+@limiter.limit("30/minute")
+def mark_payroll_run_paid(
     payroll_run_id: int,
     data: MarkPayrollPaidRequest,
     service: PayrollService = Depends(get_payroll_service),
@@ -701,13 +717,13 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
         db.refresh(payroll_run)
 
         # Return approval response
-        return PayrollApprovalResponse(
+        return success_response(data=PayrollApprovalResponse(
             success=True,
             payroll_run_id=payroll_run_id,
             status=payroll_run.status,
             approved_by=None,  # Not tracking who marked it paid in this endpoint
             approved_at=payroll_run.updated_at
-        )
+        ), request=request)
 
     except HTTPException:
         raise
@@ -729,7 +745,8 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
     summary="Calculate payroll for one employee",
     description="Calculates payroll for a single employee based on timer records"
 )
-@limiter.limit("30/minute")def calculate_employee_payroll(
+@limiter.limit("30/minute")
+def calculate_employee_payroll(
     request: EmployeePayrollCreate,
     service: PayrollService = Depends(get_payroll_service)
 ):
@@ -765,7 +782,7 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
         if 'pay_period_end' in result:
             result['pay_period_end'] = result['pay_period_end']
 
-        return EmployeePayrollResult(**result)
+        return success_response(data=EmployeePayrollResult(**result), request=request)
 
     except HTTPException:
         raise
@@ -782,7 +799,8 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
     description="Calculate employee payroll based on timer card records for a specific period",
     response_model=dict
 )
-@limiter.limit("30/minute")def calculate_payroll_from_timercards(
+@limiter.limit("30/minute")
+def calculate_payroll_from_timercards(
     employee_id: int = Query(..., description="Employee ID"),
     start_date: str = Query(..., description="Start date (YYYY-MM-DD format)"),
     end_date: str = Query(..., description="End date (YYYY-MM-DD format)"),
@@ -829,7 +847,6 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
 
         # Get employee
         from app.models.models import Employee, TimerCard
-from app.core.rate_limiter import limiter
         employee = db.query(Employee).filter(Employee.id == employee_id).first()
 
         if not employee:
@@ -849,7 +866,7 @@ from app.core.rate_limiter import limiter
         ).all()
 
         if not timer_cards:
-            return {
+            return success_response(data={
                 "employee_id": employee_id,
                 "period_start": start_date,
                 "period_end": end_date,
@@ -861,7 +878,7 @@ from app.core.rate_limiter import limiter
                 "gross_salary": 0,
                 "deductions": 0,
                 "net_salary": 0
-            }
+            }, request=request)
 
         # Aggregate hours
         regular_hours = float(sum(tc.regular_hours or 0 for tc in timer_cards))
@@ -888,7 +905,7 @@ from app.core.rate_limiter import limiter
 
         net_salary = gross_salary - total_deductions
 
-        return {
+        return success_response(data={
             "employee_id": employee_id,
             "employee_name": f"{employee.full_name_kanji or ''} ({employee.full_name_kana or ''})",
             "hourly_rate": hourly_rate,
@@ -915,7 +932,7 @@ from app.core.rate_limiter import limiter
             },
             "net_salary": round(net_salary, 0),
             "timer_cards_processed": len(timer_cards)
-        }
+        }, request=request)
 
     except ValueError as e:
         raise handle_exception(ValidationError(str(e)))
@@ -1018,7 +1035,7 @@ def get_payroll_yukyu_summary(
         # Format period
         period_str = f"{start_dt.year}-{start_dt.month:02d}"
 
-        return {
+        return success_response(data={
             'period': period_str,
             'total_employees_with_yukyu': total_employees_with_yukyu,
             'total_yukyu_days': total_days,
@@ -1029,7 +1046,7 @@ def get_payroll_yukyu_summary(
                 'end_date': end_date
             },
             'details': details
-        }
+        }, request=request)
 
     except ValueError as e:
         raise HTTPException(
@@ -1053,7 +1070,8 @@ def get_payroll_yukyu_summary(
     summary="Generate payslip PDF",
     description="Generates a payslip PDF for an employee"
 )
-@limiter.limit("30/minute")def generate_payslip(
+@limiter.limit("30/minute")
+def generate_payslip(
     request: PayslipRequest,
     service: PayrollService = Depends(get_payroll_service),
     db: Session = Depends(get_db)
@@ -1131,7 +1149,7 @@ def get_payroll_yukyu_summary(
             employee_payroll.payslip_pdf_path = result['pdf_path']
         db.commit()
 
-        return PayslipInfo(**result)
+        return success_response(data=PayslipInfo(**result), request=request)
 
     except HTTPException:
         raise
@@ -1149,7 +1167,9 @@ def get_payroll_yukyu_summary(
     summary="Get payslip information",
     description="Retrieves information about a generated payslip"
 )
-@limiter.limit("30/minute")def get_payslip(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("30/minute")
+def get_payslip(
     payslip_id: str,
     service: PayrollService = Depends(get_payroll_service)
 ):
@@ -1174,7 +1194,7 @@ def get_payroll_yukyu_summary(
                 detail=f"Payslip {payslip_id} not found"
             )
 
-        return PayslipInfo(**result)
+        return success_response(data=PayslipInfo(**result), request=request)
 
     except HTTPException:
         raise
@@ -1195,7 +1215,9 @@ def get_payroll_yukyu_summary(
     summary="Get payroll settings",
     description="Retrieves the current payroll settings from database with caching"
 )
-@limiter.limit("30/minute")async def get_payroll_settings(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("30/minute")
+async def get_payroll_settings(
     config_service: PayrollConfigService = Depends(get_payroll_config_service)
 ):
     """
@@ -1220,7 +1242,7 @@ def get_payroll_yukyu_summary(
         settings = await config_service.get_configuration()
 
         # Convert Decimal to float for Pydantic validation
-        return PayrollSettings(
+        return success_response(data=PayrollSettings(
             id=settings.id,
             company_id=settings.company_id,
             overtime_rate=float(settings.overtime_rate),
@@ -1235,7 +1257,7 @@ def get_payroll_yukyu_summary(
             employment_insurance_rate=float(settings.employment_insurance_rate) if hasattr(settings, 'employment_insurance_rate') else 0.3,
             created_at=settings.created_at,
             updated_at=settings.updated_at
-        )
+        ), request=request)
 
     except Exception as e:
         raise HTTPException(
@@ -1305,7 +1327,7 @@ async def update_payroll_settings(
         updated_settings = await config_service.update_configuration(**settings_dict)
 
         # Convert to response schema
-        return PayrollSettings(
+        return success_response(data=PayrollSettings(
             id=updated_settings.id,
             company_id=updated_settings.company_id,
             overtime_rate=float(updated_settings.overtime_rate),
@@ -1320,7 +1342,7 @@ async def update_payroll_settings(
             employment_insurance_rate=float(updated_settings.employment_insurance_rate),
             created_at=updated_settings.created_at,
             updated_at=updated_settings.updated_at
-        )
+        ), request=request)
 
     except HTTPException:
         raise
@@ -1346,7 +1368,9 @@ async def update_payroll_settings(
     summary="Get payroll summary",
     description="Retrieves a summary view of all payroll runs"
 )
-@limiter.limit("30/minute")def get_payroll_summary(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("30/minute")
+def get_payroll_summary(
     skip: int = Query(0, ge=0, description="Number of items to skip"),
     limit: int = Query(50, ge=1, le=1000, description="Maximum number of items to return"),
     service: PayrollService = Depends(get_payroll_service),
@@ -1414,7 +1438,7 @@ async def update_payroll_settings(
                 created_at=row.created_at
             ))
 
-        return summaries
+        return success_response(data=summaries, request=request)
 
     except Exception as e:
         raise HTTPException(

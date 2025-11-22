@@ -8,6 +8,9 @@ from typing import List, Optional, Dict, Any
 from pydantic import BaseModel
 
 from app.core.database import get_db
+from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import RolePagePermission, User, UserRole
 from app.api.deps import get_current_user, require_admin
 from app.services.audit_service import AuditService
@@ -23,16 +26,16 @@ router = APIRouter(prefix="/api/role-permissions", tags=["role-permissions"])
 def get_client_ip(request: Request) -> Optional[str]:
     """Extract client IP address from request"""
     if "x-forwarded-for" in request.headers:
-        return request.headers["x-forwarded-for"].split(",")[0].strip()
+        return success_response(data=request.headers["x-forwarded-for"].split(",")[0].strip(), request=request)
     elif "x-real-ip" in request.headers:
-        return request.headers["x-real-ip"]
+        return success_response(data=request.headers["x-real-ip"], request=request)
     else:
-        return request.client.host if request.client else None
+        return success_response(data=request.client.host if request.client else None, request=request)
 
 
 def get_user_agent(request: Request) -> Optional[str]:
     """Extract user agent from request"""
-    return request.headers.get("user-agent")
+    return success_response(data=request.headers.get("user-agent"), request=request)
 
 
 # ================================
@@ -215,7 +218,7 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
         "design_system", "forms", "themes", "themes_customizer", "themes_gallery"
     ]
 
-    return {
+    return success_response(data={
         "SUPER_ADMIN": all_pages,  # Full access to all 54 pages
 
         "ADMIN": [p for p in all_pages if p != "admin_database"],  # All except DB admin
@@ -248,7 +251,7 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
         "TANTOSHA": basic_pages + hr_pages + [
             "reports", "reports_attendance", "reports_export"
         ],
-    }
+    }, request=request)
 
 
 # ================================
@@ -256,19 +259,29 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
 # ================================
 
 @router.get("/roles", response_model=List[Dict[str, str]], summary="List available roles")
-@limiter.limit("60/minute")async def list_roles():
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("60/minute")
+async def list_roles(
+    request: Request,
+    ):
     """Get list of all available roles"""
-    return AVAILABLE_ROLES
+    return success_response(data=AVAILABLE_ROLES, request=request)
 
 
 @router.get("/pages", response_model=List[PageInfo], summary="List available pages")
-@limiter.limit("60/minute")async def list_pages():
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("60/minute")
+async def list_pages(
+    request: Request,
+    ):
     """Get list of all available pages"""
-    return AVAILABLE_PAGES
+    return success_response(data=AVAILABLE_PAGES, request=request)
 
 
 @router.get("/{role_key}", response_model=RolePermissionsResponse, summary="Get permissions for a role")
-@limiter.limit("60/minute")async def get_role_permissions(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("60/minute")
+async def get_role_permissions(
     role_key: str,
     current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
@@ -314,16 +327,17 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
     # Count enabled pages
     enabled_count = sum(1 for p in result_permissions if p.is_enabled)
 
-    return RolePermissionsResponse(
+    return success_response(data=RolePermissionsResponse(
         role_key=role_key,
         permissions=result_permissions,
         total_pages=len(result_permissions),
         enabled_pages=enabled_count
-    )
+    ), request=request)
 
 
 @router.put("/{role_key}/{page_key}", response_model=PermissionResponse, summary="Update a single permission")
-@limiter.limit("60/minute")async def update_permission(
+@limiter.limit("60/minute")
+async def update_permission(
     role_key: str,
     page_key: str,
     permission: PermissionUpdate,
@@ -377,17 +391,18 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
         user_agent=get_user_agent(request)
     )
 
-    return PermissionResponse(
+    return success_response(data=PermissionResponse(
         role_key=role_key,
         page_key=page_key,
         is_enabled=db_permission.is_enabled,
         created_at=db_permission.created_at.isoformat(),
         updated_at=db_permission.updated_at.isoformat() if db_permission.updated_at else ""
-    )
+    ), request=request)
 
 
 @router.post("/bulk-update/{role_key}", response_model=RolePermissionsResponse, summary="Bulk update permissions for a role")
-@limiter.limit("60/minute")async def bulk_update_permissions(
+@limiter.limit("60/minute")
+async def bulk_update_permissions(
     role_key: str,
     bulk_update: BulkPermissionUpdate,
     request: Request,
@@ -454,11 +469,13 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
     )
 
     # Return updated permissions
-    return await get_role_permissions(role_key, current_user, db)
+    return success_response(data=await get_role_permissions(role_key, current_user, db), request=request)
 
 
 @router.get("/check/{role_key}/{page_key}", summary="Check if a role has access to a page")
-@limiter.limit("60/minute")async def check_permission(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("60/minute")
+async def check_permission(
     role_key: str,
     page_key: str,
     db: Session = Depends(get_db)
@@ -469,10 +486,10 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
     """
     # Validate role and page
     if role_key not in [r["key"] for r in AVAILABLE_ROLES]:
-        return {"has_access": False, "reason": "Role not found"}
+        return success_response(data={"has_access": False, "reason": "Role not found"}, request=request)
 
     if page_key not in [p["key"] for p in AVAILABLE_PAGES]:
-        return {"has_access": False, "reason": "Page not found"}
+        return success_response(data={"has_access": False, "reason": "Page not found"}, request=request)
 
     # Check permission
     permission = db.query(RolePagePermission).filter(
@@ -482,17 +499,19 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
 
     if not permission:
         # If no explicit permission set, default to false
-        return {"has_access": False, "reason": "No permission set"}
+        return success_response(data={"has_access": False, "reason": "No permission set"}, request=request)
 
-    return {
+    return success_response(data={
         "has_access": permission.is_enabled,
         "role_key": role_key,
         "page_key": page_key
-    }
+    }, request=request)
 
 
 @router.get("/user/{user_id}/permissions", response_model=UserPermissionsResponse, summary="Get current user's permissions")
-@limiter.limit("60/minute")async def get_user_permissions(
+@cache.cached(ttl=CacheTTL.MEDIUM)
+@limiter.limit("60/minute")
+async def get_user_permissions(
     user_id: int,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -512,14 +531,15 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
     ).all()
 
     # Return list of page_keys user can access
-    return UserPermissionsResponse(
+    return success_response(data=UserPermissionsResponse(
         user_role=user.role,
         permissions=[p.page_key for p in permissions]
-    )
+    ), request=request)
 
 
 @router.post("/reset/{role_key}", summary="Reset permissions to default for a role")
-@limiter.limit("60/minute")async def reset_permissions(
+@limiter.limit("60/minute")
+async def reset_permissions(
     role_key: str,
     current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
@@ -540,14 +560,15 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
     db.commit()
 
     # Return success message
-    return {
+    return success_response(data={
         "message": f"Permissions reset for role '{role_key}'",
         "note": "Use the default permissions setup to restore specific values"
-    }
+    }, request=request)
 
 
 @router.post("/initialize-defaults", summary="Initialize default permissions for all roles")
-@limiter.limit("60/minute")async def initialize_default_permissions(
+@limiter.limit("60/minute")
+async def initialize_default_permissions(
     current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
@@ -599,7 +620,7 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
         db.commit()
 
         # Step 4: Return summary
-        return {
+        return success_response(data={
             "success": True,
             "message": "Default permissions initialized successfully",
             "summary": {
@@ -609,7 +630,7 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
                 "total_pages": len(AVAILABLE_PAGES),
                 "role_summary": role_summary
             }
-        }
+        }, request=request)
 
     except Exception as e:
         db.rollback()

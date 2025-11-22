@@ -14,6 +14,9 @@ from datetime import datetime
 import json
 
 from app.core.database import get_db
+from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.rate_limiter import limiter
 from app.models.models import PageVisibility, SystemSettings, User, RolePagePermission, AdminActionType, ResourceType
 from app.api.deps import get_current_user, require_admin
@@ -76,7 +79,9 @@ class RoleStatsResponse(BaseModel):
 # NOTE: PageVisibility endpoints consolidated in pages.py router
 
 @router.get("/settings", response_model=List[SystemSettingResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_system_settings(
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -84,11 +89,13 @@ async def get_system_settings(
     Obtener todas las configuraciones del sistema
     """
     settings = db.query(SystemSettings).order_by(SystemSettings.key).all()
-    return settings
+    return success_response(data=settings, request=request)
 
 @router.get("/settings/{setting_key}", response_model=SystemSettingResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_system_setting(
     setting_key: str,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -99,7 +106,7 @@ async def get_system_setting(
     if not setting:
         raise HTTPException(status_code=404, detail="Configuración no encontrada")
 
-    return setting
+    return success_response(data=setting, request=request)
 
 class SystemSettingUpdate(BaseModel):
     value: str
@@ -108,6 +115,7 @@ class SystemSettingUpdate(BaseModel):
 async def update_system_setting(
     setting_key: str,
     setting_data: SystemSettingUpdate,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -124,12 +132,13 @@ async def update_system_setting(
     db.commit()
     db.refresh(setting)
 
-    return setting
+    return success_response(data=setting, request=request)
 
 @router.post("/maintenance-mode")
 @limiter.limit("10/minute")  # Critical admin operation
 async def toggle_maintenance_mode(
     maintenance_data: MaintenanceModeRequest,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -168,17 +177,19 @@ async def toggle_maintenance_mode(
     db.commit()
 
     action = "activado" if maintenance_data.enabled else "desactivado"
-    return {
+    return success_response(data={
         "message": f"Modo mantenimiento {action}",
         "maintenance_mode": maintenance_data.enabled
-    }
+    }, request=request)
 
 # ============================================
 # ENDPOINTS - STATISTICS
 # ============================================
 
 @router.get("/statistics")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_admin_statistics(
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -253,7 +264,7 @@ async def get_admin_statistics(
         logger.warning(f"Could not calculate uptime: {e}")
         uptime_str = "Unknown"
 
-    return {
+    return success_response(data={
         "pages": {
             "total": total_pages,
             "enabled": enabled_pages,
@@ -273,7 +284,7 @@ async def get_admin_statistics(
         "maintenance_mode": maintenance_enabled,
         "database_size_mb": database_size_mb,
         "uptime": uptime_str
-    }
+    }, request=request)
 
 
 # ============================================
@@ -281,7 +292,9 @@ async def get_admin_statistics(
 # ============================================
 
 @router.get("/export-config")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def export_configuration(
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -314,11 +327,12 @@ async def export_configuration(
         ]
     }
 
-    return export_data
+    return success_response(data=export_data, request=request)
 
 @router.post("/import-config")
 async def import_configuration(
     config_data: dict,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -353,18 +367,19 @@ async def import_configuration(
 
     db.commit()
 
-    return {
+    return success_response(data={
         "message": "Configuración importada exitosamente",
         "imported_at": datetime.utcnow().isoformat(),
         "imported_pages": imported_pages,
         "imported_settings": imported_settings
-    }
+    }, request=request)
 
 # ============================================
 # ENDPOINTS - ROLE STATISTICS
 # ============================================
 
 @router.get("/role-stats", response_model=List[RoleStatsResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("20/minute")  # Admin endpoints - sensitive operations
 async def get_role_stats(
     request: Request,
@@ -449,7 +464,7 @@ async def get_role_stats(
         metadata={"action": "view_role_stats", "roles_count": len(result)}
     )
 
-    return result
+    return success_response(data=result, request=request)
 
 # ============================================
 # NOTE: PageVisibility CRUD endpoints removed

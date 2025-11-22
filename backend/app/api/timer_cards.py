@@ -9,6 +9,9 @@ import shutil
 import logging
 
 from app.core.database import get_db
+from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.config import settings
 from app.models.models import TimerCard, Employee, User
 from app.schemas.timer_card import (
@@ -134,7 +137,7 @@ def _get_nth_weekday(year: int, month: int, weekday: int, n: int) -> date:
     # Add weeks to get nth occurrence
     nth_occurrence = first_occurrence + timedelta(weeks=n - 1)
 
-    return nth_occurrence
+    return success_response(data=nth_occurrence, request=request)
 
 
 def calculate_hours(clock_in: datetime_time, clock_out: datetime_time, break_minutes: int = 0, work_date: date = None):
@@ -186,12 +189,12 @@ def calculate_hours(clock_in: datetime_time, clock_out: datetime_time, break_min
     # Calculate night hours (22:00-05:00 JST)
     night_hours = _calculate_night_hours(start, end, break_minutes)
 
-    return {
+    return success_response(data={
         "regular_hours": round(regular_hours, 2),
         "overtime_hours": round(overtime_hours, 2),
         "night_hours": round(night_hours, 2),
         "holiday_hours": round(holiday_hours, 2)
-    }
+    }, request=request)
 
 
 def _calculate_night_hours(start: datetime, end: datetime, break_minutes: int = 0) -> float:
@@ -241,7 +244,7 @@ def _calculate_night_hours(start: datetime, end: datetime, break_minutes: int = 
             break_ratio = break_minutes / total_work_minutes
             night_minutes = night_minutes * (1 - break_ratio)
 
-    return round(night_minutes / 60, 2)
+    return success_response(data=round(night_minutes / 60, 2), request=request)
 
 
 @router.post("/", response_model=TimerCardResponse, status_code=201)
@@ -269,7 +272,7 @@ async def create_timer_card(
     db.add(new_card)
     db.commit()
     db.refresh(new_card)
-    return new_card
+    return success_response(data=new_card, request=request)
 
 
 @router.post("/bulk", response_model=TimerCardProcessResult)
@@ -301,13 +304,13 @@ async def create_timer_cards_bulk(
 
     db.commit()
 
-    return TimerCardProcessResult(
+    return success_response(data=TimerCardProcessResult(
         total_records=len(bulk_data.records),
         successful=len(created_ids),
         failed=len(errors),
         errors=errors,
         created_ids=created_ids
-    )
+    ), request=request)
 
 
 @router.post("/upload", response_model=TimerCardUploadResponse)
@@ -354,14 +357,14 @@ async def upload_timer_card_file(
             for record in ocr_result.get('records', [])
         ]
 
-        return TimerCardUploadResponse(
+        return success_response(data=TimerCardUploadResponse(
             file_name=file.filename,
             pages_processed=ocr_result.get('pages_processed', 0),
             records_found=len(ocr_data),
             ocr_data=ocr_data,
             processing_errors=ocr_result.get('processing_errors', []),
             message=f"{len(ocr_data)} registros extraídos. Por favor revisar y confirmar."
-        )
+        ), request=request)
 
     except Exception as e:
         logger.error(f"Error processing timer card: {e}", exc_info=True)
@@ -372,6 +375,7 @@ async def upload_timer_card_file(
 
 
 @router.get("/", response_model=list[TimerCardResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("100/minute")
 async def list_timer_cards(
     request: Request,
@@ -444,16 +448,17 @@ async def list_timer_cards(
         query = query.filter(TimerCard.is_approved == is_approved)
 
     # Eager load employee relationship to prevent N+1 queries
-    return (
+    return success_response(data=(
         query
         .order_by(TimerCard.work_date.desc(), TimerCard.id.desc())
         .offset(skip)
         .limit(limit)
         .all()
-    )
+    ), request=request)
 
 
 @router.get("/{timer_card_id}", response_model=TimerCardResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("100/minute")
 async def get_timer_card(
     request: Request,
@@ -532,7 +537,7 @@ async def get_timer_card(
     # ADMIN, SUPER_ADMIN, KEITOSAN, TANTOSHA: No restrictions
 
     logger.info(f"User {current_user.username} accessed timer card {timer_card_id}")
-    return timer_card
+    return success_response(data=timer_card, request=request)
 
 
 @router.put("/{timer_card_id}", response_model=TimerCardResponse)
@@ -566,7 +571,7 @@ async def update_timer_card(
 
     db.commit()
     db.refresh(timer_card)
-    return timer_card
+    return success_response(data=timer_card, request=request)
 
 
 @router.post("/approve", response_model=dict)
@@ -585,7 +590,7 @@ async def approve_timer_cards(
     
     db.commit()
     
-    return {"message": f"Approved {len(cards)} timer cards"}
+    return success_response(data={"message": f"Approved {len(cards)} timer cards"}, request=request)
 
 
 @router.delete("/{timer_card_id}")
@@ -603,4 +608,4 @@ async def delete_timer_card(
     
     db.delete(timer_card)
     db.commit()
-    return {"message": "Timer card deleted"}
+    return success_response(data={"message": "Timer card deleted"}, request=request)

@@ -23,6 +23,9 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 from app.core.logging import get_logger, sanitize_message, get_request_id
+from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.rate_limiter import limiter
 
 router = APIRouter(prefix="/logs", tags=["logging"])
@@ -199,10 +202,13 @@ async def collect_frontend_logs(
         client_ip=client_ip,
     )
 
-    return LogResponse(
-        success=True,
-        received=processed_count,
-        request_id=request_id,
+    return created_response(
+        data=LogResponse(
+            success=True,
+            received=processed_count,
+            request_id=request_id,
+        ),
+        request=request
     )
 
 
@@ -211,18 +217,24 @@ async def collect_frontend_logs(
     summary="Logging endpoint health check",
     description="Check if the logging endpoint is operational",
 )
-async def logging_health() -> Dict[str, Any]:
+@cache.cached(ttl=CacheTTL.MEDIUM)
+async def logging_health(
+    request: Request,
+    ) -> Dict[str, Any]:
     """
     Health check for logging endpoint.
 
     Returns:
         Health status
     """
-    return {
-        "status": "healthy",
-        "service": "frontend-log-collection",
-        "timestamp": datetime.utcnow().isoformat(),
-    }
+    return success_response(
+        data={
+            "status": "healthy",
+            "service": "frontend-log-collection",
+            "timestamp": datetime.utcnow().isoformat(),
+        },
+        request=request
+    )
 
 
 __all__ = ["router"]

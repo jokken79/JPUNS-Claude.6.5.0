@@ -10,6 +10,8 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
 from app.core.database import get_db
+from fastapi import Request
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import (
     AuditLog,
     User,
@@ -204,9 +206,11 @@ def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
 
 
 @router.get("/stats")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD)
 async def get_dashboard_stats(
+    request: Request,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -248,7 +252,7 @@ async def get_dashboard_stats(
     total_salary = sum(s.net_salary for s in current_salaries)
     total_profit = sum(s.company_profit for s in current_salaries)
     
-    return DashboardStats(
+    return success_response(data=DashboardStats(
         total_candidates=total_candidates,
         pending_candidates=pending_candidates,
         total_employees=total_employees,
@@ -258,13 +262,15 @@ async def get_dashboard_stats(
         pending_timer_cards=pending_timer_cards,
         total_salary_current_month=total_salary,
         total_profit_current_month=total_profit
-    )
+    ), request=request)
 
 
 @router.get("/factories")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD)
 async def get_factories_dashboard(
+    request: Request,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -376,13 +382,15 @@ async def get_factories_dashboard(
             profit_margin=round(profit_margin, 2)
         ))
 
-    return result
+    return success_response(data=result, request=request)
 
 
 @router.get("/alerts", response_model=list[EmployeeAlert])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD)
 async def get_alerts(
+    request: Request,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -421,7 +429,7 @@ async def get_alerts(
                 message=f"Low yukyu balance: {employee.yukyu_remaining} days remaining"
             ))
     
-    return sorted(alerts, key=lambda x: x.days_until)
+    return success_response(data=sorted(alerts, key=lambda x: x.days_until), request=request)
 
 
 def _trends_cache_key(months: int, **kwargs):
@@ -430,9 +438,11 @@ def _trends_cache_key(months: int, **kwargs):
 
 
 @router.get("/trends", response_model=list[MonthlyTrend])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD, key_builder=_trends_cache_key)
 async def get_monthly_trends(
+    request: Request,
     months: int = 6,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -482,31 +492,33 @@ async def get_monthly_trends(
             total_profit=total_profit
         ))
     
-    return list(reversed(trends))
+    return success_response(data=list(reversed(trends)), request=request)
 
 
 @router.get("/admin")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD)
 async def get_admin_dashboard(
+    request: Request,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
     """Get complete admin dashboard"""
-    stats = await get_dashboard_stats(current_user, db)
-    factories = await get_factories_dashboard(current_user, db)
-    alerts = await get_alerts(current_user, db)
-    trends = await get_monthly_trends(6, current_user, db)
+    stats = await get_dashboard_stats(request, current_user, db)
+    factories = await get_factories_dashboard(request, current_user, db)
+    alerts = await get_alerts(request, current_user, db)
+    trends = await get_monthly_trends(request, 6, current_user, db)
     
     recent_activities = _build_recent_activities(db, 20)
 
-    return AdminDashboard(
+    return success_response(data=AdminDashboard(
         stats=stats,
         factories=factories,
         alerts=alerts,
         monthly_trends=trends,
         recent_activities=recent_activities
-    )
+    ), request=request)
 
 
 def _recent_activity_cache_key(limit: int = 20, **kwargs):
@@ -515,9 +527,11 @@ def _recent_activity_cache_key(limit: int = 20, **kwargs):
 
 
 @router.get("/recent-activity", response_model=list[RecentActivity])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.SHORT, key_builder=_recent_activity_cache_key)
 async def get_recent_activity(
+    request: Request,
     limit: int = Query(default=20, le=100),
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -526,7 +540,7 @@ async def get_recent_activity(
     Get recent system activity from audit logs and recent changes.
     Returns last N activities across all entities.
     """
-    return _build_recent_activities(db, limit)
+    return success_response(data=_build_recent_activities(db, limit), request=request)
 
 
 def _employee_dashboard_cache_key(employee_id: int, **kwargs):
@@ -535,10 +549,12 @@ def _employee_dashboard_cache_key(employee_id: int, **kwargs):
 
 
 @router.get("/employee/{employee_id}")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD, key_builder=_employee_dashboard_cache_key)
 async def get_employee_dashboard(
     employee_id: int,
+    request: Request,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
 ):
@@ -588,7 +604,7 @@ async def get_employee_dashboard(
         Request.status == RequestStatus.PENDING
     ).count()
 
-    return EmployeeDashboard(
+    return success_response(data=EmployeeDashboard(
         employee_id=employee.id,
         employee_name=employee.full_name_kanji,
         factory_name=factory_name,
@@ -600,7 +616,7 @@ async def get_employee_dashboard(
         last_payment_date=last_salary.paid_at.date() if last_salary and last_salary.paid_at else None,
         current_month_hours=current_hours,
         pending_requests=pending_requests
-    )
+    ), request=request)
 
 
 # ============================================================================
@@ -614,9 +630,11 @@ def _yukyu_trends_cache_key(months: int = 6, **kwargs):
 
 
 @router.get("/yukyu-trends-monthly", response_model=list[YukyuTrendMonth])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.LONG, key_builder=_yukyu_trends_cache_key)
 async def get_yukyu_trends_monthly(
+    request: Request,
     months: int = Query(default=6, ge=1, le=24, description="Number of months to retrieve"),
     current_user: User = Depends(auth_service.require_yukyu_access()),
     db: Session = Depends(get_db)
@@ -688,7 +706,7 @@ async def get_yukyu_trends_monthly(
         ))
 
     # Sort chronologically (oldest first)
-    return list(reversed(trends))
+    return success_response(data=list(reversed(trends)), request=request)
 
 
 def _yukyu_compliance_cache_key(period: str = "current", **kwargs):
@@ -697,9 +715,11 @@ def _yukyu_compliance_cache_key(period: str = "current", **kwargs):
 
 
 @router.get("/yukyu-compliance-status", response_model=YukyuComplianceStatus)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.LONG, key_builder=_yukyu_compliance_cache_key)
 async def get_yukyu_compliance_status(
+    request: Request,
     period: str = Query(default="current", description="Period: 'current' for current fiscal year or YYYY-MM"),
     current_user: User = Depends(auth_service.require_yukyu_access()),
     db: Session = Depends(get_db)
@@ -775,10 +795,10 @@ async def get_yukyu_compliance_status(
     # Sort by compliance status (non-compliant first)
     employee_details.sort(key=lambda x: (x.is_compliant, x.employee_name))
 
-    return YukyuComplianceStatus(
+    return success_response(data=YukyuComplianceStatus(
         period=period_str,
         total_employees=len(employees),
         compliant_employees=compliant,
         non_compliant_employees=non_compliant,
         employees_details=employee_details
-    )
+    ), request=request)
