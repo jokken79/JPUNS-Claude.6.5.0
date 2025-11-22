@@ -152,7 +152,7 @@ async def get_current_user_yukyu_summary(
     logger.info(f"Found employee record for user {current_user.username}: {employee.full_name_kanji} (ID: {employee.id})")
 
     service = YukyuService(db)
-    return await service.get_employee_yukyu_summary(employee.id)
+    return success_response(data=await service.get_employee_yukyu_summary(employee.id), request=request)
 
 
 @router.get("/balances/{employee_id}", response_model=YukyuBalanceSummary)
@@ -175,7 +175,7 @@ async def get_employee_yukyu_summary(
     - Alert if needs to use 5 days minimum
     """
     service = YukyuService(db)
-    return await service.get_employee_yukyu_summary(employee_id)
+    return success_response(data=await service.get_employee_yukyu_summary(employee_id), request=request)
 
 
 # ============================================================================
@@ -208,7 +208,7 @@ async def create_yukyu_request(
     - `taisha`: Resignation (退社)
     """
     service = YukyuService(db)
-    return await service.create_request(request_data, current_user.id)
+    return created_response(data=await service.create_request(request_data, current_user.id), request=request)
 
 
 @router.get("/requests/", response_model=List[YukyuRequestResponse])
@@ -278,7 +278,7 @@ async def approve_yukyu_request(
     - Remaining: 8 days from 2023 + 6 days from 2024 = 14 days total
     """
     service = YukyuService(db)
-    return await service.approve_request(request_id, approval_data, current_user.id)
+    return success_response(data=await service.approve_request(request_id, approval_data, current_user.id), request=request)
 
 
 @router.put("/requests/{request_id}/reject", response_model=YukyuRequestResponse)
@@ -304,7 +304,7 @@ async def reject_yukyu_request(
     4. No yukyus are deducted
     """
     service = YukyuService(db)
-    return await service.reject_request(request_id, rejection_data, current_user.id)
+    return success_response(data=await service.reject_request(request_id, rejection_data, current_user.id), request=request)
 
 
 # ============================================================================
@@ -333,7 +333,7 @@ async def get_employees_by_factory(
     - Factory info
     """
     service = YukyuService(db)
-    return await service.get_employees_by_factory(factory_id)
+    return success_response(data=await service.get_employees_by_factory(factory_id), request=request)
 
 
 # ============================================================================
@@ -391,7 +391,7 @@ async def get_scheduler_status(
     - Lista de jobs configurados con próximas ejecuciones
     """
     from app.core.scheduler import get_scheduler_status
-    return get_scheduler_status()
+    return success_response(data=get_scheduler_status(), request=request)
 
 
 @router.get("/reports/export-excel", tags=["Reports"])

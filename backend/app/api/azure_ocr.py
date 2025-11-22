@@ -39,7 +39,7 @@ def process_ocr_sync(image_path: str, document_type: str) -> Dict[str, Any]:
     try:
         result = ocr_service.process_document(image_path, document_type)
         result["document_type"] = document_type
-        return {"success": True, "data": result}
+        return success_response(data={"success": True, "data": result}, request=request)
     except Exception as e:
         app_logger.exception("OCR processing failed in background", document_type=document_type)
         raise
@@ -53,7 +53,7 @@ async def process_options(
     request: Request,
     ):
     """Handle OPTIONS request for CORS preflight."""
-    return {"success": True}
+    return success_response(data={"success": True}, request=request)
 
 
 @router.options("/process-from-base64")
@@ -61,7 +61,7 @@ async def process_base64_options(
     request: Request,
     ):
     """Handle OPTIONS request for CORS preflight."""
-    return {"success": True}
+    return success_response(data={"success": True}, request=request)
 
 
 @router.post(
@@ -114,7 +114,7 @@ async def process_ocr_document(
 
         app_logger.info(f"OCR processing completed successfully for {document_type}")
 
-        return {"success": True, "data": result, "message": "Document processed successfully"}
+        return success_response(data={"success": True, "data": result, "message": "Document processed successfully"}, request=request)
     except Exception as exc:  # pragma: no cover - fallback
         app_logger.exception("OCR processing failed", document_type=document_type)
         raise HTTPException(status_code=500, detail=str(exc)) from exc
@@ -146,7 +146,7 @@ async def process_ocr_from_base64(
 
         try:
             result = ocr_service.process_document(temp_file.name, document_type)
-            return {"success": True, "data": result, "message": "Document processed successfully"}
+            return success_response(data={"success": True, "data": result, "message": "Document processed successfully"}, request=request)
         finally:
             Path(temp_file.name).unlink(missing_ok=True)
     except Exception as exc:  # pragma: no cover
@@ -202,12 +202,12 @@ async def process_ocr_document_async(
 
     app_logger.info(f"📋 OCR job creado: {job_id} ({document_type})")
 
-    return JobResponse(
+    return success_response(data=JobResponse(
         job_id=job_id,
         job_type="ocr_processing",
         status="pending",
         message=f"OCR job created. Check status at /api/azure_ocr/jobs/{job_id}"
-    )
+    ), request=request)
 
 
 @router.get("/jobs/{job_id}", response_model=JobStatusResponse)
@@ -245,7 +245,7 @@ async def get_job_status(
     elif job.status == JobStatus.FAILED:
         progress = 0
 
-    return JobStatusResponse(
+    return success_response(data=JobStatusResponse(
         job_id=job.job_id,
         job_type=job.job_type,
         status=job.status.value,
@@ -255,7 +255,7 @@ async def get_job_status(
         started_at=job.started_at,
         finished_at=job.finished_at,
         progress_percentage=progress
-    )
+    ), request=request)
 
 
 @router.get("/health")
@@ -265,12 +265,12 @@ async def health_check(
     request: Request,
     ):
     """Health check endpoint"""
-    return {
+    return success_response(data={
         "status": "healthy",
         "service": "azure_ocr",
         "provider": "Azure Computer Vision",
         "api_version": ocr_service.api_version
-    }
+    }, request=request)
 
 
 @router.post("/warm-up")
@@ -308,4 +308,4 @@ async def warm_up_ocr_service(
             app_logger.warning("Warm up failed", error=str(exc))
 
     background_tasks.add_task(_warm_up)
-    return {"success": True, "message": "Azure OCR warm-up started"}
+    return success_response(data={"success": True, "message": "Azure OCR warm-up started"}, request=request)

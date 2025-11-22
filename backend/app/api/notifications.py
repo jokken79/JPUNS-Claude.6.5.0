@@ -23,7 +23,7 @@ async def _run_blocking(func, *args, **kwargs):
 
     loop = asyncio.get_running_loop()
     call = partial(func, *args, **kwargs)
-    return await loop.run_in_executor(None, call)
+    return success_response(data=await loop.run_in_executor(None, call), request=request)
 
 
 class EmailRequest(BaseModel):
@@ -73,7 +73,7 @@ async def send_email(
         if not success:
             raise HTTPException(status_code=500, detail="Failed to send email")
         
-        return {"success": True, "message": "Email sent successfully"}
+        return success_response(data={"success": True, "message": "Email sent successfully"}, request=request)
         
     except HTTPException:
         raise
@@ -107,7 +107,7 @@ async def send_line_notification(
         if not success:
             raise HTTPException(status_code=500, detail="Failed to send LINE notification")
         
-        return {"success": True, "message": "LINE notification sent"}
+        return success_response(data={"success": True, "message": "LINE notification sent"}, request=request)
         
     except HTTPException:
         raise
@@ -144,7 +144,7 @@ async def notify_yukyu_approval(
         if not success:
             raise HTTPException(status_code=500, detail="Failed to send notification")
         
-        return {"success": True, "message": "Notification sent"}
+        return success_response(data={"success": True, "message": "Notification sent"}, request=request)
         
     except HTTPException:
         raise
@@ -189,7 +189,7 @@ async def notify_payslip_ready(
         if not success:
             raise HTTPException(status_code=500, detail="Failed to send notification")
         
-        return {"success": True, "message": "Payslip notification sent"}
+        return success_response(data={"success": True, "message": "Payslip notification sent"}, request=request)
         
     except HTTPException:
         raise
@@ -214,14 +214,14 @@ async def test_email_configuration(
             is_html=True,
         )
         
-        return {
+        return success_response(data={
             "success": test_result,
             "message": "Email configuration test completed"
-        }
+        }, request=request)
         
     except Exception as e:
         logger.error(f"Email test failed: {e}")
-        return {
+        return success_response(data={
             "success": False,
             "error": str(e)
-        }
+        }, request=request)

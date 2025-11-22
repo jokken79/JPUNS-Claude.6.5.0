@@ -104,7 +104,7 @@ async def get_factories_stats(
     # Intentar obtener del cache
     cached = redis_client.get(cache_key)
     if cached:
-        return FactoryStats(**cached)
+        return success_response(data=FactoryStats(**cached), request=request)
 
     # Si no está en cache, calcular estadísticas
     # Total factories
@@ -200,7 +200,7 @@ async def delete_factory(
     # Invalidar cache de factories
     invalidate_cache("factories:*")
 
-    return {"message": "Factory deleted successfully"}
+    return no_content_response(data={"message": "Factory deleted successfully"}, request=request)
 
 
 # ============ Configuration Management Endpoints ============
@@ -220,9 +220,9 @@ async def get_factory_config(
 
     # Return config or empty config with defaults
     if factory.config:
-        return FactoryConfig(**factory.config)
+        return success_response(data=FactoryConfig(**factory.config), request=request)
     else:
-        return FactoryConfig()
+        return success_response(data=FactoryConfig(), request=request)
 
 
 @router.put("/{factory_id}/config", response_model=FactoryResponse)
@@ -312,4 +312,4 @@ async def get_factory_with_employees(
         ]
     }
 
-    return FactoryWithEmployees(**factory_dict)
+    return success_response(data=FactoryWithEmployees(**factory_dict), request=request)

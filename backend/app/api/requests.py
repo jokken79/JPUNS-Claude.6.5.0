@@ -301,7 +301,7 @@ async def delete_request(
 
     db.delete(request)
     db.commit()
-    return {"message": "Request deleted"}
+    return no_content_response(data={"message": "Request deleted"}, request=request)
 
 
 # ═══════════════════════════════════════════════════════════════════════════

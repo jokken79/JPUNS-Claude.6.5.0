@@ -46,9 +46,12 @@ async def get_visibility_toggle(
 
         enabled = setting.value.lower() == "true" if setting.value else True
 
-        return VisibilityToggleResponse(
-            enabled=enabled,
-            updated_at=setting.updated_at
+        return success_response(
+            data=VisibilityToggleResponse(
+                enabled=enabled,
+                updated_at=setting.updated_at
+            ),
+            request=request
         )
 
     except Exception as e:
@@ -107,9 +110,12 @@ async def update_visibility_toggle(
             username=current_user.username
         )
 
-        return VisibilityToggleResponse(
-            enabled=toggle_data.enabled,
-            updated_at=setting.updated_at
+        return success_response(
+            data=VisibilityToggleResponse(
+                enabled=toggle_data.enabled,
+                updated_at=setting.updated_at
+            ),
+            request=request
         )
 
     except Exception as e:

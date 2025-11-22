@@ -58,7 +58,7 @@ async def list_timer_cards(
         else:
             # If no employee record found for this user, return empty list
             logger.warning(f"User {current_user.username} (role: {user_role}) has no employee record")
-            return []
+            return success_response(data=[], request=request)
 
     elif user_role == "KANRININSHA":
         # Managers can see timer cards from their factory
@@ -68,7 +68,7 @@ async def list_timer_cards(
             logger.info(f"Manager {current_user.username} filtering timer cards for factory_id={employee.factory_id}")
         else:
             logger.warning(f"Manager {current_user.username} has no factory assignment")
-            return []
+            return success_response(data=[], request=request)
 
     elif user_role == "COORDINATOR":
         # Coordinators can see timer cards from their assigned factories
@@ -85,7 +85,7 @@ async def list_timer_cards(
             query = query.filter(TimerCard.hakenmoto_id == employee.hakenmoto_id)
         else:
             # If employee not found, return empty result
-            return []
+            return success_response(data=[], request=request)
     if factory_id:
         query = query.filter(TimerCard.factory_id == factory_id)
     if is_approved is not None:

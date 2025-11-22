@@ -51,7 +51,7 @@ SUMMARY_IGNORED_FIELDS = {"created_at", "updated_at", "password_hash"}
 def _field_names(values: Optional[Dict[str, Any]]) -> List[str]:
     if not values:
         return []
-    return [key for key in values.keys() if key not in SUMMARY_IGNORED_FIELDS]
+    return success_response(data=[key for key in values.keys() if key not in SUMMARY_IGNORED_FIELDS], request=request)
 
 
 def _format_field_suffix(fields: List[str]) -> str:
@@ -60,7 +60,7 @@ def _format_field_suffix(fields: List[str]) -> str:
     preview = ", ".join(fields[:3])
     if len(fields) > 3:
         preview += ", …"
-    return f" (fields: {preview})"
+    return success_response(data=f" (fields: {preview})", request=request)
 
 
 def _describe_audit_entry(entry: AuditLog) -> str:
@@ -69,12 +69,12 @@ def _describe_audit_entry(entry: AuditLog) -> str:
     action = (entry.action or "event").upper()
 
     if action == "CREATE":
-        return f"Created {table_label}{record_label}{_format_field_suffix(_field_names(entry.new_values))}"
+        return success_response(data=f"Created {table_label}{record_label}{_format_field_suffix(_field_names(entry.new_values))}", request=request)
     if action == "UPDATE":
-        return f"Updated {table_label}{record_label}{_format_field_suffix(_field_names(entry.new_values))}"
+        return success_response(data=f"Updated {table_label}{record_label}{_format_field_suffix(_field_names(entry.new_values))}", request=request)
     if action == "DELETE":
-        return f"Deleted {table_label}{record_label}{_format_field_suffix(_field_names(entry.old_values))}"
-    return f"{action.title()} {table_label}{record_label}"
+        return success_response(data=f"Deleted {table_label}{record_label}{_format_field_suffix(_field_names(entry.old_values))}", request=request)
+    return success_response(data=f"{action.title()} {table_label}{record_label}", request=request)
 
 
 def _fetch_recent_audit_activity(db: Session, limit: int) -> List[RecentActivity]:
@@ -115,7 +115,7 @@ def _fetch_recent_audit_activity(db: Session, limit: int) -> List[RecentActivity
             )
         )
 
-    return activities
+    return success_response(data=activities, request=request)
 
 
 def _fallback_recent_activity(db: Session, limit: int) -> List[RecentActivity]:
@@ -195,14 +195,14 @@ def _fallback_recent_activity(db: Session, limit: int) -> List[RecentActivity]:
         ))
 
     activities.sort(key=lambda x: x.timestamp, reverse=True)
-    return activities[:limit]
+    return success_response(data=activities[:limit], request=request)
 
 
 def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
     activities = _fetch_recent_audit_activity(db, limit)
     if activities:
-        return activities[:limit]
-    return _fallback_recent_activity(db, limit)
+        return success_response(data=activities[:limit], request=request)
+    return success_response(data=_fallback_recent_activity(db, limit), request=request)
 
 
 @router.get("/stats")
@@ -251,7 +251,7 @@ async def get_dashboard_stats(
     total_salary = sum(s.net_salary for s in current_salaries)
     total_profit = sum(s.company_profit for s in current_salaries)
     
-    return DashboardStats(
+    return success_response(data=DashboardStats(
         total_candidates=total_candidates,
         pending_candidates=pending_candidates,
         total_employees=total_employees,
@@ -261,7 +261,7 @@ async def get_dashboard_stats(
         pending_timer_cards=pending_timer_cards,
         total_salary_current_month=total_salary,
         total_profit_current_month=total_profit
-    )
+    ), request=request)
 
 
 @router.get("/factories")
@@ -380,7 +380,7 @@ async def get_factories_dashboard(
             profit_margin=round(profit_margin, 2)
         ))
 
-    return result
+    return success_response(data=result, request=request)
 
 
 @router.get("/alerts", response_model=list[EmployeeAlert])
@@ -426,12 +426,12 @@ async def get_alerts(
                 message=f"Low yukyu balance: {employee.yukyu_remaining} days remaining"
             ))
     
-    return sorted(alerts, key=lambda x: x.days_until)
+    return success_response(data=sorted(alerts, key=lambda x: x.days_until), request=request)
 
 
 def _trends_cache_key(months: int, **kwargs):
     """Custom cache key for monthly trends endpoint"""
-    return CacheKey.build("dashboard", "trends", str(months))
+    return success_response(data=CacheKey.build("dashboard", "trends", str(months)), request=request)
 
 
 @router.get("/trends", response_model=list[MonthlyTrend])
@@ -488,7 +488,7 @@ async def get_monthly_trends(
             total_profit=total_profit
         ))
     
-    return list(reversed(trends))
+    return success_response(data=list(reversed(trends)), request=request)
 
 
 @router.get("/admin")
@@ -507,18 +507,18 @@ async def get_admin_dashboard(
     
     recent_activities = _build_recent_activities(db, 20)
 
-    return AdminDashboard(
+    return success_response(data=AdminDashboard(
         stats=stats,
         factories=factories,
         alerts=alerts,
         monthly_trends=trends,
         recent_activities=recent_activities
-    )
+    ), request=request)
 
 
 def _recent_activity_cache_key(limit: int = 20, **kwargs):
     """Custom cache key for recent activity endpoint"""
-    return CacheKey.build("dashboard", "recent_activity", str(limit))
+    return success_response(data=CacheKey.build("dashboard", "recent_activity", str(limit)), request=request)
 
 
 @router.get("/recent-activity", response_model=list[RecentActivity])
@@ -534,12 +534,12 @@ async def get_recent_activity(
     Get recent system activity from audit logs and recent changes.
     Returns last N activities across all entities.
     """
-    return _build_recent_activities(db, limit)
+    return success_response(data=_build_recent_activities(db, limit), request=request)
 
 
 def _employee_dashboard_cache_key(employee_id: int, **kwargs):
     """Custom cache key for employee dashboard"""
-    return CacheKey.build("dashboard", "employee", str(employee_id))
+    return success_response(data=CacheKey.build("dashboard", "employee", str(employee_id)), request=request)
 
 
 @router.get("/employee/{employee_id}")
@@ -597,7 +597,7 @@ async def get_employee_dashboard(
         Request.status == RequestStatus.PENDING
     ).count()
 
-    return EmployeeDashboard(
+    return success_response(data=EmployeeDashboard(
         employee_id=employee.id,
         employee_name=employee.full_name_kanji,
         factory_name=factory_name,
@@ -609,7 +609,7 @@ async def get_employee_dashboard(
         last_payment_date=last_salary.paid_at.date() if last_salary and last_salary.paid_at else None,
         current_month_hours=current_hours,
         pending_requests=pending_requests
-    )
+    ), request=request)
 
 
 # ============================================================================
@@ -619,7 +619,7 @@ async def get_employee_dashboard(
 
 def _yukyu_trends_cache_key(months: int = 6, **kwargs):
     """Custom cache key for yukyu trends endpoint"""
-    return CacheKey.build("dashboard", "yukyu_trends", str(months))
+    return success_response(data=CacheKey.build("dashboard", "yukyu_trends", str(months)), request=request)
 
 
 @router.get("/yukyu-trends-monthly", response_model=list[YukyuTrendMonth])
@@ -698,12 +698,12 @@ async def get_yukyu_trends_monthly(
         ))
 
     # Sort chronologically (oldest first)
-    return list(reversed(trends))
+    return success_response(data=list(reversed(trends)), request=request)
 
 
 def _yukyu_compliance_cache_key(period: str = "current", **kwargs):
     """Custom cache key for yukyu compliance status endpoint"""
-    return CacheKey.build("dashboard", "yukyu_compliance", period)
+    return success_response(data=CacheKey.build("dashboard", "yukyu_compliance", period), request=request)
 
 
 @router.get("/yukyu-compliance-status", response_model=YukyuComplianceStatus)
@@ -786,10 +786,10 @@ async def get_yukyu_compliance_status(
     # Sort by compliance status (non-compliant first)
     employee_details.sort(key=lambda x: (x.is_compliant, x.employee_name))
 
-    return YukyuComplianceStatus(
+    return success_response(data=YukyuComplianceStatus(
         period=period_str,
         total_employees=len(employees),
         compliant_employees=compliant,
         non_compliant_employees=non_compliant,
         employees_details=employee_details
-    )
+    ), request=request)

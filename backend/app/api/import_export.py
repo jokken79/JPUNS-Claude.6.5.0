@@ -58,7 +58,7 @@ def _write_upload_to_temp(upload: UploadFile, expected_suffixes: tuple[str, ...]
         with temp_file as buffer:
             upload.file.seek(0)
             shutil.copyfileobj(upload.file, buffer)
-        return Path(temp_file.name)
+        return success_response(data=Path(temp_file.name), request=request)
     except HTTPException:
         raise
     except Exception:  # pragma: no cover - defensive programming
@@ -107,11 +107,11 @@ def _create_template_response(
         "Content-Disposition": f'attachment; filename="{filename}"',
         "Cache-Control": "no-cache",
     }
-    return StreamingResponse(
+    return success_response(data=StreamingResponse(
         output,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers=headers,
-    )
+    ), request=request)
 
 
 @router.post("/employees")
@@ -138,7 +138,7 @@ async def import_employees(
         # Import
         results = import_service.import_employees_from_excel(str(temp_file), db)
 
-        return results
+        return success_response(data=results, request=request)
         
     except HTTPException:
         raise
@@ -187,7 +187,7 @@ async def import_timer_cards(
             db,
         )
         
-        return results
+        return success_response(data=results, request=request)
         
     except HTTPException:
         raise
@@ -219,7 +219,7 @@ async def import_factory_configs(
     """
     try:
         results = import_service.import_factory_configs_from_json(directory_path, db)
-        return results
+        return success_response(data=results, request=request)
         
     except Exception as e:
         logger.error(f"Error importing factory configs: {e}")
@@ -269,12 +269,12 @@ async def download_employee_template(
             "2026-12-31",
         ]]
 
-        return _create_template_response(
+        return success_response(data=_create_template_response(
             columns,
             sheet_name="Employees",
             filename="empleados_template.xlsx",
             sample_rows=sample_rows,
-        )
+        ), request=request)
 
     except Exception as exc:  # pragma: no cover - defensive
         logger.exception("Error creating employee template")
@@ -304,12 +304,12 @@ async def download_timer_cards_template(
             "18:00",
         ]]
 
-        return _create_template_response(
+        return success_response(data=_create_template_response(
             columns,
             sheet_name="TimerCards",
             filename="tarjetas_tiempo_template.xlsx",
             sample_rows=sample_rows,
-        )
+        ), request=request)
 
     except Exception as exc:  # pragma: no cover - defensive
         logger.exception("Error creating timer cards template")

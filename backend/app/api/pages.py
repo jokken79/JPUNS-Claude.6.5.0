@@ -55,6 +55,7 @@ class PageVisibilityToggle(BaseModel):
 @cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_all_page_visibility(
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -63,7 +64,7 @@ async def get_all_page_visibility(
     Available to all authenticated users
     """
     pages = db.query(PageVisibility).order_by(PageVisibility.page_key).all()
-    return pages
+    return paginated_response(data=pages, request=request)
 
 
 @router.get("/visibility/{page_key}", response_model=PageVisibilityResponse)
@@ -71,6 +72,7 @@ async def get_all_page_visibility(
 @limiter.limit("60/minute")
 async def get_page_visibility(
     page_key: str,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -83,7 +85,7 @@ async def get_page_visibility(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Page '{page_key}' not found"
         )
-    return page
+    return success_response(data=page, request=request)
 
 
 @router.put("/visibility/{page_key}")
@@ -91,6 +93,7 @@ async def get_page_visibility(
 async def toggle_page_visibility(
     page_key: str,
     toggle_data: PageVisibilityToggle,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -121,17 +124,20 @@ async def toggle_page_visibility(
     db.commit()
     db.refresh(page)
 
-    return {
-        "status": "success",
-        "page_key": page.page_key,
-        "is_enabled": page.is_enabled,
-        "message": f"Page '{page.page_name}' is now {'enabled' if page.is_enabled else 'disabled'}"
-    }
+    return success_response(
+        data={
+            "page_key": page.page_key,
+            "is_enabled": page.is_enabled,
+            "message": f"Page '{page.page_name}' is now {'enabled' if page.is_enabled else 'disabled'}"
+        },
+        request=request
+    )
 
 
 @router.post("/visibility/init")
 @limiter.limit("60/minute")
 async def initialize_page_visibility(
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -217,8 +223,10 @@ async def initialize_page_visibility(
 
     db.commit()
 
-    return {
-        "status": "success",
-        "message": f"Initialized {len(default_pages)} pages",
-        "pages": len(default_pages)
-    }
+    return created_response(
+        data={
+            "message": f"Initialized {len(default_pages)} pages",
+            "pages": len(default_pages)
+        },
+        request=request
+    )

@@ -56,7 +56,7 @@ router = APIRouter(prefix="/api/payroll", tags=["payroll"])
 
 # Dependency to get PayrollService
 def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
-    return PayrollService(db_session=db)
+    return success_response(data=PayrollService(db_session=db), request=request)
 
 # ============================================================================
 # Payroll Runs Endpoints
@@ -107,7 +107,7 @@ def create_payroll_run(
         db.refresh(payroll_run)
 
         # Convert to schema with proper type conversions
-        return PayrollRun(
+        return success_response(data=PayrollRun(
             id=payroll_run.id,
             pay_period_start=datetime.combine(payroll_run.pay_period_start, datetime.min.time()),
             pay_period_end=datetime.combine(payroll_run.pay_period_end, datetime.min.time()),
@@ -119,7 +119,7 @@ def create_payroll_run(
             created_by=payroll_run.created_by,
             created_at=payroll_run.created_at,
             updated_at=payroll_run.updated_at
-        )
+        ), request=request)
 
     except Exception as e:
         db.rollback()
@@ -171,7 +171,7 @@ def get_payroll_runs(
         payroll_runs = query.order_by(PayrollRunModel.created_at.desc()).offset(skip).limit(limit).all()
 
         # Convert to PayrollRunSummary schemas
-        return [
+        return success_response(data=[
             PayrollRunSummary(
                 id=run.id,
                 pay_period_start=datetime.combine(run.pay_period_start, datetime.min.time()),
@@ -183,7 +183,7 @@ def get_payroll_runs(
                 created_at=run.created_at
             )
             for run in payroll_runs
-        ]
+        ], request=request)
 
     except Exception as e:
         raise HTTPException(
@@ -229,7 +229,7 @@ def get_payroll_run(
             )
 
         # Convert to schema with proper type conversions
-        return PayrollRun(
+        return success_response(data=PayrollRun(
             id=payroll_run.id,
             pay_period_start=datetime.combine(payroll_run.pay_period_start, datetime.min.time()),
             pay_period_end=datetime.combine(payroll_run.pay_period_end, datetime.min.time()),
@@ -241,7 +241,7 @@ def get_payroll_run(
             created_by=payroll_run.created_by,
             created_at=payroll_run.created_at,
             updated_at=payroll_run.updated_at
-        )
+        ), request=request)
 
     except HTTPException:
         raise
@@ -289,7 +289,7 @@ def calculate_payroll_run(
                 detail="No employee data provided"
             )
 
-        return BulkPayrollResult(**result)
+        return success_response(data=BulkPayrollResult(**result), request=request)
 
     except HTTPException:
         raise
@@ -405,7 +405,7 @@ def get_payroll_run_employees(
                 calculated_at=emp_payroll.created_at
             ))
 
-        return results
+        return success_response(data=results, request=request)
 
     except Exception as e:
         raise HTTPException(
@@ -467,13 +467,13 @@ def approve_payroll_run(
         db.refresh(payroll_run)
 
         # Return approval response
-        return PayrollApprovalResponse(
+        return success_response(data=PayrollApprovalResponse(
             success=True,
             payroll_run_id=payroll_run_id,
             status=payroll_run.status,
             approved_by=request.approved_by,
             approved_at=payroll_run.updated_at
-        )
+        ), request=request)
 
     except HTTPException:
         raise
@@ -540,10 +540,10 @@ def delete_payroll_run(
         db.delete(payroll_run)
         db.commit()
 
-        return {
+        return success_response(data={
             "success": True,
             "message": f"Payroll run {payroll_run_id} deleted successfully"
-        }
+        }, request=request)
 
     except HTTPException:
         raise
@@ -622,7 +622,7 @@ def update_payroll_run(
         db.refresh(payroll_run)
 
         # Convert to schema with proper type conversions
-        return PayrollRun(
+        return success_response(data=PayrollRun(
             id=payroll_run.id,
             pay_period_start=datetime.combine(payroll_run.pay_period_start, datetime.min.time()),
             pay_period_end=datetime.combine(payroll_run.pay_period_end, datetime.min.time()),
@@ -634,7 +634,7 @@ def update_payroll_run(
             created_by=payroll_run.created_by,
             created_at=payroll_run.created_at,
             updated_at=payroll_run.updated_at
-        )
+        ), request=request)
 
     except HTTPException:
         raise
@@ -717,13 +717,13 @@ def mark_payroll_run_paid(
         db.refresh(payroll_run)
 
         # Return approval response
-        return PayrollApprovalResponse(
+        return success_response(data=PayrollApprovalResponse(
             success=True,
             payroll_run_id=payroll_run_id,
             status=payroll_run.status,
             approved_by=None,  # Not tracking who marked it paid in this endpoint
             approved_at=payroll_run.updated_at
-        )
+        ), request=request)
 
     except HTTPException:
         raise
@@ -782,7 +782,7 @@ def calculate_employee_payroll(
         if 'pay_period_end' in result:
             result['pay_period_end'] = result['pay_period_end']
 
-        return EmployeePayrollResult(**result)
+        return success_response(data=EmployeePayrollResult(**result), request=request)
 
     except HTTPException:
         raise
@@ -866,7 +866,7 @@ def calculate_payroll_from_timercards(
         ).all()
 
         if not timer_cards:
-            return {
+            return success_response(data={
                 "employee_id": employee_id,
                 "period_start": start_date,
                 "period_end": end_date,
@@ -878,7 +878,7 @@ def calculate_payroll_from_timercards(
                 "gross_salary": 0,
                 "deductions": 0,
                 "net_salary": 0
-            }
+            }, request=request)
 
         # Aggregate hours
         regular_hours = float(sum(tc.regular_hours or 0 for tc in timer_cards))
@@ -905,7 +905,7 @@ def calculate_payroll_from_timercards(
 
         net_salary = gross_salary - total_deductions
 
-        return {
+        return success_response(data={
             "employee_id": employee_id,
             "employee_name": f"{employee.full_name_kanji or ''} ({employee.full_name_kana or ''})",
             "hourly_rate": hourly_rate,
@@ -932,7 +932,7 @@ def calculate_payroll_from_timercards(
             },
             "net_salary": round(net_salary, 0),
             "timer_cards_processed": len(timer_cards)
-        }
+        }, request=request)
 
     except ValueError as e:
         raise handle_exception(ValidationError(str(e)))
@@ -1035,7 +1035,7 @@ def get_payroll_yukyu_summary(
         # Format period
         period_str = f"{start_dt.year}-{start_dt.month:02d}"
 
-        return {
+        return success_response(data={
             'period': period_str,
             'total_employees_with_yukyu': total_employees_with_yukyu,
             'total_yukyu_days': total_days,
@@ -1046,7 +1046,7 @@ def get_payroll_yukyu_summary(
                 'end_date': end_date
             },
             'details': details
-        }
+        }, request=request)
 
     except ValueError as e:
         raise HTTPException(
@@ -1149,7 +1149,7 @@ def generate_payslip(
             employee_payroll.payslip_pdf_path = result['pdf_path']
         db.commit()
 
-        return PayslipInfo(**result)
+        return success_response(data=PayslipInfo(**result), request=request)
 
     except HTTPException:
         raise
@@ -1194,7 +1194,7 @@ def get_payslip(
                 detail=f"Payslip {payslip_id} not found"
             )
 
-        return PayslipInfo(**result)
+        return success_response(data=PayslipInfo(**result), request=request)
 
     except HTTPException:
         raise
@@ -1242,7 +1242,7 @@ async def get_payroll_settings(
         settings = await config_service.get_configuration()
 
         # Convert Decimal to float for Pydantic validation
-        return PayrollSettings(
+        return success_response(data=PayrollSettings(
             id=settings.id,
             company_id=settings.company_id,
             overtime_rate=float(settings.overtime_rate),
@@ -1257,7 +1257,7 @@ async def get_payroll_settings(
             employment_insurance_rate=float(settings.employment_insurance_rate) if hasattr(settings, 'employment_insurance_rate') else 0.3,
             created_at=settings.created_at,
             updated_at=settings.updated_at
-        )
+        ), request=request)
 
     except Exception as e:
         raise HTTPException(
@@ -1327,7 +1327,7 @@ async def update_payroll_settings(
         updated_settings = await config_service.update_configuration(**settings_dict)
 
         # Convert to response schema
-        return PayrollSettings(
+        return success_response(data=PayrollSettings(
             id=updated_settings.id,
             company_id=updated_settings.company_id,
             overtime_rate=float(updated_settings.overtime_rate),
@@ -1342,7 +1342,7 @@ async def update_payroll_settings(
             employment_insurance_rate=float(updated_settings.employment_insurance_rate),
             created_at=updated_settings.created_at,
             updated_at=updated_settings.updated_at
-        )
+        ), request=request)
 
     except HTTPException:
         raise
@@ -1438,7 +1438,7 @@ def get_payroll_summary(
                 created_at=row.created_at
             ))
 
-        return summaries
+        return success_response(data=summaries, request=request)
 
     except Exception as e:
         raise HTTPException(

@@ -49,7 +49,7 @@ def _build_emergency_contact(candidate: "Candidate") -> Optional[str]:
         parts.append(f"({candidate.emergency_contact_relation})")
 
     contact = " ".join(parts).strip()
-    return contact or None
+    return success_response(data=contact or None, request=request)
 
 
 import threading
@@ -63,8 +63,8 @@ def _clean_string(value: Any) -> Optional[str]:
         return None
     if isinstance(value, str):
         cleaned = value.strip()
-        return cleaned or None
-    return str(value)
+        return success_response(data=cleaned or None, request=request)
+    return success_response(data=str(value), request=request)
 
 
 def _parse_int(value: Any) -> Optional[int]:
@@ -77,7 +77,7 @@ def _parse_int(value: Any) -> Optional[int]:
         if not digits:
             return None
         try:
-            return int(digits)
+            return success_response(data=int(digits), request=request)
         except ValueError:
             return None
     return None
@@ -89,7 +89,7 @@ def _parse_date_value(value: Any) -> Optional[date]:
     if isinstance(value, date):
         return value
     if isinstance(value, datetime):
-        return value.date()
+        return success_response(data=value.date(), request=request)
     if isinstance(value, str):
         candidate_value = value.strip()
         if not candidate_value:
@@ -102,13 +102,13 @@ def _parse_date_value(value: Any) -> Optional[date]:
             try:
                 year, month, day = (int(jp_match[0]), int(jp_match[1]), int(jp_match[2]))
                 if 1 <= month <= 12 and 1 <= day <= 31:
-                    return date(year, month, day)
+                    return success_response(data=date(year, month, day), request=request)
             except ValueError:
                 pass
         # Try known date formats
         for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%Y.%m.%d", "%Y-%m-%dT%H:%M:%S", "%Y/%m/%d %H:%M:%S"):
             try:
-                return datetime.strptime(candidate_value[:len(fmt)], fmt).date()
+                return success_response(data=datetime.strptime(candidate_value[:len(fmt)], fmt).date(), request=request)
             except ValueError:
                 continue
     return None
@@ -118,7 +118,7 @@ def _bool_to_flag(value: Any) -> Optional[str]:
     if value is None:
         return None
     if isinstance(value, bool):
-        return "有" if value else "無"
+        return success_response(data="有" if value else "無", request=request)
     if isinstance(value, str):
         lowered = value.strip().lower()
         if lowered in {"有", "あり", "true", "yes", "1"}:
@@ -173,7 +173,7 @@ def _summarize_jobs(jobs: Any) -> Optional[str]:
             parts.append(f"備考:{reason}")
         if parts:
             summaries.append(" / ".join(parts))
-    return "\n".join(summaries) if summaries else None
+    return success_response(data="\n".join(summaries) if summaries else None, request=request)
 
 
 def _map_form_to_candidate(form_data: Dict[str, Any], applicant_id: Optional[str], photo_data_url: Optional[str]) -> Dict[str, Any]:
@@ -261,7 +261,7 @@ def _map_form_to_candidate(form_data: Dict[str, Any], applicant_id: Optional[str
         updates["photo_data_url"] = photo_data_url
         updates["photo_url"] = photo_data_url
 
-    return updates
+    return success_response(data=updates, request=request)
 
 
 def _apply_candidate_updates(candidate: Candidate, updates: Dict[str, Any]) -> None:
@@ -314,7 +314,7 @@ def generate_rirekisho_id(db: Session) -> str:
             next_num = start_num
             logger.info(f"Generated first rirekisho_id: {prefix}{next_num}")
 
-        return f"{prefix}{next_num}"
+        return success_response(data=f"{prefix}{next_num}", request=request)
 
 
 def generate_applicant_id(db: Session) -> str:
@@ -327,7 +327,7 @@ def generate_applicant_id(db: Session) -> str:
         else:
             next_id = max_id + 1
             
-        return str(next_id)
+        return success_response(data=str(next_id), request=request)
 
 
 @router.post("/", response_model=CandidateResponse, status_code=status.HTTP_201_CREATED)
@@ -367,7 +367,7 @@ async def create_candidate(
     db.commit()
     db.refresh(new_candidate)
 
-    return new_candidate
+    return success_response(data=new_candidate, request=request)
 
 
 @router.post("/rirekisho/form", response_model=CandidateFormResponse, status_code=status.HTTP_201_CREATED)
@@ -467,7 +467,7 @@ async def save_rirekisho_form(
     db.refresh(candidate)
     db.refresh(form_entry)
 
-    return form_entry
+    return success_response(data=form_entry, request=request)
 
 
 @router.get("/", response_model=PaginatedResponse[CandidateResponse])
@@ -510,7 +510,7 @@ async def list_candidates(
 
     total_pages = (total + page_size - 1) // page_size
 
-    return {
+    return success_response(data={
         "items": items,
         "total": total,
         "page": page,
@@ -518,7 +518,7 @@ async def list_candidates(
         "total_pages": total_pages,
         "has_next": page < total_pages,
         "has_previous": page > 1
-    }
+    }, request=request)
 
 
 @router.get("/{candidate_id}", response_model=CandidateResponse)
@@ -533,7 +533,7 @@ async def get_candidate(
     """
     service = CandidateService(db)
     candidate = await service.get_candidate_by_id(candidate_id)
-    return candidate
+    return success_response(data=candidate, request=request)
 
 
 @router.put("/{candidate_id}", response_model=CandidateResponse)
@@ -548,7 +548,7 @@ async def update_candidate(
     """
     service = CandidateService(db)
     candidate = await service.update_candidate(candidate_id, candidate_update, current_user)
-    return candidate
+    return success_response(data=candidate, request=request)
 
 
 @router.delete("/{candidate_id}")
@@ -565,7 +565,7 @@ async def delete_candidate(
     """
     service = CandidateService(db)
     await service.soft_delete_candidate(candidate_id, current_user)
-    return {"message": "Candidate deleted successfully"}
+    return success_response(data={"message": "Candidate deleted successfully"}, request=request)
 
 
 @router.post("/{candidate_id}/restore")
@@ -581,7 +581,7 @@ async def restore_candidate(
     """
     service = CandidateService(db)
     await service.restore_candidate(candidate_id, current_user)
-    return {"message": "Candidate restored successfully"}
+    return success_response(data={"message": "Candidate restored successfully"}, request=request)
 
 
 @router.post("/{candidate_id}/evaluate", response_model=CandidateResponse)
@@ -662,7 +662,7 @@ async def quick_evaluate_candidate(
     db.commit()
     db.refresh(candidate)
 
-    return candidate
+    return success_response(data=candidate, request=request)
 
 
 @router.post("/{candidate_id}/upload", response_model=DocumentUpload)
@@ -799,13 +799,13 @@ async def upload_document(
     db.commit()
     db.refresh(document)
 
-    return DocumentUpload(
+    return success_response(data=DocumentUpload(
         document_id=document.id,
         file_name=file.filename,
         file_path=file_path,
         ocr_data=ocr_data,
         message="Document uploaded and processed successfully"
-    )
+    ), request=request)
 
 
 @router.post("/{candidate_id}/approve", response_model=CandidateResponse)
@@ -823,7 +823,7 @@ async def approve_candidate(
     """
     service = CandidateService(db)
     candidate = await service.approve_candidate(candidate_id, approve_data, current_user)
-    return candidate
+    return success_response(data=candidate, request=request)
 
 
 @router.post("/{candidate_id}/reject", response_model=CandidateResponse)
@@ -841,7 +841,7 @@ async def reject_candidate(
     """
     service = CandidateService(db)
     candidate = await service.reject_candidate(candidate_id, reject_data, current_user)
-    return candidate
+    return success_response(data=candidate, request=request)
 
 
 @router.options("/ocr/process")
@@ -849,7 +849,7 @@ async def ocr_process_options(
     request: Request,
     ):
     """Handle OPTIONS request for CORS preflight."""
-    return {"success": True}
+    return success_response(data={"success": True}, request=request)
 
 
 @router.post("/ocr/process")
@@ -906,11 +906,11 @@ async def process_ocr_document(
         # Add document type to the result
         ocr_result["document_type"] = document_type
 
-        return {
+        return success_response(data={
             "success": True,
             "data": ocr_result,
             "message": "Document processed successfully"
-        }
+        }, request=request)
     except Exception as e:
         logger.error(f"OCR processing error: {e}")
         raise HTTPException(

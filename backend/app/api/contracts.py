@@ -203,7 +203,7 @@ async def delete_contract(
     contract.soft_delete()
     db.commit()
 
-    return {"message": "Contract deleted successfully"}
+    return no_content_response(data={"message": "Contract deleted successfully"}, request=request)
 
 
 @router.post("/{contract_id}/restore")
@@ -231,4 +231,4 @@ async def restore_contract(
     contract.restore()
     db.commit()
 
-    return {"message": "Contract restored successfully"}
+    return created_response(data={"message": "Contract restored successfully"}, request=request)

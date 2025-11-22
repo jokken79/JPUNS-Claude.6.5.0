@@ -185,7 +185,7 @@ def _list_contract_workers(
     # Usar ContractWorkerResponse directamente (sin mapeo manual)
     items = [ContractWorkerResponse.model_validate(worker).model_dump() for worker in workers]
 
-    return _paginate_response(items, total, page, page_size)
+    return created_response(data=_paginate_response(items, total, page, page_size), request=request)
 
 
 def _list_staff_members(
@@ -238,7 +238,7 @@ def _list_staff_members(
     # Usar StaffResponse directamente (sin mapeo manual)
     items = [StaffResponse.model_validate(member).model_dump() for member in staff_members]
 
-    return _paginate_response(items, total, page, page_size)
+    return created_response(data=_paginate_response(items, total, page, page_size), request=request)
 
 
 @router.get("")
@@ -369,7 +369,7 @@ async def list_employees(
             emp_dict['factory_name'] = factory.name if factory else None
         items.append(emp_dict)
 
-    return _paginate_response(items, total, page, page_size)
+    return success_response(data=_paginate_response(items, total, page, page_size), request=request)
 
 
 @router.get("/available-for-apartment")
@@ -479,7 +479,7 @@ async def list_available_for_apartment(
 
         items.append(worker_dict)
 
-    return _paginate_response(items, total_query, page, page_size)
+    return success_response(data=_paginate_response(items, total_query, page, page_size), request=request)
 
 
 @router.get("/{employee_id}")
@@ -708,7 +708,7 @@ async def terminate_employee(
     employee.termination_reason = termination.termination_reason
     
     db.commit()
-    return {"message": "Employee terminated successfully"}
+    return created_response(data={"message": "Employee terminated successfully"}, request=request)
 
 
 @router.put("/{employee_id}/yukyu", response_model=EmployeeResponse)
@@ -756,7 +756,7 @@ async def delete_employee(
     employee.soft_delete()
     db.commit()
 
-    return {"message": "Employee deleted successfully"}
+    return no_content_response(data={"message": "Employee deleted successfully"}, request=request)
 
 
 @router.post("/{employee_id}/restore")
@@ -782,7 +782,7 @@ async def restore_employee(
     employee.restore()
     db.commit()
 
-    return {"message": "Employee restored successfully"}
+    return created_response(data={"message": "Employee restored successfully"}, request=request)
 
 
 @router.post("/import-excel")
@@ -825,9 +825,9 @@ async def import_employees_from_excel(
                     if pd.isna(value) or value == '' or value == '-':
                         return None
                     if isinstance(value, datetime):
-                        return value.date()
+                        return created_response(data=value.date(), request=request)
                     try:
-                        return pd.to_datetime(value).date()
+                        return created_response(data=pd.to_datetime(value).date(), request=request)
                     except (ValueError, TypeError):
                         # Return None for unparseable date formats
                         return None
@@ -837,7 +837,7 @@ async def import_employees_from_excel(
                     if pd.isna(value) or value == '' or value == '-':
                         return None
                     try:
-                        return int(value)
+                        return created_response(data=int(value), request=request)
                     except (ValueError, TypeError):
                         # Return None for non-integer values
                         return None
@@ -976,7 +976,7 @@ async def change_employee_type(
     # No hacer nada si el tipo es el mismo
     if current_type == change_request.new_type:
         # Retornar el empleado actual como EmployeeResponse
-        return EmployeeResponse.model_validate(employee, from_attributes=True)
+        return success_response(data=EmployeeResponse.model_validate(employee, from_attributes=True), request=request)
 
     # Guardar el hakenmoto_id/staff_id actual
     if current_type == "staff":
@@ -1090,7 +1090,7 @@ async def change_employee_type(
         db.refresh(new_record)
 
         # Retornar como EmployeeResponse
-        return EmployeeResponse.model_validate(new_record, from_attributes=True)
+        return success_response(data=EmployeeResponse.model_validate(new_record, from_attributes=True), request=request)
 
     except Exception as e:
         db.rollback()

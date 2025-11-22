@@ -181,7 +181,7 @@ async def create_apartment(
     ```
     """
     service = ApartmentService(db)
-    return await service.create_apartment(apartment, current_user.id)
+    return created_response(data=await service.create_apartment(apartment, current_user.id), request=request)
 
 
 @router.get(
@@ -206,7 +206,7 @@ async def get_apartment(
     - Cargos adicionales recientes
     """
     service = ApartmentService(db)
-    return await service.get_apartment_with_stats(apartment_id)
+    return success_response(data=await service.get_apartment_with_stats(apartment_id), request=request)
 
 
 @router.put(
@@ -232,7 +232,7 @@ async def update_apartment(
     - Estado (active/inactive)
     """
     service = ApartmentService(db)
-    return await service.update_apartment(apartment_id, apartment, current_user.id)
+    return success_response(data=await service.update_apartment(apartment_id, apartment, current_user.id), request=request)
 
 
 @router.delete(
@@ -355,7 +355,7 @@ async def create_assignment(
     ```
     """
     service = AssignmentService(db)
-    return await service.create_assignment(assignment, current_user.id)
+    return created_response(data=await service.create_assignment(assignment, current_user.id), request=request)
 
 
 @router.get(
@@ -420,7 +420,7 @@ async def get_assignment(
     - Deducciones generadas
     """
     service = AssignmentService(db)
-    return await service.get_assignment(assignment_id)
+    return success_response(data=await service.get_assignment(assignment_id), request=request)
 
 
 @router.get(
@@ -442,7 +442,7 @@ async def get_active_assignments(
     - Verificación de disponibilidad
     """
     service = AssignmentService(db)
-    return await service.get_active_assignments()
+    return success_response(data=await service.get_active_assignments(), request=request)
 
 
 @router.put(
@@ -491,7 +491,7 @@ async def end_assignment(
     ```
     """
     service = AssignmentService(db)
-    return await service.end_assignment(assignment_id, update, current_user.id)
+    return success_response(data=await service.end_assignment(assignment_id, update, current_user.id), request=request)
 
 
 @router.post(
@@ -547,7 +547,7 @@ async def transfer_assignment(
     - Breakdown de deducciones
     """
     service = AssignmentService(db)
-    return await service.transfer_assignment(transfer, current_user.id)
+    return created_response(data=await service.transfer_assignment(transfer, current_user.id), request=request)
 
 
 # =============================================================================
@@ -607,7 +607,7 @@ async def calculate_prorated_rent(
     ```
     """
     service = AssignmentService(db)
-    return await service.calculate_prorated_rent(calculation)
+    return created_response(data=await service.calculate_prorated_rent(calculation), request=request)
 
 
 @router.get(
@@ -636,7 +636,7 @@ async def get_cleaning_fee(
     - Validación del monto
     """
     service = ApartmentService(db)
-    return await service.get_cleaning_fee(apartment_id, custom_amount)
+    return success_response(data=await service.get_cleaning_fee(apartment_id, custom_amount), request=request)
 
 
 @router.post(
@@ -694,7 +694,7 @@ async def calculate_total_deduction(
     ```
     """
     service = AssignmentService(db)
-    return await service.calculate_total_deduction(calculation)
+    return created_response(data=await service.calculate_total_deduction(calculation), request=request)
 
 
 # =============================================================================
@@ -739,7 +739,7 @@ async def create_additional_charge(
     - ADMIN+: Aprobar cargos
     """
     service = AdditionalChargeService(db)
-    return await service.create_additional_charge(charge, current_user.id)
+    return created_response(data=await service.create_additional_charge(charge, current_user.id), request=request)
 
 
 @router.get(
@@ -809,7 +809,7 @@ async def get_additional_charge(
     - Datos de aprobación (si aplica)
     """
     service = AdditionalChargeService(db)
-    return await service.get_additional_charge(charge_id)
+    return success_response(data=await service.get_additional_charge(charge_id), request=request)
 
 
 @router.put(
@@ -841,7 +841,7 @@ async def approve_additional_charge(
     ```
     """
     service = AdditionalChargeService(db)
-    return await service.approve_additional_charge(charge_id, update, current_user)
+    return success_response(data=await service.approve_additional_charge(charge_id, update, current_user), request=request)
 
 
 @router.put(
@@ -867,7 +867,7 @@ async def cancel_additional_charge(
     - Confirmación de cancelación
     """
     service = AdditionalChargeService(db)
-    return await service.cancel_additional_charge(charge_id, update, current_user.id)
+    return success_response(data=await service.cancel_additional_charge(charge_id, update, current_user.id), request=request)
 
 
 @router.delete(
@@ -986,7 +986,7 @@ async def generate_monthly_deductions(
     - ADMIN+ (para sobreescribir si ya existen)
     """
     service = DeductionService(db)
-    return await service.generate_monthly_deductions(year, month, current_user.id)
+    return created_response(data=await service.generate_monthly_deductions(year, month, current_user.id), request=request)
 
 
 @router.get(
@@ -1033,7 +1033,7 @@ async def export_deductions_excel(
     - ADMIN+ (exportar datos sensibles)
     """
     service = DeductionService(db)
-    return await service.export_deductions_excel(year, month, apartment_id, current_user.id)
+    return success_response(data=await service.export_deductions_excel(year, month, apartment_id, current_user.id), request=request)
 
 
 @router.put(
@@ -1075,7 +1075,7 @@ async def update_deduction_status(
     - ADMIN+ (marcar como paid)
     """
     service = DeductionService(db)
-    return await service.update_deduction_status(deduction_id, update, current_user.id)
+    return success_response(data=await service.update_deduction_status(deduction_id, update, current_user.id), request=request)
 
 
 @router.get(
@@ -1100,7 +1100,7 @@ async def get_deduction(
     - Historial de cambios de estado
     """
     service = DeductionService(db)
-    return await service.get_deduction(deduction_id)
+    return success_response(data=await service.get_deduction(deduction_id), request=request)
 
 
 # =============================================================================
@@ -1153,7 +1153,7 @@ async def get_occupancy_report(
     ```
     """
     service = ReportService(db)
-    return service.get_occupancy_report(prefecture, building_name)
+    return success_response(data=service.get_occupancy_report(prefecture, building_name), request=request)
 
 
 @router.get(
@@ -1387,4 +1387,4 @@ async def get_cost_analysis_report(
     - ADMIN+ (información financiera)
     """
     service = ReportService(db)
-    return service.get_cost_analysis_report(year, month)
+    return success_response(data=service.get_cost_analysis_report(year, month), request=request)

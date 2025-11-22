@@ -202,10 +202,13 @@ async def collect_frontend_logs(
         client_ip=client_ip,
     )
 
-    return LogResponse(
-        success=True,
-        received=processed_count,
-        request_id=request_id,
+    return created_response(
+        data=LogResponse(
+            success=True,
+            received=processed_count,
+            request_id=request_id,
+        ),
+        request=request
     )
 
 
@@ -224,11 +227,14 @@ async def logging_health(
     Returns:
         Health status
     """
-    return {
-        "status": "healthy",
-        "service": "frontend-log-collection",
-        "timestamp": datetime.utcnow().isoformat(),
-    }
+    return success_response(
+        data={
+            "status": "healthy",
+            "service": "frontend-log-collection",
+            "timestamp": datetime.utcnow().isoformat(),
+        },
+        request=request
+    )
 
 
 __all__ = ["router"]
