@@ -23,7 +23,7 @@ async def _run_blocking(func, *args, **kwargs):
 
     loop = asyncio.get_running_loop()
     call = partial(func, *args, **kwargs)
-    return success_response(data=await loop.run_in_executor(None, call), request=request)
+    return await loop.run_in_executor(None, call)
 
 
 class EmailRequest(BaseModel):
