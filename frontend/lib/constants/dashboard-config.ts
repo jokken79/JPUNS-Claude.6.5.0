@@ -15,6 +15,7 @@ import {
   MessageCircle,
   BookOpen,
   Calendar,
+  CalendarCheck,
   BarChart3,
   Settings,
   Palette,
@@ -120,6 +121,12 @@ export const dashboardConfig: DashboardConfig = {
       href: '/yukyu-history',
       icon: Clock,
       description: 'Historial detallado de uso de yukyus con lógica LIFO.',
+    },
+    {
+      title: 'Dashboard KEIRI',
+      href: '/dashboard/keiri/yukyu-dashboard',
+      icon: CalendarCheck,
+      description: 'Panel especializado de KEITOSAN para gestión de yukyus, compliance y análisis financiero.',
     },
   ],
   secondaryNav: [
