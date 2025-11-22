@@ -1,0 +1,155 @@
+version: '3.8'
+
+services:
+  # ==================== PROMETHEUS ====================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: jpuns-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alert-rules.yml:/etc/prometheus/rules/alert-rules.yml:ro
+      - prometheus-storage:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+    networks:
+      - monitoring
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ==================== ALERTMANAGER ====================
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: jpuns-alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager-storage:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+    networks:
+      - monitoring
+    restart: unless-stopped
+
+  # ==================== GRAFANA ====================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: jpuns-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin_password_123
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_DATE_FORMAT=YYYY-MM-DD HH:mm:ss
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ==================== NODE EXPORTER ====================
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: jpuns-node-exporter
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    networks:
+      - monitoring
+    restart: unless-stopped
+
+  # ==================== POSTGRES EXPORTER ====================
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: jpuns-postgres-exporter
+    ports:
+      - "9187:9187"
+    environment:
+      DATA_SOURCE_NAME: "postgresql://jpuns:jpuns_password@postgres:5432/jpuns?sslmode=disable"
+    depends_on:
+      - postgres
+    networks:
+      - monitoring
+    restart: unless-stopped
+
+  # ==================== REDIS EXPORTER ====================
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: jpuns-redis-exporter
+    ports:
+      - "9121:9121"
+    environment:
+      REDIS_ADDR: "redis://redis:6379"
+    depends_on:
+      - redis
+    networks:
+      - monitoring
+    restart: unless-stopped
+
+  # ==================== POSTGRES (for testing) ====================
+  postgres:
+    image: postgres:15-alpine
+    container_name: jpuns-postgres-monitoring
+    environment:
+      POSTGRES_USER: jpuns
+      POSTGRES_PASSWORD: jpuns_password
+      POSTGRES_DB: jpuns
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-storage:/var/lib/postgresql/data
+    networks:
+      - monitoring
+    restart: unless-stopped
+
+  # ==================== REDIS (for testing) ====================
+  redis:
+    image: redis:7-alpine
+    container_name: jpuns-redis-monitoring
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-storage:/data
+    networks:
+      - monitoring
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  prometheus-storage:
+  alertmanager-storage:
+  grafana-storage:
+  postgres-storage:
+  redis-storage:
