@@ -51,7 +51,7 @@ SUMMARY_IGNORED_FIELDS = {"created_at", "updated_at", "password_hash"}
 def _field_names(values: Optional[Dict[str, Any]]) -> List[str]:
     if not values:
         return []
-    return success_response(data=[key for key in values.keys() if key not in SUMMARY_IGNORED_FIELDS], request=request)
+    return [key for key in values.keys() if key not in SUMMARY_IGNORED_FIELDS]
 
 
 def _format_field_suffix(fields: List[str]) -> str:
@@ -60,7 +60,7 @@ def _format_field_suffix(fields: List[str]) -> str:
     preview = ", ".join(fields[:3])
     if len(fields) > 3:
         preview += ", …"
-    return success_response(data=f" (fields: {preview})", request=request)
+    return f" (fields: {preview})"
 
 
 def _describe_audit_entry(entry: AuditLog) -> str:
@@ -69,12 +69,12 @@ def _describe_audit_entry(entry: AuditLog) -> str:
     action = (entry.action or "event").upper()
 
     if action == "CREATE":
-        return success_response(data=f"Created {table_label}{record_label}{_format_field_suffix(_field_names(entry.new_values))}", request=request)
+        return f"Created {table_label}{record_label}{_format_field_suffix(_field_names(entry.new_values))}"
     if action == "UPDATE":
-        return success_response(data=f"Updated {table_label}{record_label}{_format_field_suffix(_field_names(entry.new_values))}", request=request)
+        return f"Updated {table_label}{record_label}{_format_field_suffix(_field_names(entry.new_values))}"
     if action == "DELETE":
-        return success_response(data=f"Deleted {table_label}{record_label}{_format_field_suffix(_field_names(entry.old_values))}", request=request)
-    return success_response(data=f"{action.title()} {table_label}{record_label}", request=request)
+        return f"Deleted {table_label}{record_label}{_format_field_suffix(_field_names(entry.old_values))}"
+    return f"{action.title()} {table_label}{record_label}"
 
 
 def _fetch_recent_audit_activity(db: Session, limit: int) -> List[RecentActivity]:
@@ -115,7 +115,7 @@ def _fetch_recent_audit_activity(db: Session, limit: int) -> List[RecentActivity
             )
         )
 
-    return success_response(data=activities, request=request)
+    return activities
 
 
 def _fallback_recent_activity(db: Session, limit: int) -> List[RecentActivity]:
@@ -195,14 +195,14 @@ def _fallback_recent_activity(db: Session, limit: int) -> List[RecentActivity]:
         ))
 
     activities.sort(key=lambda x: x.timestamp, reverse=True)
-    return success_response(data=activities[:limit], request=request)
+    return activities[:limit]
 
 
 def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
     activities = _fetch_recent_audit_activity(db, limit)
     if activities:
-        return success_response(data=activities[:limit], request=request)
-    return success_response(data=_fallback_recent_activity(db, limit), request=request)
+        return activities[:limit]
+    return _fallback_recent_activity(db, limit)
 
 
 @router.get("/stats")
@@ -210,6 +210,7 @@ def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD)
 async def get_dashboard_stats(
+    request: Request,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -269,6 +270,7 @@ async def get_dashboard_stats(
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD)
 async def get_factories_dashboard(
+    request: Request,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -388,6 +390,7 @@ async def get_factories_dashboard(
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD)
 async def get_alerts(
+    request: Request,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -431,7 +434,7 @@ async def get_alerts(
 
 def _trends_cache_key(months: int, **kwargs):
     """Custom cache key for monthly trends endpoint"""
-    return success_response(data=CacheKey.build("dashboard", "trends", str(months)), request=request)
+    return CacheKey.build("dashboard", "trends", str(months))
 
 
 @router.get("/trends", response_model=list[MonthlyTrend])
@@ -439,6 +442,7 @@ def _trends_cache_key(months: int, **kwargs):
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD, key_builder=_trends_cache_key)
 async def get_monthly_trends(
+    request: Request,
     months: int = 6,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -496,14 +500,15 @@ async def get_monthly_trends(
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD)
 async def get_admin_dashboard(
+    request: Request,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
     """Get complete admin dashboard"""
-    stats = await get_dashboard_stats(current_user, db)
-    factories = await get_factories_dashboard(current_user, db)
-    alerts = await get_alerts(current_user, db)
-    trends = await get_monthly_trends(6, current_user, db)
+    stats = await get_dashboard_stats(request, current_user, db)
+    factories = await get_factories_dashboard(request, current_user, db)
+    alerts = await get_alerts(request, current_user, db)
+    trends = await get_monthly_trends(request, 6, current_user, db)
     
     recent_activities = _build_recent_activities(db, 20)
 
@@ -518,7 +523,7 @@ async def get_admin_dashboard(
 
 def _recent_activity_cache_key(limit: int = 20, **kwargs):
     """Custom cache key for recent activity endpoint"""
-    return success_response(data=CacheKey.build("dashboard", "recent_activity", str(limit)), request=request)
+    return CacheKey.build("dashboard", "recent_activity", str(limit))
 
 
 @router.get("/recent-activity", response_model=list[RecentActivity])
@@ -526,6 +531,7 @@ def _recent_activity_cache_key(limit: int = 20, **kwargs):
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.SHORT, key_builder=_recent_activity_cache_key)
 async def get_recent_activity(
+    request: Request,
     limit: int = Query(default=20, le=100),
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -539,7 +545,7 @@ async def get_recent_activity(
 
 def _employee_dashboard_cache_key(employee_id: int, **kwargs):
     """Custom cache key for employee dashboard"""
-    return success_response(data=CacheKey.build("dashboard", "employee", str(employee_id)), request=request)
+    return CacheKey.build("dashboard", "employee", str(employee_id))
 
 
 @router.get("/employee/{employee_id}")
@@ -548,6 +554,7 @@ def _employee_dashboard_cache_key(employee_id: int, **kwargs):
 @cache.cached(ttl=CacheTTL.DASHBOARD, key_builder=_employee_dashboard_cache_key)
 async def get_employee_dashboard(
     employee_id: int,
+    request: Request,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
 ):
@@ -619,7 +626,7 @@ async def get_employee_dashboard(
 
 def _yukyu_trends_cache_key(months: int = 6, **kwargs):
     """Custom cache key for yukyu trends endpoint"""
-    return success_response(data=CacheKey.build("dashboard", "yukyu_trends", str(months)), request=request)
+    return CacheKey.build("dashboard", "yukyu_trends", str(months))
 
 
 @router.get("/yukyu-trends-monthly", response_model=list[YukyuTrendMonth])
@@ -627,6 +634,7 @@ def _yukyu_trends_cache_key(months: int = 6, **kwargs):
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.LONG, key_builder=_yukyu_trends_cache_key)
 async def get_yukyu_trends_monthly(
+    request: Request,
     months: int = Query(default=6, ge=1, le=24, description="Number of months to retrieve"),
     current_user: User = Depends(auth_service.require_yukyu_access()),
     db: Session = Depends(get_db)
@@ -703,7 +711,7 @@ async def get_yukyu_trends_monthly(
 
 def _yukyu_compliance_cache_key(period: str = "current", **kwargs):
     """Custom cache key for yukyu compliance status endpoint"""
-    return success_response(data=CacheKey.build("dashboard", "yukyu_compliance", period), request=request)
+    return CacheKey.build("dashboard", "yukyu_compliance", period)
 
 
 @router.get("/yukyu-compliance-status", response_model=YukyuComplianceStatus)
@@ -711,6 +719,7 @@ def _yukyu_compliance_cache_key(period: str = "current", **kwargs):
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.LONG, key_builder=_yukyu_compliance_cache_key)
 async def get_yukyu_compliance_status(
+    request: Request,
     period: str = Query(default="current", description="Period: 'current' for current fiscal year or YYYY-MM"),
     current_user: User = Depends(auth_service.require_yukyu_access()),
     db: Session = Depends(get_db)

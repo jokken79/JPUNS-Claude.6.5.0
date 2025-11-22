@@ -33,16 +33,16 @@ router = APIRouter(prefix="/api/admin", tags=["admin"])
 def get_client_ip(request: Request) -> Optional[str]:
     """Extract client IP address from request"""
     if "x-forwarded-for" in request.headers:
-        return success_response(data=request.headers["x-forwarded-for"].split(",")[0].strip(), request=request)
+        return request.headers["x-forwarded-for"].split(",")[0].strip()
     elif "x-real-ip" in request.headers:
-        return success_response(data=request.headers["x-real-ip"], request=request)
+        return request.headers["x-real-ip"]
     else:
-        return success_response(data=request.client.host if request.client else None, request=request)
+        return request.client.host if request.client else None
 
 
 def get_user_agent(request: Request) -> Optional[str]:
     """Extract user agent from request"""
-    return success_response(data=request.headers.get("user-agent"), request=request)
+    return request.headers.get("user-agent")
 
 
 # ============================================
@@ -81,6 +81,7 @@ class RoleStatsResponse(BaseModel):
 @router.get("/settings", response_model=List[SystemSettingResponse])
 @cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_system_settings(
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -94,6 +95,7 @@ async def get_system_settings(
 @cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_system_setting(
     setting_key: str,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -113,6 +115,7 @@ class SystemSettingUpdate(BaseModel):
 async def update_system_setting(
     setting_key: str,
     setting_data: SystemSettingUpdate,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -135,6 +138,7 @@ async def update_system_setting(
 @limiter.limit("10/minute")  # Critical admin operation
 async def toggle_maintenance_mode(
     maintenance_data: MaintenanceModeRequest,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -185,6 +189,7 @@ async def toggle_maintenance_mode(
 @router.get("/statistics")
 @cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_admin_statistics(
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -289,6 +294,7 @@ async def get_admin_statistics(
 @router.get("/export-config")
 @cache.cached(ttl=CacheTTL.MEDIUM)
 async def export_configuration(
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -326,6 +332,7 @@ async def export_configuration(
 @router.post("/import-config")
 async def import_configuration(
     config_data: dict,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
