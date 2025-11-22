@@ -8,6 +8,8 @@ from typing import List, Optional, Dict, Any
 from pydantic import BaseModel
 
 from app.core.database import get_db
+from fastapi import Request
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import RolePagePermission, User, UserRole
 from app.api.deps import get_current_user, require_admin
 from app.services.audit_service import AuditService
@@ -257,14 +259,18 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
 
 @router.get("/roles", response_model=List[Dict[str, str]], summary="List available roles")
 @limiter.limit("60/minute")
-async def list_roles():
+async def list_roles(
+    request: Request,
+    ):
     """Get list of all available roles"""
     return AVAILABLE_ROLES
 
 
 @router.get("/pages", response_model=List[PageInfo], summary="List available pages")
 @limiter.limit("60/minute")
-async def list_pages():
+async def list_pages(
+    request: Request,
+    ):
     """Get list of all available pages"""
     return AVAILABLE_PAGES
 

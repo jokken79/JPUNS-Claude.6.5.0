@@ -15,6 +15,8 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 from app.core.database import get_db
+from fastapi import Request
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.config import settings
 from app.models.models import Candidate, Document, Employee, User, CandidateStatus, DocumentType, CandidateForm, Request as RequestModel, RequestType, RequestStatus
 from app.schemas.candidate import (
@@ -840,7 +842,9 @@ async def reject_candidate(
 
 
 @router.options("/ocr/process")
-async def ocr_process_options():
+async def ocr_process_options(
+    request: Request,
+    ):
     """Handle OPTIONS request for CORS preflight."""
     return {"success": True}
 

@@ -10,6 +10,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 from app.core.database import get_db
+from fastapi import Request
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.api.deps import get_current_user
 from app.models.models import User, UserRole, YukyuRequest, RequestStatus
 from app.schemas.yukyu import (
@@ -26,6 +28,7 @@ from app.schemas.yukyu import (
 )
 from app.services.auth_service import auth_service
 from app.services.yukyu_service import YukyuService
+from app.core.rate_limiter import limiter
 
 router = APIRouter()
 
@@ -703,7 +706,6 @@ async def get_yukyu_usage_history(
     if not include_expired:
         # Only show usage from balances that are still ACTIVE
         from app.models.models import YukyuStatus
-from app.core.rate_limiter import limiter
         query = query.filter(YukyuBalance.status == YukyuStatus.ACTIVE)
 
     # Order by usage date descending (most recent first)

@@ -17,6 +17,8 @@ from app.services.import_service import import_service
 from app.services.auth_service import AuthService
 from app.core.config import settings
 from app.core.database import get_db
+from fastapi import Request
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.rate_limiter import limiter
 
 router = APIRouter()
@@ -225,7 +227,9 @@ async def import_factory_configs(
 
 @router.get("/template/employees")
 @limiter.limit("30/minute")
-async def download_employee_template():
+async def download_employee_template(
+    request: Request,
+    ):
     """Download Excel template for employee import"""
     try:
         columns = [
@@ -277,7 +281,9 @@ async def download_employee_template():
 
 @router.get("/template/timer-cards")
 @limiter.limit("30/minute")
-async def download_timer_cards_template():
+async def download_timer_cards_template(
+    request: Request,
+    ):
     """Download Excel template for timer cards import"""
     try:
         columns = [

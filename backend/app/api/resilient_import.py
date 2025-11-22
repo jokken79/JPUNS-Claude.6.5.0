@@ -11,13 +11,15 @@ from datetime import datetime
 import json
 
 from app.core.database import get_db
+from fastapi import Request
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.resilience import (
     ImportOrchestrator,
     CheckpointManager,
     StructuredLogger,
 )
-from app.models.models import (
 from app.core.rate_limiter import limiter
+from app.models.models import (
     Factory, Employee, ContractWorker, Staff,
     SocialInsuranceRate, Candidate, User
 )
@@ -370,7 +372,9 @@ async def list_checkpoints(
 
 @router.get("/health")
 @limiter.limit("30/minute")
-async def health_check(db: Session = Depends(get_db)):
+async def health_check(
+    request: Request,
+    db: Session = Depends(get_db)):
     """
     Health check for resilient import system.
 

@@ -9,6 +9,8 @@ from datetime import datetime
 import logging
 
 from app.core.database import get_db
+from fastapi import Request
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.app_exceptions import (
     PayrollCalculationError,
     ResourceNotFoundError,
@@ -47,6 +49,7 @@ from app.schemas.payroll import (
     ValidationResult,
 )
 from app.schemas.salary_unified import PayrollRunUpdate, MarkPayrollPaidRequest
+from app.core.rate_limiter import limiter
 
 router = APIRouter(prefix="/api/payroll", tags=["payroll"])
 
@@ -840,7 +843,6 @@ def calculate_payroll_from_timercards(
 
         # Get employee
         from app.models.models import Employee, TimerCard
-from app.core.rate_limiter import limiter
         employee = db.query(Employee).filter(Employee.id == employee_id).first()
 
         if not employee:

@@ -9,6 +9,8 @@ import psutil
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.core.config import settings
+from fastapi import Request
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.logging import app_logger
 from app.core.observability import get_runtime_metrics
 from app.services.auth_service import AuthService
@@ -19,7 +21,9 @@ router = APIRouter()
 
 @router.get("/health", summary="Detailed health information")
 @limiter.limit("100/minute")
-async def detailed_health() -> Dict[str, Any]:
+async def detailed_health(
+    request: Request,
+    ) -> Dict[str, Any]:
     try:
         # OCR service removed - using Azure OCR service instead
         process = psutil.Process()

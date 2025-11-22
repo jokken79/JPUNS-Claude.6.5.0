@@ -10,6 +10,8 @@ from pydantic import BaseModel, EmailStr
 from app.services.auth_service import AuthService
 from app.services.notification_service import notification_service
 from app.core.rate_limiter import limiter
+from fastapi import Request
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 
 router = APIRouter()
 logger = logging.getLogger(__name__)

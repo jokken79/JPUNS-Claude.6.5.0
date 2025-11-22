@@ -17,12 +17,15 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.database import get_db
+from fastapi import Request
+from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.logging import app_logger
 from app.core.background_tasks import background_manager, JobStatus
 from app.schemas.responses import CacheStatsResponse, ErrorResponse, OCRResponse
 from app.schemas.job import JobResponse, JobStatusResponse, OCRJobRequest
 from app.services.auth_service import AuthService
 from app.services.hybrid_ocr_service import HybridOCRService
+from app.core.rate_limiter import limiter
 
 router = APIRouter()
 ocr_service = HybridOCRService()  # Consolidated OCR service (Azure primary, with fallbacks)
@@ -45,13 +48,17 @@ def process_ocr_sync(image_path: str, document_type: str) -> Dict[str, Any]:
 
 
 @router.options("/process")
-async def process_options():
+async def process_options(
+    request: Request,
+    ):
     """Handle OPTIONS request for CORS preflight."""
     return {"success": True}
 
 
 @router.options("/process-from-base64")
-async def process_base64_options():
+async def process_base64_options(
+    request: Request,
+    ):
     """Handle OPTIONS request for CORS preflight."""
     return {"success": True}
 
@@ -251,7 +258,9 @@ async def get_job_status(
 
 @router.get("/health")
 @limiter.limit("20/hour")
-async def health_check():
+async def health_check(
+    request: Request,
+    ):
     """Health check endpoint"""
     return {
         "status": "healthy",
@@ -275,7 +284,6 @@ async def warm_up_ocr_service(
             # Create tiny blank image for pipeline warm-up
             import io
             from PIL import Image
-from app.core.rate_limiter import limiter
 
             image = Image.new("RGB", (10, 10), color="white")
             buffer = io.BytesIO()
