@@ -73,6 +73,7 @@ from app.services.assignment_service import AssignmentService
 from app.services.additional_charge_service import AdditionalChargeService
 from app.services.deduction_service import DeductionService
 from app.services.report_service import ReportService
+from app.core.rate_limiter import limiter
 
 # NOTE: Prefix is now empty because this router will be registered at /api/apartments in main.py
 # This is the official Apartments API (formerly V2, now the only version)
@@ -89,7 +90,7 @@ router = APIRouter(prefix="", tags=["apartments"])
     summary="Lista de apartamentos",
     description="Obtener lista paginada de apartamentos con filtros opcionales"
 )
-async def list_apartments(
+@limiter.limit("30/minute")async def list_apartments(
     page: int = Query(1, ge=1, description="Número de página"),
     page_size: int = Query(12, ge=1, le=100, description="Tamaño de página"),
     available_only: bool = Query(False, description="Filtrar solo apartamentos disponibles"),
@@ -140,7 +141,7 @@ async def list_apartments(
     summary="Crear apartamento",
     description="Crear un nuevo apartamento en el sistema"
 )
-async def create_apartment(
+@limiter.limit("30/minute")async def create_apartment(
     apartment: ApartmentCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -183,7 +184,7 @@ async def create_apartment(
     summary="Detalles de apartamento",
     description="Obtener información completa de un apartamento específico"
 )
-async def get_apartment(
+@limiter.limit("30/minute")async def get_apartment(
     apartment_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -206,7 +207,7 @@ async def get_apartment(
     summary="Actualizar apartamento",
     description="Actualizar información de un apartamento existente"
 )
-async def update_apartment(
+@limiter.limit("30/minute")async def update_apartment(
     apartment_id: int,
     apartment: ApartmentUpdate,
     db: Session = Depends(get_db),
@@ -253,7 +254,7 @@ async def delete_apartment(
     summary="Búsqueda avanzada",
     description="Búsqueda avanzada con múltiples filtros combinables"
 )
-async def search_apartments(
+@limiter.limit("30/minute")async def search_apartments(
     q: Optional[str] = Query(None, description="Búsqueda de texto libre"),
     capacity_min: Optional[int] = Query(None, ge=1, description="Capacidad mínima"),
     size_min: Optional[float] = Query(None, ge=0, description="Tamaño mínimo en m²"),
@@ -307,7 +308,7 @@ async def search_apartments(
     summary="Asignar empleado",
     description="Asignar un empleado a un apartamento"
 )
-async def create_assignment(
+@limiter.limit("30/minute")async def create_assignment(
     assignment: AssignmentCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -351,7 +352,7 @@ async def create_assignment(
     summary="Listar asignaciones",
     description="Obtener lista paginada de asignaciones con filtros"
 )
-async def list_assignments(
+@limiter.limit("30/minute")async def list_assignments(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),
     employee_id: Optional[int] = Query(None, description="Filtrar por empleado"),
@@ -389,7 +390,7 @@ async def list_assignments(
     summary="Detalles de asignación",
     description="Obtener información completa de una asignación específica"
 )
-async def get_assignment(
+@limiter.limit("30/minute")async def get_assignment(
     assignment_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -412,7 +413,7 @@ async def get_assignment(
     summary="Asignaciones activas",
     description="Obtener todas las asignaciones actualmente activas"
 )
-async def get_active_assignments(
+@limiter.limit("30/minute")async def get_active_assignments(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -541,7 +542,7 @@ async def transfer_assignment(
     summary="Calcular renta prorrateada",
     description="Calcular renta prorrateada basada en días ocupados"
 )
-async def calculate_prorated_rent(
+@limiter.limit("30/minute")async def calculate_prorated_rent(
     calculation: ProratedCalculationRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -596,7 +597,7 @@ async def calculate_prorated_rent(
     summary="Obtener cargo de limpieza",
     description="Obtener el cargo de limpieza configurado para un apartamento"
 )
-async def get_cleaning_fee(
+@limiter.limit("30/minute")async def get_cleaning_fee(
     apartment_id: int,
     custom_amount: Optional[int] = Query(None, description="Sobrescribir monto por defecto"),
     db: Session = Depends(get_db),
@@ -686,7 +687,7 @@ async def calculate_total_deduction(
     summary="Agregar cargo adicional",
     description="Agregar un cargo adicional a una asignación"
 )
-async def create_additional_charge(
+@limiter.limit("30/minute")async def create_additional_charge(
     charge: AdditionalChargeCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -725,7 +726,7 @@ async def create_additional_charge(
     summary="Listar cargos adicionales",
     description="Obtener lista de cargos con filtros opcionales"
 )
-async def list_additional_charges(
+@limiter.limit("30/minute")async def list_additional_charges(
     assignment_id: Optional[int] = Query(None, description="Filtrar por asignación"),
     employee_id: Optional[int] = Query(None, description="Filtrar por empleado"),
     apartment_id: Optional[int] = Query(None, description="Filtrar por apartamento"),
@@ -769,7 +770,7 @@ async def list_additional_charges(
     summary="Detalles de cargo",
     description="Obtener información de un cargo adicional específico"
 )
-async def get_additional_charge(
+@limiter.limit("30/minute")async def get_additional_charge(
     charge_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -823,7 +824,7 @@ async def approve_additional_charge(
     summary="Cancelar cargo",
     description="Cancelar un cargo adicional"
 )
-async def cancel_additional_charge(
+@limiter.limit("30/minute")async def cancel_additional_charge(
     charge_id: int,
     update: AdditionalChargeUpdate,
     db: Session = Depends(get_db),
@@ -877,7 +878,7 @@ async def delete_additional_charge(
     summary="Deducciones del mes",
     description="Obtener todas las deducciones de renta para un mes específico"
 )
-async def get_monthly_deductions(
+@limiter.limit("30/minute")async def get_monthly_deductions(
     year: int,
     month: int,
     apartment_id: Optional[int] = Query(None, description="Filtrar por apartamento"),
@@ -924,7 +925,7 @@ async def get_monthly_deductions(
     summary="Generar deducciones automáticas",
     description="Generar deducciones automáticas para el mes especificado"
 )
-async def generate_monthly_deductions(
+@limiter.limit("30/minute")async def generate_monthly_deductions(
     year: int,
     month: int,
     db: Session = Depends(get_db),
@@ -963,7 +964,7 @@ async def generate_monthly_deductions(
     summary="Exportar deducciones a Excel",
     description="Exportar deducciones del mes a archivo Excel"
 )
-async def export_deductions_excel(
+@limiter.limit("30/minute")async def export_deductions_excel(
     year: int,
     month: int,
     apartment_id: Optional[int] = Query(None),
@@ -1009,7 +1010,7 @@ async def export_deductions_excel(
     summary="Actualizar estado de deducción",
     description="Marcar deducción como procesada o pagada"
 )
-async def update_deduction_status(
+@limiter.limit("30/minute")async def update_deduction_status(
     deduction_id: int,
     update: DeductionStatusUpdate,
     db: Session = Depends(get_db),
@@ -1050,7 +1051,7 @@ async def update_deduction_status(
     summary="Detalles de deducción",
     description="Obtener información completa de una deducción específica"
 )
-async def get_deduction(
+@limiter.limit("30/minute")async def get_deduction(
     deduction_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -1077,7 +1078,7 @@ async def get_deduction(
     summary="Reporte de ocupación",
     description="Obtener estadísticas de ocupación de apartamentos"
 )
-async def get_occupancy_report(
+@limiter.limit("30/minute")async def get_occupancy_report(
     prefecture: Optional[str] = Query(None, description="Filtrar por prefectura"),
     building_name: Optional[str] = Query(None, description="Filtrar por edificio"),
     db: Session = Depends(get_db),
@@ -1124,7 +1125,7 @@ async def get_occupancy_report(
     summary="Reporte de pagos pendientes",
     description="Obtener reporte de deducciones y pagos pendientes"
 )
-async def get_arrears_report(
+@limiter.limit("30/minute")async def get_arrears_report(
     year: int = Query(..., ge=2020, le=2100, description="Año del reporte"),
     month: int = Query(..., ge=1, le=12, description="Mes (1-12)"),
     db: Session = Depends(get_db),
@@ -1205,7 +1206,7 @@ async def get_arrears_report(
     summary="Reporte de mantenimiento",
     description="Obtener estado de mantenimiento de apartamentos"
 )
-async def get_maintenance_report(
+@limiter.limit("30/minute")async def get_maintenance_report(
     period: str = Query("6months", description="Período: 3months, 6months, 1year"),
     charge_type: Optional[str] = Query(None, description="Filtrar por tipo: cleaning, repair, deposit, penalty, other"),
     db: Session = Depends(get_db),
@@ -1303,7 +1304,7 @@ async def get_maintenance_report(
     summary="Análisis de costos",
     description="Obtener análisis completo de costos del sistema de apartamentos"
 )
-async def get_cost_analysis_report(
+@limiter.limit("30/minute")async def get_cost_analysis_report(
     year: int,
     month: Optional[int] = Query(None, description="Mes específico (opcional)"),
     db: Session = Depends(get_db),

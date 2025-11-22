@@ -17,6 +17,7 @@ from app.services.import_service import import_service
 from app.services.auth_service import AuthService
 from app.core.config import settings
 from app.core.database import get_db
+from app.core.rate_limiter import limiter
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -111,7 +112,7 @@ def _create_template_response(
 
 
 @router.post("/employees")
-async def import_employees(
+@limiter.limit("30/minute")async def import_employees(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
     current_user = Depends(_admin_guard_dependency)
@@ -151,7 +152,7 @@ async def import_employees(
 
 
 @router.post("/timer-cards")
-async def import_timer_cards(
+@limiter.limit("30/minute")async def import_timer_cards(
     file: UploadFile = File(...),
     factory_id: str = Query(...),
     year: int = Query(...),
@@ -199,7 +200,7 @@ async def import_timer_cards(
 
 
 @router.post("/factory-configs")
-async def import_factory_configs(
+@limiter.limit("30/minute")async def import_factory_configs(
     directory_path: str,
     db: Session = Depends(get_db),
     current_user=Depends(_admin_guard_dependency),
@@ -220,7 +221,7 @@ async def import_factory_configs(
 
 
 @router.get("/template/employees")
-async def download_employee_template():
+@limiter.limit("30/minute")async def download_employee_template():
     """Download Excel template for employee import"""
     try:
         columns = [
@@ -271,7 +272,7 @@ async def download_employee_template():
 
 
 @router.get("/template/timer-cards")
-async def download_timer_cards_template():
+@limiter.limit("30/minute")async def download_timer_cards_template():
     """Download Excel template for timer cards import"""
     try:
         columns = [

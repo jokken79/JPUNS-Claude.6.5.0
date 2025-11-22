@@ -14,6 +14,7 @@ from datetime import datetime
 import json
 
 from app.core.database import get_db
+from app.core.rate_limiter import limiter
 from app.models.models import PageVisibility, SystemSettings, User, RolePagePermission, AdminActionType, ResourceType
 from app.api.deps import get_current_user, require_admin
 from app.services.audit_service import AuditService
@@ -126,6 +127,7 @@ async def update_system_setting(
     return setting
 
 @router.post("/maintenance-mode")
+@limiter.limit("10/minute")  # Critical admin operation
 async def toggle_maintenance_mode(
     maintenance_data: MaintenanceModeRequest,
     db: Session = Depends(get_db),
@@ -363,6 +365,7 @@ async def import_configuration(
 # ============================================
 
 @router.get("/role-stats", response_model=List[RoleStatsResponse])
+@limiter.limit("20/minute")  # Admin endpoints - sensitive operations
 async def get_role_stats(
     request: Request,
     db: Session = Depends(get_db),

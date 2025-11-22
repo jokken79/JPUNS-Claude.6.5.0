@@ -12,12 +12,13 @@ from app.core.config import settings
 from app.core.logging import app_logger
 from app.core.observability import get_runtime_metrics
 from app.services.auth_service import AuthService
+from app.core.rate_limiter import limiter
 
 router = APIRouter()
 
 
 @router.get("/health", summary="Detailed health information")
-async def detailed_health() -> Dict[str, Any]:
+@limiter.limit("100/minute")async def detailed_health() -> Dict[str, Any]:
     try:
         # OCR service removed - using Azure OCR service instead
         process = psutil.Process()

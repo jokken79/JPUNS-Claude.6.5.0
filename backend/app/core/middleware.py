@@ -55,6 +55,7 @@ class SecurityMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         response = await call_next(request)
 
+        # Basic security headers
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("X-Frame-Options", "DENY")
         response.headers.setdefault("X-XSS-Protection", "1; mode=block")
@@ -64,6 +65,21 @@ class SecurityMiddleware(BaseHTTPMiddleware):
         response.headers.setdefault("Cross-Origin-Opener-Policy", "same-origin")
         response.headers.setdefault("Cross-Origin-Resource-Policy", "same-origin")
         response.headers.setdefault("X-Permitted-Cross-Domain-Policies", "none")
+
+        # Content-Security-Policy (CSP) - XSS protection at browser level
+        csp_directives = [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",  # Next.js requires unsafe-eval for dev
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+            "font-src 'self' https://fonts.gstatic.com data:",
+            "img-src 'self' data: https: blob:",
+            "connect-src 'self' ws: wss:",
+            "frame-ancestors 'none'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "upgrade-insecure-requests"
+        ]
+        response.headers.setdefault("Content-Security-Policy", "; ".join(csp_directives))
 
         # Improved user-agent detection
         user_agent = request.headers.get("User-Agent", "")

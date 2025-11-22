@@ -60,7 +60,7 @@ async def process_base64_options():
     "/process",
     responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
 )
-async def process_ocr_document(
+@limiter.limit("20/hour")async def process_ocr_document(
     file: UploadFile = File(..., description="Imagen a procesar"),
     document_type: str = Form("zairyu_card", description="Tipo de documento"),
     db: Session = Depends(get_db),
@@ -117,7 +117,7 @@ async def process_ocr_document(
     "/process-from-base64",
     responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
 )
-async def process_ocr_from_base64(
+@limiter.limit("20/hour")async def process_ocr_from_base64(
     image_base64: str = Form(..., description="Imagen en base64"),
     mime_type: str = Form(..., description="Tipo MIME"),
     document_type: str = Form("zairyu_card"),
@@ -145,7 +145,7 @@ async def process_ocr_from_base64(
 
 
 @router.post("/process-async", response_model=JobResponse)
-async def process_ocr_document_async(
+@limiter.limit("20/hour")async def process_ocr_document_async(
     file: UploadFile = File(..., description="Imagen a procesar"),
     document_type: str = Form("zairyu_card", description="Tipo de documento"),
     db: Session = Depends(get_db),
@@ -200,7 +200,7 @@ async def process_ocr_document_async(
 
 
 @router.get("/jobs/{job_id}", response_model=JobStatusResponse)
-async def get_job_status(
+@limiter.limit("20/hour")async def get_job_status(
     job_id: str,
     current_user = Depends(AuthService.get_current_active_user)
 ) -> JobStatusResponse:
@@ -246,7 +246,7 @@ async def get_job_status(
 
 
 @router.get("/health")
-async def health_check():
+@limiter.limit("20/hour")async def health_check():
     """Health check endpoint"""
     return {
         "status": "healthy",
@@ -257,7 +257,7 @@ async def health_check():
 
 
 @router.post("/warm-up")
-async def warm_up_ocr_service(
+@limiter.limit("20/hour")async def warm_up_ocr_service(
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user = Depends(AuthService.require_role("admin"))
@@ -269,6 +269,7 @@ async def warm_up_ocr_service(
             # Create tiny blank image for pipeline warm-up
             import io
             from PIL import Image
+from app.core.rate_limiter import limiter
 
             image = Image.new("RGB", (10, 10), color="white")
             buffer = io.BytesIO()

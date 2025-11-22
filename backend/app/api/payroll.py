@@ -65,7 +65,7 @@ def get_payroll_service(db: Session = Depends(get_db)) -> PayrollService:
     summary="Create a new payroll run",
     description="Creates a new payroll run for a specific pay period"
 )
-def create_payroll_run(
+@limiter.limit("30/minute")def create_payroll_run(
     payroll_data: PayrollRunCreate,
     service: PayrollService = Depends(get_payroll_service),
     db: Session = Depends(get_db)
@@ -130,7 +130,7 @@ def create_payroll_run(
     summary="Get all payroll runs",
     description="Retrieves a list of all payroll runs with pagination"
 )
-def get_payroll_runs(
+@limiter.limit("30/minute")def get_payroll_runs(
     skip: int = Query(0, ge=0, description="Number of items to skip"),
     limit: int = Query(100, ge=1, le=1000, description="Maximum number of items to return"),
     status_filter: Optional[str] = Query(None, description="Filter by status"),
@@ -191,7 +191,7 @@ def get_payroll_runs(
     summary="Get payroll run details",
     description="Retrieves detailed information about a specific payroll run"
 )
-def get_payroll_run(
+@limiter.limit("30/minute")def get_payroll_run(
     payroll_run_id: int,
     service: PayrollService = Depends(get_payroll_service),
     db: Session = Depends(get_db)
@@ -249,7 +249,7 @@ def get_payroll_run(
     summary="Calculate payroll for all employees",
     description="Calculates payroll for all employees in a payroll run"
 )
-def calculate_payroll_run(
+@limiter.limit("30/minute")def calculate_payroll_run(
     payroll_run_id: int,
     request: BulkPayrollRequest,
     service: PayrollService = Depends(get_payroll_service)
@@ -296,7 +296,7 @@ def calculate_payroll_run(
     summary="Get employees in payroll run",
     description="Retrieves all employees and their payroll calculations for a run"
 )
-def get_payroll_run_employees(
+@limiter.limit("30/minute")def get_payroll_run_employees(
     payroll_run_id: int,
     service: PayrollService = Depends(get_payroll_service),
     db: Session = Depends(get_db)
@@ -408,7 +408,7 @@ def get_payroll_run_employees(
     summary="Approve a payroll run",
     description="Approves a payroll run for payment"
 )
-def approve_payroll_run(
+@limiter.limit("30/minute")def approve_payroll_run(
     payroll_run_id: int,
     request: PayrollApprovalRequest,
     service: PayrollService = Depends(get_payroll_service),
@@ -477,7 +477,7 @@ def approve_payroll_run(
     summary="Delete a payroll run",
     description="Deletes a payroll run. Only allowed if status is DRAFT or CALCULATED."
 )
-def delete_payroll_run(
+@limiter.limit("30/minute")def delete_payroll_run(
     payroll_run_id: int,
     service: PayrollService = Depends(get_payroll_service),
     db: Session = Depends(get_db)
@@ -547,7 +547,7 @@ def delete_payroll_run(
     summary="Update a payroll run",
     description="Updates a payroll run. Only allowed if status is DRAFT."
 )
-def update_payroll_run(
+@limiter.limit("30/minute")def update_payroll_run(
     payroll_run_id: int,
     data: PayrollRunUpdate,
     service: PayrollService = Depends(get_payroll_service),
@@ -637,7 +637,7 @@ def update_payroll_run(
     summary="Mark payroll run as paid",
     description="Marks a payroll run as paid. Updates status and all employee payroll records."
 )
-def mark_payroll_run_paid(
+@limiter.limit("30/minute")def mark_payroll_run_paid(
     payroll_run_id: int,
     data: MarkPayrollPaidRequest,
     service: PayrollService = Depends(get_payroll_service),
@@ -729,7 +729,7 @@ def mark_payroll_run_paid(
     summary="Calculate payroll for one employee",
     description="Calculates payroll for a single employee based on timer records"
 )
-def calculate_employee_payroll(
+@limiter.limit("30/minute")def calculate_employee_payroll(
     request: EmployeePayrollCreate,
     service: PayrollService = Depends(get_payroll_service)
 ):
@@ -782,7 +782,7 @@ def calculate_employee_payroll(
     description="Calculate employee payroll based on timer card records for a specific period",
     response_model=dict
 )
-def calculate_payroll_from_timercards(
+@limiter.limit("30/minute")def calculate_payroll_from_timercards(
     employee_id: int = Query(..., description="Employee ID"),
     start_date: str = Query(..., description="Start date (YYYY-MM-DD format)"),
     end_date: str = Query(..., description="End date (YYYY-MM-DD format)"),
@@ -829,6 +829,7 @@ def calculate_payroll_from_timercards(
 
         # Get employee
         from app.models.models import Employee, TimerCard
+from app.core.rate_limiter import limiter
         employee = db.query(Employee).filter(Employee.id == employee_id).first()
 
         if not employee:
@@ -1052,7 +1053,7 @@ def get_payroll_yukyu_summary(
     summary="Generate payslip PDF",
     description="Generates a payslip PDF for an employee"
 )
-def generate_payslip(
+@limiter.limit("30/minute")def generate_payslip(
     request: PayslipRequest,
     service: PayrollService = Depends(get_payroll_service),
     db: Session = Depends(get_db)
@@ -1148,7 +1149,7 @@ def generate_payslip(
     summary="Get payslip information",
     description="Retrieves information about a generated payslip"
 )
-def get_payslip(
+@limiter.limit("30/minute")def get_payslip(
     payslip_id: str,
     service: PayrollService = Depends(get_payroll_service)
 ):
@@ -1194,7 +1195,7 @@ def get_payslip(
     summary="Get payroll settings",
     description="Retrieves the current payroll settings from database with caching"
 )
-async def get_payroll_settings(
+@limiter.limit("30/minute")async def get_payroll_settings(
     config_service: PayrollConfigService = Depends(get_payroll_config_service)
 ):
     """
@@ -1345,7 +1346,7 @@ async def update_payroll_settings(
     summary="Get payroll summary",
     description="Retrieves a summary view of all payroll runs"
 )
-def get_payroll_summary(
+@limiter.limit("30/minute")def get_payroll_summary(
     skip: int = Query(0, ge=0, description="Number of items to skip"),
     limit: int = Query(50, ge=1, le=1000, description="Maximum number of items to return"),
     service: PayrollService = Depends(get_payroll_service),

@@ -21,6 +21,7 @@ router = APIRouter(prefix="/api/pages", tags=["pages"])
 # ============================================
 
 from pydantic import BaseModel
+from app.core.rate_limiter import limiter
 
 class PageVisibilityResponse(BaseModel):
     id: int
@@ -48,7 +49,7 @@ class PageVisibilityToggle(BaseModel):
 # ============================================
 
 @router.get("/visibility", response_model=List[PageVisibilityResponse])
-async def get_all_page_visibility(
+@limiter.limit("60/minute")async def get_all_page_visibility(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -61,7 +62,7 @@ async def get_all_page_visibility(
 
 
 @router.get("/visibility/{page_key}", response_model=PageVisibilityResponse)
-async def get_page_visibility(
+@limiter.limit("60/minute")async def get_page_visibility(
     page_key: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -79,7 +80,7 @@ async def get_page_visibility(
 
 
 @router.put("/visibility/{page_key}")
-async def toggle_page_visibility(
+@limiter.limit("60/minute")async def toggle_page_visibility(
     page_key: str,
     toggle_data: PageVisibilityToggle,
     db: Session = Depends(get_db),
@@ -121,7 +122,7 @@ async def toggle_page_visibility(
 
 
 @router.post("/visibility/init")
-async def initialize_page_visibility(
+@limiter.limit("60/minute")async def initialize_page_visibility(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):

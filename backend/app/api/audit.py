@@ -21,6 +21,7 @@ from app.schemas.audit import (
     ResourceType
 )
 from app.schemas.base import PaginatedResponse, create_paginated_response
+from app.core.rate_limiter import limiter
 
 router = APIRouter(prefix="/api/admin/audit-log", tags=["admin-audit"])
 
@@ -45,7 +46,7 @@ def get_user_agent(request: Request) -> Optional[str]:
 # ============================================
 
 @router.get("", response_model=PaginatedResponse[AdminAuditLogResponse])
-async def get_audit_logs(
+@limiter.limit("60/minute")async def get_audit_logs(
     request: Request,
     action_type: Optional[AdminActionType] = Query(None, description="Filter by action type"),
     resource_type: Optional[ResourceType] = Query(None, description="Filter by resource type"),
@@ -99,7 +100,7 @@ async def get_audit_logs(
 
 
 @router.get("/{log_id}", response_model=AdminAuditLogResponse)
-async def get_audit_log_by_id(
+@limiter.limit("60/minute")async def get_audit_log_by_id(
     log_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
@@ -117,7 +118,7 @@ async def get_audit_log_by_id(
 
 
 @router.get("/recent/{limit}", response_model=list[AdminAuditLogResponse])
-async def get_recent_audit_logs(
+@limiter.limit("60/minute")async def get_recent_audit_logs(
     limit: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
@@ -139,7 +140,7 @@ async def get_recent_audit_logs(
 # ============================================
 
 @router.get("/stats/summary", response_model=AdminAuditLogStats)
-async def get_audit_log_stats(
+@limiter.limit("60/minute")async def get_audit_log_stats(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
@@ -155,7 +156,7 @@ async def get_audit_log_stats(
 # ============================================
 
 @router.post("/export")
-async def export_audit_logs(
+@limiter.limit("60/minute")async def export_audit_logs(
     export_request: AdminAuditLogExportRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
@@ -190,7 +191,7 @@ async def export_audit_logs(
 # ============================================
 
 @router.get("/search/query", response_model=PaginatedResponse[AdminAuditLogResponse])
-async def search_audit_logs(
+@limiter.limit("60/minute")async def search_audit_logs(
     q: str = Query(..., min_length=1, description="Search query"),
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
@@ -232,7 +233,7 @@ async def search_audit_logs(
 # ============================================
 
 @router.delete("/{log_id}")
-async def delete_audit_log(
+@limiter.limit("60/minute")async def delete_audit_log(
     log_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)

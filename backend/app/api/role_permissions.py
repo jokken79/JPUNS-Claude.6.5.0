@@ -11,6 +11,7 @@ from app.core.database import get_db
 from app.models.models import RolePagePermission, User, UserRole
 from app.api.deps import get_current_user, require_admin
 from app.services.audit_service import AuditService
+from app.core.rate_limiter import limiter
 
 router = APIRouter(prefix="/api/role-permissions", tags=["role-permissions"])
 
@@ -255,19 +256,19 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
 # ================================
 
 @router.get("/roles", response_model=List[Dict[str, str]], summary="List available roles")
-async def list_roles():
+@limiter.limit("60/minute")async def list_roles():
     """Get list of all available roles"""
     return AVAILABLE_ROLES
 
 
 @router.get("/pages", response_model=List[PageInfo], summary="List available pages")
-async def list_pages():
+@limiter.limit("60/minute")async def list_pages():
     """Get list of all available pages"""
     return AVAILABLE_PAGES
 
 
 @router.get("/{role_key}", response_model=RolePermissionsResponse, summary="Get permissions for a role")
-async def get_role_permissions(
+@limiter.limit("60/minute")async def get_role_permissions(
     role_key: str,
     current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
@@ -322,7 +323,7 @@ async def get_role_permissions(
 
 
 @router.put("/{role_key}/{page_key}", response_model=PermissionResponse, summary="Update a single permission")
-async def update_permission(
+@limiter.limit("60/minute")async def update_permission(
     role_key: str,
     page_key: str,
     permission: PermissionUpdate,
@@ -386,7 +387,7 @@ async def update_permission(
 
 
 @router.post("/bulk-update/{role_key}", response_model=RolePermissionsResponse, summary="Bulk update permissions for a role")
-async def bulk_update_permissions(
+@limiter.limit("60/minute")async def bulk_update_permissions(
     role_key: str,
     bulk_update: BulkPermissionUpdate,
     request: Request,
@@ -457,7 +458,7 @@ async def bulk_update_permissions(
 
 
 @router.get("/check/{role_key}/{page_key}", summary="Check if a role has access to a page")
-async def check_permission(
+@limiter.limit("60/minute")async def check_permission(
     role_key: str,
     page_key: str,
     db: Session = Depends(get_db)
@@ -491,7 +492,7 @@ async def check_permission(
 
 
 @router.get("/user/{user_id}/permissions", response_model=UserPermissionsResponse, summary="Get current user's permissions")
-async def get_user_permissions(
+@limiter.limit("60/minute")async def get_user_permissions(
     user_id: int,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -518,7 +519,7 @@ async def get_user_permissions(
 
 
 @router.post("/reset/{role_key}", summary="Reset permissions to default for a role")
-async def reset_permissions(
+@limiter.limit("60/minute")async def reset_permissions(
     role_key: str,
     current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
@@ -546,7 +547,7 @@ async def reset_permissions(
 
 
 @router.post("/initialize-defaults", summary="Initialize default permissions for all roles")
-async def initialize_default_permissions(
+@limiter.limit("60/minute")async def initialize_default_permissions(
     current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
 ):

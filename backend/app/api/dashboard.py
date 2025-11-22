@@ -37,6 +37,7 @@ from app.schemas.dashboard import (
     YukyuComplianceDetail,
 )
 from app.services.auth_service import auth_service
+from app.core.rate_limiter import limiter
 
 router = APIRouter()
 
@@ -202,7 +203,7 @@ def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
 
 
 @router.get("/stats", response_model=DashboardStats)
-async def get_dashboard_stats(
+@limiter.limit("60/minute")async def get_dashboard_stats(
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -258,7 +259,7 @@ async def get_dashboard_stats(
 
 
 @router.get("/factories", response_model=list[FactoryDashboard])
-async def get_factories_dashboard(
+@limiter.limit("60/minute")async def get_factories_dashboard(
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -374,7 +375,7 @@ async def get_factories_dashboard(
 
 
 @router.get("/alerts", response_model=list[EmployeeAlert])
-async def get_alerts(
+@limiter.limit("60/minute")async def get_alerts(
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -417,7 +418,7 @@ async def get_alerts(
 
 
 @router.get("/trends", response_model=list[MonthlyTrend])
-async def get_monthly_trends(
+@limiter.limit("60/minute")async def get_monthly_trends(
     months: int = 6,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -471,7 +472,7 @@ async def get_monthly_trends(
 
 
 @router.get("/admin", response_model=AdminDashboard)
-async def get_admin_dashboard(
+@limiter.limit("60/minute")async def get_admin_dashboard(
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -493,7 +494,7 @@ async def get_admin_dashboard(
 
 
 @router.get("/recent-activity", response_model=list[RecentActivity])
-async def get_recent_activity(
+@limiter.limit("60/minute")async def get_recent_activity(
     limit: int = Query(default=20, le=100),
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -506,7 +507,7 @@ async def get_recent_activity(
 
 
 @router.get("/employee/{employee_id}", response_model=EmployeeDashboard)
-async def get_employee_dashboard(
+@limiter.limit("60/minute")async def get_employee_dashboard(
     employee_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -578,7 +579,7 @@ async def get_employee_dashboard(
 
 
 @router.get("/yukyu-trends-monthly", response_model=list[YukyuTrendMonth])
-async def get_yukyu_trends_monthly(
+@limiter.limit("60/minute")async def get_yukyu_trends_monthly(
     months: int = Query(default=6, ge=1, le=24, description="Number of months to retrieve"),
     current_user: User = Depends(auth_service.require_yukyu_access()),
     db: Session = Depends(get_db)
@@ -654,7 +655,7 @@ async def get_yukyu_trends_monthly(
 
 
 @router.get("/yukyu-compliance-status", response_model=YukyuComplianceStatus)
-async def get_yukyu_compliance_status(
+@limiter.limit("60/minute")async def get_yukyu_compliance_status(
     period: str = Query(default="current", description="Period: 'current' for current fiscal year or YYYY-MM"),
     current_user: User = Depends(auth_service.require_yukyu_access()),
     db: Session = Depends(get_db)

@@ -15,6 +15,7 @@ from app.core.database import get_db
 from app.models.models import Employee, Factory, SalaryCalculation
 from app.services.auth_service import AuthService
 from app.services.report_service import report_service
+from app.core.rate_limiter import limiter
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -154,7 +155,7 @@ def _build_sample_annual_data():
 
 
 @router.post("/monthly-factory")
-async def generate_monthly_factory_report(
+@limiter.limit("30/minute")async def generate_monthly_factory_report(
     factory_id: str = Query(...),
     year: int = Query(...),
     month: int = Query(...),
@@ -304,7 +305,7 @@ async def generate_monthly_factory_report(
 
 
 @router.post("/payslip")
-async def generate_payslip_pdf(
+@limiter.limit("30/minute")async def generate_payslip_pdf(
     employee_id: int = Query(...),
     year: int = Query(...),
     month: int = Query(...),
@@ -397,7 +398,7 @@ async def generate_payslip_pdf(
 
 
 @router.get("/download/{filename}")
-async def download_report(
+@limiter.limit("30/minute")async def download_report(
     filename: str,
     current_user=Depends(_reports_guard_dependency),
 ):
@@ -423,7 +424,7 @@ async def download_report(
 
 
 @router.post("/annual-summary")
-async def generate_annual_summary(
+@limiter.limit("30/minute")async def generate_annual_summary(
     factory_id: str = Query(...),
     year: int = Query(...),
     db: Session = Depends(get_db),
