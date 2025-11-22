@@ -1,0 +1,154 @@
+{
+  "dashboard": {
+    "title": "Alerts Status",
+    "tags": ["alerts", "alertmanager", "monitoring"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "30s",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Active Alerts",
+        "type": "stat",
+        "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "count(ALERTS)",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "thresholds"},
+            "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": 0}, {"color": "yellow", "value": 1}, {"color": "red", "value": 5}]}
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Critical Alerts",
+        "type": "stat",
+        "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0},
+        "targets": [
+          {
+            "expr": "count(ALERTS{severity=\"critical\"})",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "thresholds"},
+            "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": 0}, {"color": "red", "value": 1}]}
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Warning Alerts",
+        "type": "stat",
+        "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "count(ALERTS{severity=\"warning\"})",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "thresholds"},
+            "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": 0}, {"color": "yellow", "value": 1}]}
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Alert Health %",
+        "type": "gauge",
+        "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0},
+        "targets": [
+          {
+            "expr": "100 - ((count(ALERTS) / 30) * 100)",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 100,
+            "unit": "percent",
+            "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": 0}, {"color": "yellow", "value": 80}, {"color": "green", "value": 95}]}
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Alerts Timeline",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8},
+        "targets": [
+          {
+            "expr": "ALERTS",
+            "format": "time_series",
+            "legendFormat": "{{alertname}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {"custom": {"lineWidth": 2}, "unit": "short"}
+        }
+      },
+      {
+        "id": 6,
+        "title": "Alerts by Severity",
+        "type": "piechart",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+        "targets": [
+          {
+            "expr": "count by (severity) (ALERTS)",
+            "legendFormat": "{{severity}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {"unit": "short"}
+        }
+      },
+      {
+        "id": 7,
+        "title": "Recent Alerts",
+        "type": "table",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+        "targets": [
+          {
+            "expr": "ALERTS",
+            "format": "table",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {"Time": false},
+              "indexByName": {},
+              "renameByName": {"alertname": "Alert", "severity": "Severity", "instance": "Instance"}
+            }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {"displayMode": "auto", "align": "auto"}
+          }
+        }
+      }
+    ],
+    "schemaVersion": 38,
+    "style": "dark",
+    "templating": {"list": []},
+    "time": {"from": "now-24h", "to": "now"},
+    "timepicker": {}
+  },
+  "overwrite": true
+}
