@@ -17,6 +17,7 @@ from app.core.resilience import (
     StructuredLogger,
 )
 from app.models.models import (
+from app.core.rate_limiter import limiter
     Factory, Employee, ContractWorker, Staff,
     SocialInsuranceRate, Candidate, User
 )
@@ -28,7 +29,7 @@ logger = StructuredLogger(name="resilient_import_api")
 
 
 @router.post("/employees")
-async def import_employees(
+@limiter.limit("30/minute")async def import_employees(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
 ):
@@ -180,7 +181,7 @@ async def import_employees(
 
 
 @router.post("/factories")
-async def import_factories(
+@limiter.limit("30/minute")async def import_factories(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
 ):
@@ -264,7 +265,7 @@ async def import_factories(
 
 
 @router.get("/status/{operation_id}")
-async def get_import_status(
+@limiter.limit("30/minute")async def get_import_status(
     operation_id: str,
     db: Session = Depends(get_db),
 ):
@@ -293,7 +294,7 @@ async def get_import_status(
 
 
 @router.post("/resume/{operation_id}")
-async def resume_import(
+@limiter.limit("30/minute")async def resume_import(
     operation_id: str,
     db: Session = Depends(get_db),
 ):
@@ -336,7 +337,7 @@ async def resume_import(
 
 
 @router.get("/checkpoints")
-async def list_checkpoints(
+@limiter.limit("30/minute")async def list_checkpoints(
     db: Session = Depends(get_db),
 ):
     """
@@ -363,7 +364,7 @@ async def list_checkpoints(
 
 
 @router.get("/health")
-async def health_check(db: Session = Depends(get_db)):
+@limiter.limit("30/minute")async def health_check(db: Session = Depends(get_db)):
     """
     Health check for resilient import system.
 

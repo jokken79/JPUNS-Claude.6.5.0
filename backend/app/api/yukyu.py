@@ -35,7 +35,7 @@ router = APIRouter()
 # ============================================================================
 
 @router.post("/balances/calculate", response_model=YukyuCalculationResponse)
-async def calculate_employee_yukyus(
+@limiter.limit("30/minute")async def calculate_employee_yukyus(
     calc_request: YukyuCalculationRequest,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -63,7 +63,7 @@ async def calculate_employee_yukyus(
 
 
 @router.get("/balances", response_model=YukyuBalanceSummary)
-async def get_current_user_yukyu_summary(
+@limiter.limit("30/minute")async def get_current_user_yukyu_summary(
     current_user: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -149,7 +149,7 @@ async def get_current_user_yukyu_summary(
 
 
 @router.get("/balances/{employee_id}", response_model=YukyuBalanceSummary)
-async def get_employee_yukyu_summary(
+@limiter.limit("30/minute")async def get_employee_yukyu_summary(
     employee_id: int,
     current_user: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db)
@@ -174,7 +174,7 @@ async def get_employee_yukyu_summary(
 # ============================================================================
 
 @router.post("/requests/", response_model=YukyuRequestResponse, status_code=status.HTTP_201_CREATED)
-async def create_yukyu_request(
+@limiter.limit("30/minute")async def create_yukyu_request(
     request_data: YukyuRequestCreate,
     current_user: User = Depends(auth_service.require_role("employee")),
     db: Session = Depends(get_db)
@@ -202,7 +202,7 @@ async def create_yukyu_request(
 
 
 @router.get("/requests/", response_model=List[YukyuRequestResponse])
-async def list_yukyu_requests(
+@limiter.limit("30/minute")async def list_yukyu_requests(
     factory_id: Optional[str] = Query(None, description="Filter by factory ID"),
     status: Optional[str] = Query(None, description="Filter by status (pending, approved, rejected)"),
     employee_id: Optional[int] = Query(None, description="Filter by employee ID"),
@@ -237,7 +237,7 @@ async def list_yukyu_requests(
 
 
 @router.put("/requests/{request_id}/approve", response_model=YukyuRequestResponse)
-async def approve_yukyu_request(
+@limiter.limit("30/minute")async def approve_yukyu_request(
     request_id: int,
     approval_data: YukyuRequestApprove,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -269,7 +269,7 @@ async def approve_yukyu_request(
 
 
 @router.put("/requests/{request_id}/reject", response_model=YukyuRequestResponse)
-async def reject_yukyu_request(
+@limiter.limit("30/minute")async def reject_yukyu_request(
     request_id: int,
     rejection_data: YukyuRequestReject,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -298,7 +298,7 @@ async def reject_yukyu_request(
 # ============================================================================
 
 @router.get("/employees/by-factory/{factory_id}", response_model=List[EmployeeByFactoryResponse])
-async def get_employees_by_factory(
+@limiter.limit("30/minute")async def get_employees_by_factory(
     factory_id: str,
     current_user: User = Depends(auth_service.require_role("employee")),
     db: Session = Depends(get_db)
@@ -325,7 +325,7 @@ async def get_employees_by_factory(
 # ============================================================================
 
 @router.post("/maintenance/expire-old-yukyus", response_model=dict)
-async def expire_old_yukyus(
+@limiter.limit("30/minute")async def expire_old_yukyus(
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -356,7 +356,7 @@ async def expire_old_yukyus(
 
 
 @router.get("/maintenance/scheduler-status", tags=["Maintenance"])
-async def get_scheduler_status(
+@limiter.limit("30/minute")async def get_scheduler_status(
     current_user: dict = Depends(get_current_user)
 ):
     """
@@ -376,7 +376,7 @@ async def get_scheduler_status(
 
 
 @router.get("/reports/export-excel", tags=["Reports"])
-async def export_yukyu_to_excel(
+@limiter.limit("30/minute")async def export_yukyu_to_excel(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
@@ -429,7 +429,7 @@ async def export_yukyu_to_excel(
 
 
 @router.get("/requests/{request_id}/pdf", tags=["Reports"])
-async def generate_request_pdf(
+@limiter.limit("30/minute")async def generate_request_pdf(
     request_id: int,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
@@ -478,7 +478,7 @@ async def generate_request_pdf(
 
 
 @router.get("/payroll/summary", tags=["Payroll Integration"])
-async def get_payroll_yukyu_summary(
+@limiter.limit("30/minute")async def get_payroll_yukyu_summary(
     year: int,
     month: int,
     factory_id: Optional[str] = None,
@@ -609,7 +609,7 @@ async def get_payroll_yukyu_summary(
 # ============================================================================
 
 @router.get("/usage-history/{employee_id}", response_model=List[YukyuUsageHistoryResponse])
-async def get_yukyu_usage_history(
+@limiter.limit("30/minute")async def get_yukyu_usage_history(
     employee_id: int,
     start_date: Optional[date] = Query(None, description="Filter by start date"),
     end_date: Optional[date] = Query(None, description="Filter by end date"),
@@ -689,6 +689,7 @@ async def get_yukyu_usage_history(
     if not include_expired:
         # Only show usage from balances that are still ACTIVE
         from app.models.models import YukyuStatus
+from app.core.rate_limiter import limiter
         query = query.filter(YukyuBalance.status == YukyuStatus.ACTIVE)
 
     # Order by usage date descending (most recent first)

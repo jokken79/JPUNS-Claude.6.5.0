@@ -33,7 +33,7 @@ def _get_table_safely(db: Session, table_name: str) -> Table:
 
 
 @router.get("/tables")
-async def get_tables(
+@limiter.limit("10/minute")async def get_tables(
     current_user = Depends(AuthService.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -83,7 +83,7 @@ async def get_tables(
 
 
 @router.get("/tables/{table_name}/data")
-async def get_table_data(
+@limiter.limit("10/minute")async def get_table_data(
     table_name: str,
     limit: int = 20,
     offset: int = 0,
@@ -165,7 +165,7 @@ async def get_table_data(
 
 
 @router.get("/tables/{table_name}/export")
-async def export_table(
+@limiter.limit("10/minute")async def export_table(
     table_name: str,
     current_user = Depends(AuthService.require_role("admin")),
     db: Session = Depends(get_db)
@@ -196,6 +196,7 @@ async def export_table(
         # Create response
         output.seek(0)
         from fastapi.responses import StreamingResponse
+from app.core.rate_limiter import limiter
         return StreamingResponse(
             io.BytesIO(output.getvalue().encode('utf-8-sig')),
             media_type="text/csv",
@@ -211,7 +212,7 @@ async def export_table(
 
 
 @router.post("/tables/{table_name}/import")
-async def import_table(
+@limiter.limit("10/minute")async def import_table(
     table_name: str,
     file: UploadFile = File(...),
     current_user = Depends(AuthService.require_role("admin")),
@@ -324,7 +325,7 @@ async def import_table(
 
 
 @router.put("/tables/{table_name}/rows/{row_id}")
-async def update_row(
+@limiter.limit("10/minute")async def update_row(
     table_name: str,
     row_id: str,
     update_data: Dict[str, Any],
@@ -377,7 +378,7 @@ async def update_row(
 
 
 @router.delete("/tables/{table_name}/rows/{row_id}")
-async def delete_row(
+@limiter.limit("10/minute")async def delete_row(
     table_name: str,
     row_id: str,
     current_user = Depends(AuthService.require_role("admin")),
@@ -419,7 +420,7 @@ async def delete_row(
 
 
 @router.delete("/tables/{table_name}/truncate")
-async def truncate_table(
+@limiter.limit("10/minute")async def truncate_table(
     table_name: str,
     current_user = Depends(AuthService.require_role("admin")),
     db: Session = Depends(get_db)
@@ -459,7 +460,7 @@ async def truncate_table(
 
 
 @router.post("/tables/{table_name}/create")
-async def create_table(
+@limiter.limit("10/minute")async def create_table(
     table_name: str,
     table_schema: Dict[str, Any],
     current_user = Depends(AuthService.require_role("admin")),

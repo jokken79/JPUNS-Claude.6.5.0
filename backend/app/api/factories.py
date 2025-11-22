@@ -17,12 +17,13 @@ from app.schemas.factory import (
     FactoryWithEmployees
 )
 from app.services.auth_service import auth_service
+from app.core.rate_limiter import limiter
 
 router = APIRouter()
 
 
 @router.post("/", response_model=FactoryResponse, status_code=status.HTTP_201_CREATED)
-async def create_factory(
+@limiter.limit("60/minute")async def create_factory(
     factory: FactoryCreate,
     current_user: User = Depends(auth_service.require_role("super_admin")),
     db: Session = Depends(get_db)
@@ -44,7 +45,7 @@ async def create_factory(
 
 
 @router.get("/", response_model=list[FactoryResponse])
-async def list_factories(
+@limiter.limit("60/minute")async def list_factories(
     is_active: bool = True,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -85,7 +86,7 @@ async def list_factories(
 
 
 @router.get("/stats", response_model=FactoryStats)
-async def get_factories_stats(
+@limiter.limit("60/minute")async def get_factories_stats(
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
 ):
@@ -134,7 +135,7 @@ async def get_factories_stats(
 
 
 @router.get("/{factory_id}", response_model=FactoryResponse)
-async def get_factory(
+@limiter.limit("60/minute")async def get_factory(
     factory_id: str,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -147,7 +148,7 @@ async def get_factory(
 
 
 @router.put("/{factory_id}", response_model=FactoryResponse)
-async def update_factory(
+@limiter.limit("60/minute")async def update_factory(
     factory_id: str,
     factory_update: FactoryUpdate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -171,7 +172,7 @@ async def update_factory(
 
 
 @router.delete("/{factory_id}")
-async def delete_factory(
+@limiter.limit("60/minute")async def delete_factory(
     factory_id: str,
     current_user: User = Depends(auth_service.require_role("super_admin")),
     db: Session = Depends(get_db)
@@ -193,7 +194,7 @@ async def delete_factory(
 # ============ Configuration Management Endpoints ============
 
 @router.get("/{factory_id}/config", response_model=FactoryConfig)
-async def get_factory_config(
+@limiter.limit("60/minute")async def get_factory_config(
     factory_id: str,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -211,7 +212,7 @@ async def get_factory_config(
 
 
 @router.put("/{factory_id}/config", response_model=FactoryResponse)
-async def update_factory_config(
+@limiter.limit("60/minute")async def update_factory_config(
     factory_id: str,
     config: FactoryConfig,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -231,7 +232,7 @@ async def update_factory_config(
 
 
 @router.post("/{factory_id}/config/validate", response_model=dict)
-async def validate_factory_config(
+@limiter.limit("60/minute")async def validate_factory_config(
     factory_id: str,
     config: FactoryConfig,
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -250,7 +251,7 @@ async def validate_factory_config(
     }
 
 @router.get("/{factory_id}/employees", response_model=FactoryWithEmployees)
-async def get_factory_with_employees(
+@limiter.limit("60/minute")async def get_factory_with_employees(
     factory_id: str,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)

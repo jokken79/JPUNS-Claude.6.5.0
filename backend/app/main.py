@@ -24,10 +24,10 @@ from app.core.observability import configure_observability
 from app.core.scheduler import start_scheduler, stop_scheduler
 from app.core.middleware import (
     AuditContextMiddleware,
-    ExceptionHandlerMiddleware,
     LoggingMiddleware,
     SecurityMiddleware,
 )
+from app.core.error_middleware import ErrorHandlerMiddleware
 
 # Initialize rate limiter
 limiter = Limiter(key_func=get_remote_address)
@@ -100,11 +100,12 @@ configure_observability(app)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, handle_rate_limit_error)
 
-# Add custom middlewares (order matters: audit context first)
+# Add custom middlewares (order matters: audit context first, error handler last)
 app.add_middleware(AuditContextMiddleware)
 app.add_middleware(SecurityMiddleware)
-app.add_middleware(ExceptionHandlerMiddleware)
 app.add_middleware(LoggingMiddleware)
+# Error handler middleware should be added last to catch all exceptions
+app.add_middleware(ErrorHandlerMiddleware)
 
 # Global rate limiting middleware
 @app.middleware("http")
@@ -252,6 +253,7 @@ from app.api import (
     employees,
     factories,
     import_export,
+    logs,  # Frontend log collection - FASE 4 #3
     monitoring,
     notifications,
     pages,
@@ -286,6 +288,7 @@ app.include_router(resilient_import.router, tags=["Resilient Import"])
 app.include_router(payroll.router, tags=["Payroll"])  # Router already has prefix="/api/payroll"
 app.include_router(reports.router, prefix="/api/reports", tags=["Reports"])
 app.include_router(notifications.router, prefix="/api/notifications", tags=["Notifications"])
+app.include_router(logs.router, prefix="/api", tags=["Logging"])  # Frontend log collection - FASE 4 #3
 app.include_router(monitoring.router, prefix="/api/monitoring", tags=["Monitoring"])
 app.include_router(pages.router)
 app.include_router(settings_router.router, prefix="/api/settings", tags=["Settings"])

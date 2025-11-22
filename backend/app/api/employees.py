@@ -44,7 +44,7 @@ class ChangeTypeRequest(BaseModel):
 
 
 @router.post("/", response_model=EmployeeResponse, status_code=status.HTTP_201_CREATED)
-async def create_employee(
+@limiter.limit("30/minute")async def create_employee(
     employee: EmployeeCreate,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -237,8 +237,8 @@ def _list_staff_members(
 
 
 @router.get("")
-@router.get("/")
-async def list_employees(
+@limiter.limit("30/minute")@router.get("/")
+@limiter.limit("30/minute")async def list_employees(
     page: int = 1,
     page_size: int = 20,
     factory_id: Optional[str] = None,
@@ -366,7 +366,7 @@ async def list_employees(
 
 
 @router.get("/available-for-apartment")
-async def list_available_for_apartment(
+@limiter.limit("30/minute")async def list_available_for_apartment(
     page: int = Query(1, ge=1),
     page_size: int = Query(1000, ge=1, le=2000),
     search: Optional[str] = Query(None),
@@ -379,6 +379,7 @@ async def list_available_for_apartment(
     Returns ALL active workers (including those already assigned, allowing transfers).
     """
     from sqlalchemy import union_all, cast, String, literal
+from app.core.rate_limiter import limiter
 
     # Build search filters for employees
     employee_filters = [
@@ -474,7 +475,7 @@ async def list_available_for_apartment(
 
 
 @router.get("/{employee_id}")
-async def get_employee(
+@limiter.limit("30/minute")async def get_employee(
     employee_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -497,7 +498,7 @@ async def get_employee(
 
 
 @router.get("/by-rirekisho/{rirekisho_id}", response_model=EmployeeResponse)
-async def get_employee_by_rirekisho(
+@limiter.limit("30/minute")async def get_employee_by_rirekisho(
     rirekisho_id: str,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -518,7 +519,7 @@ async def get_employee_by_rirekisho(
 
 
 @router.put("/{employee_id}", response_model=EmployeeResponse)
-async def update_employee(
+@limiter.limit("30/minute")async def update_employee(
     employee_id: int,
     employee_update: EmployeeUpdate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -677,7 +678,7 @@ async def update_employee(
 
 
 @router.post("/{employee_id}/terminate")
-async def terminate_employee(
+@limiter.limit("30/minute")async def terminate_employee(
     employee_id: int,
     termination: EmployeeTerminate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -697,7 +698,7 @@ async def terminate_employee(
 
 
 @router.put("/{employee_id}/yukyu", response_model=EmployeeResponse)
-async def update_yukyu(
+@limiter.limit("30/minute")async def update_yukyu(
     employee_id: int,
     yukyu_update: YukyuUpdate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -717,7 +718,7 @@ async def update_yukyu(
 
 
 @router.delete("/{employee_id}")
-async def delete_employee(
+@limiter.limit("30/minute")async def delete_employee(
     employee_id: int,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -743,7 +744,7 @@ async def delete_employee(
 
 
 @router.post("/{employee_id}/restore")
-async def restore_employee(
+@limiter.limit("30/minute")async def restore_employee(
     employee_id: int,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -768,7 +769,7 @@ async def restore_employee(
 
 
 @router.post("/import-excel")
-async def import_employees_from_excel(
+@limiter.limit("30/minute")async def import_employees_from_excel(
     file: UploadFile = File(...),
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -920,7 +921,7 @@ async def import_employees_from_excel(
 
 
 @router.patch("/{employee_id}/change-type", response_model=EmployeeResponse)
-async def change_employee_type(
+@limiter.limit("30/minute")async def change_employee_type(
     employee_id: int,
     change_request: ChangeTypeRequest,
     current_user: User = Depends(auth_service.require_role("admin")),

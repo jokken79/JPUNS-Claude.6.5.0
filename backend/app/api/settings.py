@@ -9,12 +9,13 @@ from app.models.models import SystemSettings, User, UserRole
 from app.api.deps import get_current_user
 from app.schemas.settings import VisibilityToggleResponse, VisibilityToggleUpdate
 from app.core.logging import app_logger
+from app.core.rate_limiter import limiter
 
 router = APIRouter()
 
 
 @router.get("/visibility", response_model=VisibilityToggleResponse)
-async def get_visibility_toggle(db: Session = Depends(get_db)):
+@limiter.limit("60/minute")async def get_visibility_toggle(db: Session = Depends(get_db)):
     """
     Get visibility toggle status
     Public endpoint - anyone can check if content is visible
@@ -52,7 +53,7 @@ async def get_visibility_toggle(db: Session = Depends(get_db)):
 
 
 @router.put("/visibility", response_model=VisibilityToggleResponse)
-async def update_visibility_toggle(
+@limiter.limit("60/minute")async def update_visibility_toggle(
     toggle_data: VisibilityToggleUpdate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)

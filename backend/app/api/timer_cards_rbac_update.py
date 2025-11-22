@@ -10,13 +10,14 @@ Copy the relevant functions to timer_cards.py
 """
 
 from datetime import datetime
+from app.core.rate_limiter import limiter
 
 # ============================================
 # UPDATED LIST ENDPOINT WITH RBAC
 # ============================================
 
 @router.get("/", response_model=list[TimerCardResponse])
-async def list_timer_cards(
+@limiter.limit("30/minute")async def list_timer_cards(
     employee_id: int = None,
     factory_id: str = None,
     is_approved: bool = None,
@@ -100,7 +101,7 @@ async def list_timer_cards(
 # ============================================
 
 @router.get("/{timer_card_id}", response_model=TimerCardResponse)
-async def get_timer_card(
+@limiter.limit("30/minute")async def get_timer_card(
     timer_card_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -184,7 +185,7 @@ async def get_timer_card(
 # ============================================
 
 @router.put("/{timer_card_id}", response_model=TimerCardResponse)
-async def update_timer_card(
+@limiter.limit("30/minute")async def update_timer_card(
     timer_card_id: int,
     timer_card_update: TimerCardUpdate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -257,7 +258,7 @@ async def update_timer_card(
 # ============================================
 
 @router.post("/approve", response_model=dict)
-async def approve_timer_cards(
+@limiter.limit("30/minute")async def approve_timer_cards(
     approve_data: TimerCardApprove,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)

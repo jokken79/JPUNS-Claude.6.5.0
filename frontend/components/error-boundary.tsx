@@ -2,6 +2,7 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { ErrorDisplay, ChunkLoadError, NetworkError, AuthError } from '@/components/error-state';
+import { logger } from '@/lib/logging';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -43,9 +44,26 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // Log error to console for debugging
-    console.error('ErrorBoundary caught an error:', error);
-    console.error('Error Info:', errorInfo);
+    // Determine error type for context
+    let errorType: 'generic' | 'chunk' | 'network' | 'auth' = 'generic';
+
+    if (error.message.includes('Loading chunk')) {
+      errorType = 'chunk';
+    } else if (error.message.includes('Network') || error.message.includes('fetch')) {
+      errorType = 'network';
+    } else if (error.message.includes('Unauthorized') || error.message.includes('401')) {
+      errorType = 'auth';
+    }
+
+    // Log error with structured context
+    logger.error('React Error Boundary caught error', {
+      error_type: errorType,
+      error_name: error.name,
+      error_message: error.message,
+      error_stack: error.stack,
+      component_stack: errorInfo.componentStack,
+      error_digest: (errorInfo as any).digest,  // Next.js error digest if available
+    });
 
     // Update state with error details
     this.setState({
@@ -57,9 +75,6 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
-
-    // You could also log the error to an error reporting service here
-    // Example: logErrorToService(error, errorInfo);
   }
 
   handleReset = (): void => {
@@ -110,7 +125,12 @@ export function useErrorHandler() {
   }, []);
 
   const handleError = React.useCallback((error: Error) => {
-    console.error('Error caught by useErrorHandler:', error);
+    // Log error with structured context
+    logger.error('Error caught by useErrorHandler', {
+      error_name: error.name,
+      error_message: error.message,
+      error_stack: error.stack,
+    });
     setError(error);
   }, []);
 

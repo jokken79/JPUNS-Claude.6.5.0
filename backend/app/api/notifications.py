@@ -9,6 +9,7 @@ from pydantic import BaseModel, EmailStr
 
 from app.services.auth_service import AuthService
 from app.services.notification_service import notification_service
+from app.core.rate_limiter import limiter
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ class YukyuNotificationRequest(BaseModel):
 
 
 @router.post("/send-email")
-async def send_email(
+@limiter.limit("60/minute")async def send_email(
     request: EmailRequest,
     current_user=Depends(AuthService.require_role("admin")),
 ):
@@ -78,7 +79,7 @@ async def send_email(
 
 
 @router.post("/send-line")
-async def send_line_notification(
+@limiter.limit("60/minute")async def send_line_notification(
     request: LINERequest,
     current_user=Depends(AuthService.require_role("admin")),
 ):
@@ -111,7 +112,7 @@ async def send_line_notification(
 
 
 @router.post("/yukyu-approval")
-async def notify_yukyu_approval(
+@limiter.limit("60/minute")async def notify_yukyu_approval(
     request: YukyuNotificationRequest,
     current_user=Depends(AuthService.require_role("admin")),
 ):
@@ -147,7 +148,7 @@ async def notify_yukyu_approval(
 
 
 @router.post("/payslip-ready")
-async def notify_payslip_ready(
+@limiter.limit("60/minute")async def notify_payslip_ready(
     employee_email: EmailStr,
     employee_name: str,
     year: int,
@@ -191,7 +192,7 @@ async def notify_payslip_ready(
 
 
 @router.get("/test-email")
-async def test_email_configuration(
+@limiter.limit("60/minute")async def test_email_configuration(
     current_user=Depends(AuthService.require_role("admin")),
 ):
     """Test email configuration"""

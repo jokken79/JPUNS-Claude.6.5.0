@@ -10,12 +10,13 @@ from app.models.models import Contract, Employee, User
 from app.schemas.contract import ContractCreate, ContractUpdate, ContractResponse
 from app.schemas.base import PaginatedResponse, create_paginated_response
 from app.services.auth_service import auth_service
+from app.core.rate_limiter import limiter
 
 router = APIRouter()
 
 
 @router.post("/", response_model=ContractResponse, status_code=status.HTTP_201_CREATED)
-async def create_contract(
+@limiter.limit("60/minute")async def create_contract(
     contract: ContractCreate,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -52,7 +53,7 @@ async def create_contract(
 
 
 @router.get("/", response_model=PaginatedResponse[ContractResponse])
-async def list_contracts(
+@limiter.limit("60/minute")async def list_contracts(
     employee_id: Optional[int] = Query(None, description="Filter by employee ID"),
     signed: Optional[bool] = Query(None, description="Filter by signed status"),
     page: int = Query(1, ge=1, description="Page number"),
@@ -94,7 +95,7 @@ async def list_contracts(
 
 
 @router.get("/{contract_id}", response_model=ContractResponse)
-async def get_contract(
+@limiter.limit("60/minute")async def get_contract(
     contract_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -115,7 +116,7 @@ async def get_contract(
 
 
 @router.put("/{contract_id}", response_model=ContractResponse)
-async def update_contract(
+@limiter.limit("60/minute")async def update_contract(
     contract_id: int,
     contract_update: ContractUpdate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -169,7 +170,7 @@ async def update_contract(
 
 
 @router.delete("/{contract_id}")
-async def delete_contract(
+@limiter.limit("60/minute")async def delete_contract(
     contract_id: int,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -196,7 +197,7 @@ async def delete_contract(
 
 
 @router.post("/{contract_id}/restore")
-async def restore_contract(
+@limiter.limit("60/minute")async def restore_contract(
     contract_id: int,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
