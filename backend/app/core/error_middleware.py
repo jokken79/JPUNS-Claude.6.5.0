@@ -16,7 +16,6 @@ Usage:
 
 from __future__ import annotations
 
-import logging
 import traceback
 import uuid
 from typing import Callable
@@ -37,8 +36,10 @@ from app.core.exceptions import (
     ServerError,
 )
 from app.core.config import settings
+from app.core.logging import get_logger, set_request_id, clear_request_id
 
-logger = logging.getLogger(__name__)
+# Use Loguru for structured logging
+logger = get_logger(__name__)
 
 
 class ErrorHandlerMiddleware(BaseHTTPMiddleware):
@@ -54,59 +55,66 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
     """
     
     async def dispatch(
-        self, 
-        request: Request, 
+        self,
+        request: Request,
         call_next: RequestResponseEndpoint
     ) -> Response:
         # Generate request ID for tracking
         request_id = str(uuid.uuid4())
         request.state.request_id = request_id
-        
+
+        # Set request ID in logging context for automatic tracking
+        set_request_id(request_id)
+
         try:
             # Add request ID to response headers
             response = await call_next(request)
             response.headers["X-Request-ID"] = request_id
             return response
-            
+
         except ApplicationError as exc:
             # Handle our custom application errors
             return await self._handle_application_error(exc, request, request_id)
-            
+
         except IntegrityError as exc:
             # Handle database integrity errors (unique constraint, foreign key, etc.)
             return await self._handle_integrity_error(exc, request, request_id)
-            
+
         except OperationalError as exc:
             # Handle database connection errors
             return await self._handle_operational_error(exc, request, request_id)
-            
+
         except SQLAlchemyError as exc:
             # Handle other SQLAlchemy errors
             return await self._handle_sqlalchemy_error(exc, request, request_id)
-            
+
         except requests.exceptions.Timeout as exc:
             # Handle HTTP timeout errors
             return await self._handle_timeout_error(exc, request, request_id)
-            
+
         except requests.exceptions.ConnectionError as exc:
             # Handle HTTP connection errors
             return await self._handle_connection_error(exc, request, request_id)
-            
+
         except requests.exceptions.RequestException as exc:
             # Handle other HTTP request errors
             return await self._handle_request_error(exc, request, request_id)
-            
+
         except ValueError as exc:
             # Handle value errors (invalid input)
             return await self._handle_value_error(exc, request, request_id)
-            
+
         except KeyError as exc:
             # Handle missing key errors
             return await self._handle_key_error(exc, request, request_id)
-            
+
         except Exception as exc:
             # Catch-all for unexpected exceptions
             return await self._handle_unexpected_error(exc, request, request_id)
+
+        finally:
+            # Clear request ID from context after request completes
+            clear_request_id()
     
     async def _handle_application_error(
         self,
@@ -118,38 +126,32 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
         # Set request ID on exception if not already set
         if not exc.request_id or exc.request_id != request_id:
             exc.request_id = request_id
-        
-        # Log with appropriate level based on status code
-        log_data = {
-            "error_code": exc.error_code.value,
-            "status_code": exc.status_code,
-            "request_id": request_id,
-            "path": request.url.path,
-            "method": request.method,
-        }
-        
+
+        # Build log context
+        log_ctx = get_logger(
+            __name__,
+            error_code=exc.error_code.value,
+            status_code=exc.status_code,
+            path=str(request.url.path),
+            method=request.method,
+        )
+
         if exc.context:
-            log_data["context"] = exc.context
-        
+            log_ctx = log_ctx.bind(error_context=exc.context)
+
+        # Log with appropriate level based on status code
         if exc.status_code >= 500:
-            logger.error(
-                f"Server error: {exc.message}",
-                extra=log_data,
-                exc_info=True
-            )
+            log_ctx.error(f"Server error: {exc.message}")
         elif exc.status_code >= 400:
-            logger.warning(
-                f"Client error: {exc.message}",
-                extra=log_data
-            )
-        
+            log_ctx.warning(f"Client error: {exc.message}")
+
         # Convert to JSON response
         response_data = exc.to_dict()
-        
+
         # Remove context in production for security
         if settings.ENVIRONMENT == "production" and "context" in response_data.get("error", {}):
             del response_data["error"]["context"]
-        
+
         return JSONResponse(
             status_code=exc.status_code,
             content=response_data,
@@ -163,14 +165,11 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
         request_id: str
     ) -> JSONResponse:
         """Handle database integrity constraint violations."""
-        logger.warning(
-            f"Database integrity error: {str(exc.orig)}",
-            extra={
-                "request_id": request_id,
-                "path": request.url.path,
-                "method": request.method,
-            }
-        )
+        get_logger(
+            __name__,
+            path=str(request.url.path),
+            method=request.method,
+        ).warning(f"Database integrity error: {str(exc.orig)}")
         
         # Extract constraint name if available
         constraint_name = None
@@ -212,15 +211,11 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
         request_id: str
     ) -> JSONResponse:
         """Handle database connection errors."""
-        logger.error(
-            f"Database operational error: {str(exc.orig)}",
-            extra={
-                "request_id": request_id,
-                "path": request.url.path,
-                "method": request.method,
-            },
-            exc_info=True
-        )
+        get_logger(
+            __name__,
+            path=str(request.url.path),
+            method=request.method,
+        ).error(f"Database operational error: {str(exc.orig)}")
         
         error = DatabaseConnectionError(
             message="Database connection failed",
@@ -245,15 +240,11 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
         request_id: str
     ) -> JSONResponse:
         """Handle general SQLAlchemy errors."""
-        logger.error(
-            f"SQLAlchemy error: {str(exc)}",
-            extra={
-                "request_id": request_id,
-                "path": request.url.path,
-                "method": request.method,
-            },
-            exc_info=True
-        )
+        get_logger(
+            __name__,
+            path=str(request.url.path),
+            method=request.method,
+        ).error(f"SQLAlchemy error: {str(exc)}")
         
         error = DatabaseError(
             message="Database error occurred",
@@ -278,14 +269,11 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
         request_id: str
     ) -> JSONResponse:
         """Handle HTTP timeout errors."""
-        logger.error(
-            f"External service timeout: {str(exc)}",
-            extra={
-                "request_id": request_id,
-                "path": request.url.path,
-                "method": request.method,
-            }
-        )
+        get_logger(
+            __name__,
+            path=str(request.url.path),
+            method=request.method,
+        ).error(f"External service timeout: {str(exc)}")
         
         error = ExternalServiceError(
             service_name="External Service",
@@ -312,14 +300,11 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
         request_id: str
     ) -> JSONResponse:
         """Handle HTTP connection errors."""
-        logger.error(
-            f"External service connection error: {str(exc)}",
-            extra={
-                "request_id": request_id,
-                "path": request.url.path,
-                "method": request.method,
-            }
-        )
+        get_logger(
+            __name__,
+            path=str(request.url.path),
+            method=request.method,
+        ).error(f"External service connection error: {str(exc)}")
         
         error = ExternalServiceError(
             service_name="External Service",
@@ -346,14 +331,11 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
         request_id: str
     ) -> JSONResponse:
         """Handle general HTTP request errors."""
-        logger.error(
-            f"External service request error: {str(exc)}",
-            extra={
-                "request_id": request_id,
-                "path": request.url.path,
-                "method": request.method,
-            }
-        )
+        get_logger(
+            __name__,
+            path=str(request.url.path),
+            method=request.method,
+        ).error(f"External service request error: {str(exc)}")
         
         error = ExternalServiceError(
             service_name="External Service",
@@ -380,14 +362,11 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
         request_id: str
     ) -> JSONResponse:
         """Handle value errors (invalid input)."""
-        logger.warning(
-            f"Value error: {str(exc)}",
-            extra={
-                "request_id": request_id,
-                "path": request.url.path,
-                "method": request.method,
-            }
-        )
+        get_logger(
+            __name__,
+            path=str(request.url.path),
+            method=request.method,
+        ).warning(f"Value error: {str(exc)}")
         
         from app.core.exceptions import ValidationError
         
@@ -414,14 +393,11 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
         request_id: str
     ) -> JSONResponse:
         """Handle missing key errors."""
-        logger.warning(
-            f"Missing key: {str(exc)}",
-            extra={
-                "request_id": request_id,
-                "path": request.url.path,
-                "method": request.method,
-            }
-        )
+        get_logger(
+            __name__,
+            path=str(request.url.path),
+            method=request.method,
+        ).warning(f"Missing key: {str(exc)}")
         
         from app.core.exceptions import ValidationError
         
@@ -450,15 +426,12 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
     ) -> JSONResponse:
         """Handle unexpected exceptions."""
         # Log with full traceback for debugging
-        logger.exception(
-            f"Unexpected error: {str(exc)}",
-            extra={
-                "request_id": request_id,
-                "path": request.url.path,
-                "method": request.method,
-                "exception_type": type(exc).__name__,
-            }
-        )
+        get_logger(
+            __name__,
+            path=str(request.url.path),
+            method=request.method,
+            exception_type=type(exc).__name__,
+        ).exception(f"Unexpected error: {str(exc)}")
         
         # In development, include more details
         if settings.DEBUG:

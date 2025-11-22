@@ -7,7 +7,13 @@ from fastapi import HTTPException, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
 from app.core.app_exceptions import handle_exception
-from app.core.logging import app_logger, log_performance_metric, log_security_event
+from app.core.logging import (
+    get_logger,
+    log_http_request,
+    log_performance_metric,
+    log_security_event,
+    get_request_id,
+)
 from app.core.audit import clear_audit_context, update_audit_context
 
 
@@ -29,23 +35,69 @@ class AuditContextMiddleware(BaseHTTPMiddleware):
 
 
 class LoggingMiddleware(BaseHTTPMiddleware):
-    """Attach structured logging to each request."""
+    """
+    Attach structured logging to each request.
+
+    Logs:
+    - Request start with method, path, client IP
+    - Request completion with status code, duration
+    - Performance metrics with threshold warnings
+    - Slow request warnings (>200ms)
+    """
 
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         start = time.perf_counter()
-        route = request.url.path
+        route = str(request.url.path)
         method = request.method
         client = request.client.host if request.client else "unknown"
 
-        app_logger.bind(route=route, method=method, client=client).info("request.started")
+        # Log request start
+        logger = get_logger(
+            __name__,
+            method=method,
+            path=route,
+            client_ip=client,
+        )
+        logger.info(f"Request started: {method} {route}")
 
+        # Process request
         response = await call_next(request)
 
+        # Calculate duration
         elapsed = time.perf_counter() - start
+        duration_ms = elapsed * 1000
+
+        # Add process time header
         response.headers["X-Process-Time"] = f"{elapsed:.4f}"
 
-        log_performance_metric("request_duration", elapsed, route=route, status=response.status_code)
-        app_logger.bind(route=route, method=method, status=response.status_code).info("request.finished")
+        # Log HTTP request with context
+        log_http_request(
+            method=method,
+            path=route,
+            status_code=response.status_code,
+            duration=elapsed,
+            client_ip=client,
+        )
+
+        # Log performance metric with threshold
+        log_performance_metric(
+            "request_duration",
+            duration_ms,
+            unit="ms",
+            threshold=200.0,  # Warn if request takes > 200ms
+            route=route,
+            method=method,
+            status=response.status_code,
+        )
+
+        # Additional warning for very slow requests (>1s)
+        if duration_ms > 1000:
+            logger.warning(
+                f"Very slow request: {method} {route} took {duration_ms:.2f}ms",
+                duration_ms=duration_ms,
+                status_code=response.status_code,
+            )
+
         return response
 
 
@@ -86,7 +138,13 @@ class SecurityMiddleware(BaseHTTPMiddleware):
         suspicious_patterns = [r"^curl", r"^python-requests", r"^wget", r"^libwww"]
         is_suspicious = not user_agent or any(re.match(pattern, user_agent, re.IGNORECASE) for pattern in suspicious_patterns)
         if is_suspicious:
-            log_security_event(message="Suspicious user agent", user_agent=user_agent)
+            log_security_event(
+                "suspicious_user_agent",
+                severity="warning",
+                user_agent=user_agent,
+                path=str(request.url.path),
+                client_ip=request.client.host if request.client else "unknown",
+            )
 
         return response
 
@@ -112,7 +170,11 @@ class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
             raise
         except Exception as exc:
             # Convert all exceptions to appropriate HTTP responses using centralized handler
-            app_logger.bind(route=request.url.path).exception("Application exception")
+            get_logger(
+                __name__,
+                path=str(request.url.path),
+                method=request.method,
+            ).exception("Application exception")
             raise handle_exception(exc)
 
 

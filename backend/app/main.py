@@ -253,6 +253,7 @@ from app.api import (
     employees,
     factories,
     import_export,
+    logs,  # Frontend log collection - FASE 4 #3
     monitoring,
     notifications,
     pages,
@@ -287,6 +288,7 @@ app.include_router(resilient_import.router, tags=["Resilient Import"])
 app.include_router(payroll.router, tags=["Payroll"])  # Router already has prefix="/api/payroll"
 app.include_router(reports.router, prefix="/api/reports", tags=["Reports"])
 app.include_router(notifications.router, prefix="/api/notifications", tags=["Notifications"])
+app.include_router(logs.router, prefix="/api", tags=["Logging"])  # Frontend log collection - FASE 4 #3
 app.include_router(monitoring.router, prefix="/api/monitoring", tags=["Monitoring"])
 app.include_router(pages.router)
 app.include_router(settings_router.router, prefix="/api/settings", tags=["Settings"])
