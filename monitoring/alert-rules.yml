@@ -1,0 +1,227 @@
+groups:
+  - name: jpuns_yukyu_alerts
+    interval: 30s
+    rules:
+      # ==================== API ERROR RATE ====================
+      - alert: HighErrorRate
+        expr: |
+          (rate(http_requests_total{status=~"5.."}[5m]) /
+           rate(http_requests_total[5m])) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "High error rate detected on {{ $labels.job }}"
+          description: "Error rate is {{ $value | humanizePercentage }} (>5%)"
+          dashboard: "http://localhost:3000/d/yukyu-dashboard"
+
+      # ==================== API RESPONSE TIME ====================
+      - alert: SlowAPIResponse
+        expr: |
+          histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 3m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Slow API response time on {{ $labels.endpoint }}"
+          description: "95th percentile response time is {{ $value }}s (>1s)"
+
+      - alert: VerySlowAPIResponse
+        expr: |
+          histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 5
+        for: 1m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "Very slow API response time on {{ $labels.endpoint }}"
+          description: "95th percentile response time is {{ $value }}s (>5s)"
+
+      # ==================== DATABASE ====================
+      - alert: HighDatabaseConnections
+        expr: |
+          pg_stat_activity_count /
+          (select setting::float from pg_settings where name = 'max_connections') > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          team: database
+        annotations:
+          summary: "High database connection usage"
+          description: "Using {{ $value | humanizePercentage }} of max connections"
+
+      - alert: DatabaseQuerySlow
+        expr: |
+          pg_slow_queries_total > 10
+        for: 5m
+        labels:
+          severity: warning
+          team: database
+        annotations:
+          summary: "Multiple slow queries detected"
+          description: "{{ $value }} slow queries in the last 5 minutes"
+
+      - alert: DatabaseDown
+        expr: |
+          up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          team: database
+        annotations:
+          summary: "PostgreSQL database is down!"
+          description: "Database at {{ $labels.instance }} is not responding"
+
+      # ==================== CACHE (Redis) ====================
+      - alert: CacheDown
+        expr: |
+          up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          team: infrastructure
+        annotations:
+          summary: "Redis cache is down!"
+          description: "Redis at {{ $labels.instance }} is not responding"
+
+      - alert: CacheLowHitRate
+        expr: |
+          redis_keyspace_hits_total /
+          (redis_keyspace_hits_total + redis_keyspace_misses_total) < 0.3
+        for: 10m
+        labels:
+          severity: warning
+          team: infrastructure
+        annotations:
+          summary: "Low cache hit rate detected"
+          description: "Cache hit rate is {{ $value | humanizePercentage }} (<30%)"
+
+      # ==================== SYSTEM RESOURCES ====================
+      - alert: HighCPUUsage
+        expr: |
+          (100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 80
+        for: 5m
+        labels:
+          severity: warning
+          team: infrastructure
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value | humanize }}%"
+
+      - alert: CriticalCPUUsage
+        expr: |
+          (100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 95
+        for: 2m
+        labels:
+          severity: critical
+          team: infrastructure
+        annotations:
+          summary: "Critical CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value | humanize }}%"
+
+      - alert: HighMemoryUsage
+        expr: |
+          (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          team: infrastructure
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value | humanize }}%"
+
+      - alert: CriticalMemoryUsage
+        expr: |
+          (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 95
+        for: 2m
+        labels:
+          severity: critical
+          team: infrastructure
+        annotations:
+          summary: "Critical memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value | humanize }}%"
+
+      - alert: HighDiskUsage
+        expr: |
+          (node_filesystem_avail_bytes{fstype=~"ext4|xfs|btrfs"} /
+           node_filesystem_size_bytes) < 0.15
+        for: 10m
+        labels:
+          severity: warning
+          team: infrastructure
+        annotations:
+          summary: "High disk usage on {{ $labels.device }}"
+          description: "Only {{ $value | humanizePercentage }} disk space remaining"
+
+      # ==================== AVAILABILITY ====================
+      - alert: BackendDown
+        expr: |
+          up{job="jpuns-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "JPUNS Backend is DOWN!"
+          description: "Backend at {{ $labels.instance }} is not responding"
+
+      - alert: FrontendDown
+        expr: |
+          up{job="jpuns-frontend"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          team: frontend
+        annotations:
+          summary: "JPUNS Frontend is DOWN!"
+          description: "Frontend at {{ $labels.instance }} is not responding"
+
+      # ==================== SPECIFIC YUKYU ENDPOINTS ====================
+      - alert: YukyuTrendsEndpointDown
+        expr: |
+          up{job="jpuns-backend", endpoint="/api/dashboard/yukyu-trends-monthly"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "Yukyu Trends endpoint is DOWN!"
+          description: "/api/dashboard/yukyu-trends-monthly is not responding"
+
+      - alert: YukyuComplianceEndpointDown
+        expr: |
+          up{job="jpuns-backend", endpoint="/api/dashboard/yukyu-compliance-status"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "Yukyu Compliance endpoint is DOWN!"
+          description: "/api/dashboard/yukyu-compliance-status is not responding"
+
+      - alert: YukyuEndpointSlowResponse
+        expr: |
+          histogram_quantile(0.95,
+            rate(http_request_duration_seconds_bucket{endpoint=~"/api/dashboard/yukyu.*"}[5m])
+          ) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Yukyu endpoint slow response: {{ $labels.endpoint }}"
+          description: "Response time is {{ $value }}s (>500ms)"
+
+      # ==================== RATE LIMITING ====================
+      - alert: RateLimitExceeded
+        expr: |
+          increase(http_requests_total{status="429"}[5m]) > 10
+        for: 2m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Rate limit exceeded on {{ $labels.endpoint }}"
+          description: "{{ $value }} requests blocked by rate limiter"

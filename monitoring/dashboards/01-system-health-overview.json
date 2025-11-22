@@ -1,0 +1,167 @@
+{
+  "dashboard": {
+    "title": "System Health Overview",
+    "tags": ["system", "health", "overview"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "30s",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Service Status",
+        "type": "table",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "up",
+            "format": "table",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {"Time": true},
+              "indexByName": {},
+              "renameByName": {"job": "Service", "instance": "Instance", "Value": "Status"}
+            }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {"displayMode": "color-background", "align": "auto"},
+            "mappings": [
+              {"type": "value", "options": {"0": {"color": "red", "text": "DOWN"}, "1": {"color": "green", "text": "UP"}}}
+            ]
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "CPU Usage (%)",
+        "type": "gauge",
+        "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 100,
+            "unit": "percent",
+            "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": 0}, {"color": "yellow", "value": 80}, {"color": "red", "value": 95}]},
+            "custom": {"hideFrom": {"tooltip": false, "viz": false, "legend": false}}
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Memory Usage (%)",
+        "type": "gauge",
+        "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0},
+        "targets": [
+          {
+            "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 100,
+            "unit": "percent",
+            "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": 0}, {"color": "yellow", "value": 85}, {"color": "red", "value": 95}]}
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Disk Usage (%)",
+        "type": "gauge",
+        "gridPos": {"h": 8, "w": 6, "x": 0, "y": 8},
+        "targets": [
+          {
+            "expr": "(1 - (node_filesystem_avail_bytes{fstype=~\"ext4|xfs\"} / node_filesystem_size_bytes{fstype=~\"ext4|xfs\"})) * 100",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 100,
+            "unit": "percent",
+            "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": 0}, {"color": "yellow", "value": 80}, {"color": "red", "value": 90}]}
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "System Status",
+        "type": "stat",
+        "gridPos": {"h": 8, "w": 6, "x": 6, "y": 8},
+        "targets": [
+          {
+            "expr": "up{job=\"node\"}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [{"type": "value", "options": {"0": {"color": "red", "text": "DOWN"}, "1": {"color": "green", "text": "UP"}}}],
+            "color": {"mode": "background"}
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Prometheus Status",
+        "type": "stat",
+        "gridPos": {"h": 8, "w": 6, "x": 12, "y": 8},
+        "targets": [
+          {
+            "expr": "up{job=\"prometheus\"}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [{"type": "value", "options": {"0": {"color": "red", "text": "DOWN"}, "1": {"color": "green", "text": "UP"}}}],
+            "color": {"mode": "background"}
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "Alerts Status",
+        "type": "stat",
+        "gridPos": {"h": 8, "w": 6, "x": 18, "y": 8},
+        "targets": [
+          {
+            "expr": "count(ALERTS)",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [{"type": "value", "options": {"0": {"color": "green", "text": "No Alerts"}, "1": {"color": "red"}, "2": {"color": "red"}}},
+            {"type": "range", "options": {"from": 0, "to": 0, "result": {"color": "green", "text": "OK"}}},
+            {"type": "range", "options": {"from": 1, "to": null, "result": {"color": "red"}}}],
+            "color": {"mode": "background"}
+          }
+        }
+      }
+    ],
+    "schemaVersion": 38,
+    "style": "dark",
+    "templating": {"list": []},
+    "time": {"from": "now-6h", "to": "now"},
+    "timepicker": {}
+  },
+  "overwrite": true
+}
