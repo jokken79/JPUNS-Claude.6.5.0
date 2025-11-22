@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import SystemSettings, User, UserRole
 from app.api.deps import get_current_user
@@ -17,6 +18,7 @@ router = APIRouter()
 
 
 @router.get("/visibility", response_model=VisibilityToggleResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_visibility_toggle(
     request: Request,

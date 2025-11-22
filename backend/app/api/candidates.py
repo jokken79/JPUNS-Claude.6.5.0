@@ -16,6 +16,7 @@ from slowapi.util import get_remote_address
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.config import settings
 from app.models.models import Candidate, Document, Employee, User, CandidateStatus, DocumentType, CandidateForm, Request as RequestModel, RequestType, RequestStatus
@@ -470,6 +471,7 @@ async def save_rirekisho_form(
 
 
 @router.get("/", response_model=PaginatedResponse[CandidateResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def list_candidates(
     skip: int = 0,
     limit: int = 50,
@@ -520,6 +522,7 @@ async def list_candidates(
 
 
 @router.get("/{candidate_id}", response_model=CandidateResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_candidate(
     candidate_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),

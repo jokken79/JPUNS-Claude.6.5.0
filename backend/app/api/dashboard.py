@@ -206,6 +206,7 @@ def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
 
 
 @router.get("/stats")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD)
 async def get_dashboard_stats(
@@ -264,6 +265,7 @@ async def get_dashboard_stats(
 
 
 @router.get("/factories")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD)
 async def get_factories_dashboard(
@@ -382,6 +384,7 @@ async def get_factories_dashboard(
 
 
 @router.get("/alerts", response_model=list[EmployeeAlert])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD)
 async def get_alerts(
@@ -432,6 +435,7 @@ def _trends_cache_key(months: int, **kwargs):
 
 
 @router.get("/trends", response_model=list[MonthlyTrend])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD, key_builder=_trends_cache_key)
 async def get_monthly_trends(
@@ -488,6 +492,7 @@ async def get_monthly_trends(
 
 
 @router.get("/admin")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD)
 async def get_admin_dashboard(
@@ -517,6 +522,7 @@ def _recent_activity_cache_key(limit: int = 20, **kwargs):
 
 
 @router.get("/recent-activity", response_model=list[RecentActivity])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.SHORT, key_builder=_recent_activity_cache_key)
 async def get_recent_activity(
@@ -537,6 +543,7 @@ def _employee_dashboard_cache_key(employee_id: int, **kwargs):
 
 
 @router.get("/employee/{employee_id}")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.DASHBOARD, key_builder=_employee_dashboard_cache_key)
 async def get_employee_dashboard(
@@ -616,6 +623,7 @@ def _yukyu_trends_cache_key(months: int = 6, **kwargs):
 
 
 @router.get("/yukyu-trends-monthly", response_model=list[YukyuTrendMonth])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.LONG, key_builder=_yukyu_trends_cache_key)
 async def get_yukyu_trends_monthly(
@@ -699,6 +707,7 @@ def _yukyu_compliance_cache_key(period: str = "current", **kwargs):
 
 
 @router.get("/yukyu-compliance-status", response_model=YukyuComplianceStatus)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 @cache.cached(ttl=CacheTTL.LONG, key_builder=_yukyu_compliance_cache_key)
 async def get_yukyu_compliance_status(

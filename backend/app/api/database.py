@@ -11,6 +11,7 @@ from typing import List, Dict, Any, Optional
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.services.auth_service import AuthService
 from app.core.rate_limiter import limiter
@@ -36,6 +37,7 @@ def _get_table_safely(db: Session, table_name: str) -> Table:
 
 
 @router.get("/tables")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("10/minute")
 async def get_tables(
     current_user = Depends(AuthService.require_role("admin")),
@@ -87,6 +89,7 @@ async def get_tables(
 
 
 @router.get("/tables/{table_name}/data")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("10/minute")
 async def get_table_data(
     table_name: str,
@@ -170,6 +173,7 @@ async def get_table_data(
 
 
 @router.get("/tables/{table_name}/export")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("10/minute")
 async def export_table(
     table_name: str,

@@ -10,6 +10,7 @@ import logging
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.app_exceptions import (
     PayrollCalculationError,
@@ -134,6 +135,7 @@ def create_payroll_run(
     summary="Get all payroll runs",
     description="Retrieves a list of all payroll runs with pagination"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 def get_payroll_runs(
     skip: int = Query(0, ge=0, description="Number of items to skip"),
@@ -196,6 +198,7 @@ def get_payroll_runs(
     summary="Get payroll run details",
     description="Retrieves detailed information about a specific payroll run"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 def get_payroll_run(
     payroll_run_id: int,
@@ -303,6 +306,7 @@ def calculate_payroll_run(
     summary="Get employees in payroll run",
     description="Retrieves all employees and their payroll calculations for a run"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 def get_payroll_run_employees(
     payroll_run_id: int,
@@ -1163,6 +1167,7 @@ def generate_payslip(
     summary="Get payslip information",
     description="Retrieves information about a generated payslip"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 def get_payslip(
     payslip_id: str,
@@ -1210,6 +1215,7 @@ def get_payslip(
     summary="Get payroll settings",
     description="Retrieves the current payroll settings from database with caching"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_payroll_settings(
     config_service: PayrollConfigService = Depends(get_payroll_config_service)
@@ -1362,6 +1368,7 @@ async def update_payroll_settings(
     summary="Get payroll summary",
     description="Retrieves a summary view of all payroll runs"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 def get_payroll_summary(
     skip: int = Query(0, ge=0, description="Number of items to skip"),

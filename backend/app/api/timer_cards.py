@@ -10,6 +10,7 @@ import logging
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.config import settings
 from app.models.models import TimerCard, Employee, User
@@ -374,6 +375,7 @@ async def upload_timer_card_file(
 
 
 @router.get("/", response_model=list[TimerCardResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("100/minute")
 async def list_timer_cards(
     request: Request,
@@ -456,6 +458,7 @@ async def list_timer_cards(
 
 
 @router.get("/{timer_card_id}", response_model=TimerCardResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("100/minute")
 async def get_timer_card(
     request: Request,

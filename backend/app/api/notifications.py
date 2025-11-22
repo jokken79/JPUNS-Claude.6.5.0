@@ -11,6 +11,7 @@ from app.services.auth_service import AuthService
 from app.services.notification_service import notification_service
 from app.core.rate_limiter import limiter
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 
 router = APIRouter()
@@ -198,6 +199,7 @@ async def notify_payslip_ready(
 
 
 @router.get("/test-email")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def test_email_configuration(
     current_user=Depends(AuthService.require_role("admin")),

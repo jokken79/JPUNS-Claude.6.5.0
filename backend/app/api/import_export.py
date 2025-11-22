@@ -18,6 +18,7 @@ from app.services.auth_service import AuthService
 from app.core.config import settings
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.rate_limiter import limiter
 
@@ -226,6 +227,7 @@ async def import_factory_configs(
 
 
 @router.get("/template/employees")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def download_employee_template(
     request: Request,
@@ -280,6 +282,7 @@ async def download_employee_template(
 
 
 @router.get("/template/timer-cards")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def download_timer_cards_template(
     request: Request,

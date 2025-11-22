@@ -47,6 +47,7 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_current_user
 from app.core.database import SessionLocal
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.rate_limiter import limiter, RateLimitConfig
 from app.core.error_handlers import handle_errors
@@ -524,6 +525,7 @@ async def batch_invoke(
 
 
 @router.get("/health", response_model=HealthResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def health_check(
     gateway: AIGateway = Depends(get_ai_gateway),
 ) -> HealthResponse:
@@ -578,6 +580,7 @@ async def health_check(
 # ============================================
 
 @router.get("/budget", response_model=AIBudgetResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_budget(
     service: AIBudgetService = Depends(get_ai_budget_service),
     current_user: User = Depends(get_current_user),
@@ -705,6 +708,7 @@ async def update_budget(
 
 
 @router.get("/budget/validate", response_model=BudgetValidationResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def validate_budget(
     cost: float = 0.0,
     service: AIBudgetService = Depends(get_ai_budget_service),
@@ -748,6 +752,7 @@ async def validate_budget(
 # ============================================
 
 @router.get("/usage/stats", response_model=UsageStatsResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_usage_stats(
     days: int = 1,
     provider: Optional[str] = None,
@@ -781,6 +786,7 @@ async def get_usage_stats(
 
 
 @router.get("/usage/daily", response_model=DailyUsageResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_daily_usage(
     days: int = 7,
     service: AIUsageService = Depends(get_ai_usage_service),
@@ -812,6 +818,7 @@ async def get_daily_usage(
 
 
 @router.get("/usage/logs", response_model=UsageLogsResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_usage_logs(
     limit: int = 100,
     offset: int = 0,
@@ -858,6 +865,7 @@ async def get_usage_logs(
 
 
 @router.get("/usage/cost", response_model=TotalCostResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_total_cost(
     days: int = 30,
     service: AIUsageService = Depends(get_ai_usage_service),
@@ -893,6 +901,7 @@ async def get_total_cost(
 # ============================================
 
 @router.get("/cache/stats", response_model=CacheStatsResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_cache_stats(
     service: CacheService = Depends(get_cache_service),
     current_user: User = Depends(get_current_user),
@@ -920,6 +929,7 @@ async def get_cache_stats(
 
 
 @router.get("/cache/memory", response_model=CacheMemoryResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_cache_memory(
     service: CacheService = Depends(get_cache_service),
     current_user: User = Depends(get_current_user),
@@ -947,6 +957,7 @@ async def get_cache_memory(
 
 
 @router.get("/cache/health", response_model=CacheHealthResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_cache_health(
     service: CacheService = Depends(get_cache_service),
     current_user: User = Depends(get_current_user),
@@ -1625,6 +1636,7 @@ async def create_streaming_session(
 
 
 @router.get("/stream/health", response_model=Dict[str, Any])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def streaming_health_check(
     streaming_service: StreamingService = Depends(get_streaming_service),
     current_user: User = Depends(get_current_user),
@@ -1933,6 +1945,7 @@ async def invoke_zhipu(
 
 
 @router.get("/providers", response_model=ProviderListResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def list_providers(
     current_user: User = Depends(get_current_user),
 ) -> ProviderListResponse:
@@ -1977,6 +1990,7 @@ async def list_providers(
 
 
 @router.get("/providers/health", response_model=Dict[str, Any])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def check_providers_health(
     current_user: User = Depends(get_current_user),
 ) -> Dict[str, Any]:
@@ -2122,6 +2136,7 @@ async def invoke_multiple_providers(
 
 
 @router.get("/analytics/dashboard", response_model=Dict[str, Any])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_analytics_dashboard(
     analytics: AnalyticsService = Depends(get_analytics_service),
     current_user: User = Depends(get_current_user),
@@ -2169,6 +2184,7 @@ async def get_analytics_dashboard(
 
 
 @router.get("/analytics/summary", response_model=AnalyticsSummaryResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_summary(
     analytics: AnalyticsService = Depends(get_analytics_service),
     current_user: User = Depends(get_current_user),
@@ -2203,6 +2219,7 @@ async def get_summary(
 
 
 @router.get("/analytics/providers", response_model=Dict[str, Any])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_provider_analytics(
     analytics: AnalyticsService = Depends(get_analytics_service),
     current_user: User = Depends(get_current_user),
@@ -2244,6 +2261,7 @@ async def get_provider_analytics(
 
 
 @router.get("/analytics/trends", response_model=Dict[str, Any])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_cost_trends(
     days: int = 7,
     analytics: AnalyticsService = Depends(get_analytics_service),
@@ -2276,6 +2294,7 @@ async def get_cost_trends(
 
 
 @router.get("/analytics/optimization", response_model=OptimizationImpactResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_optimization_impact(
     analytics: AnalyticsService = Depends(get_analytics_service),
     current_user: User = Depends(get_current_user),
@@ -2317,6 +2336,7 @@ async def get_optimization_impact(
 
 
 @router.get("/analytics/performance", response_model=Dict[str, Any])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_performance_report(
     analytics: AnalyticsService = Depends(get_analytics_service),
     current_user: User = Depends(get_current_user),

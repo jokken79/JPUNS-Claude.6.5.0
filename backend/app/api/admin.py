@@ -15,6 +15,7 @@ import json
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.rate_limiter import limiter
 from app.models.models import PageVisibility, SystemSettings, User, RolePagePermission, AdminActionType, ResourceType
@@ -78,6 +79,7 @@ class RoleStatsResponse(BaseModel):
 # NOTE: PageVisibility endpoints consolidated in pages.py router
 
 @router.get("/settings", response_model=List[SystemSettingResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_system_settings(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
@@ -89,6 +91,7 @@ async def get_system_settings(
     return settings
 
 @router.get("/settings/{setting_key}", response_model=SystemSettingResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_system_setting(
     setting_key: str,
     db: Session = Depends(get_db),
@@ -180,6 +183,7 @@ async def toggle_maintenance_mode(
 # ============================================
 
 @router.get("/statistics")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def get_admin_statistics(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
@@ -283,6 +287,7 @@ async def get_admin_statistics(
 # ============================================
 
 @router.get("/export-config")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def export_configuration(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
@@ -367,6 +372,7 @@ async def import_configuration(
 # ============================================
 
 @router.get("/role-stats", response_model=List[RoleStatsResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("20/minute")  # Admin endpoints - sensitive operations
 async def get_role_stats(
     request: Request,

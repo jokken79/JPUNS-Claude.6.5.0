@@ -22,6 +22,7 @@ from calendar import monthrange
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.api.deps import get_current_user
 from app.models.models import User, UserRole
@@ -92,6 +93,7 @@ router = APIRouter(prefix="", tags=["apartments"])
     summary="Lista de apartamentos",
     description="Obtener lista paginada de apartamentos con filtros opcionales"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def list_apartments(
     page: int = Query(1, ge=1, description="Número de página"),
@@ -188,6 +190,7 @@ async def create_apartment(
     summary="Detalles de apartamento",
     description="Obtener información completa de un apartamento específico"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_apartment(
     apartment_id: int,
@@ -260,6 +263,7 @@ async def delete_apartment(
     summary="Búsqueda avanzada",
     description="Búsqueda avanzada con múltiples filtros combinables"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def search_apartments(
     q: Optional[str] = Query(None, description="Búsqueda de texto libre"),
@@ -360,6 +364,7 @@ async def create_assignment(
     summary="Listar asignaciones",
     description="Obtener lista paginada de asignaciones con filtros"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def list_assignments(
     skip: int = Query(0, ge=0),
@@ -399,6 +404,7 @@ async def list_assignments(
     summary="Detalles de asignación",
     description="Obtener información completa de una asignación específica"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_assignment(
     assignment_id: int,
@@ -423,6 +429,7 @@ async def get_assignment(
     summary="Asignaciones activas",
     description="Obtener todas las asignaciones actualmente activas"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_active_assignments(
     db: Session = Depends(get_db),
@@ -609,6 +616,7 @@ async def calculate_prorated_rent(
     summary="Obtener cargo de limpieza",
     description="Obtener el cargo de limpieza configurado para un apartamento"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_cleaning_fee(
     apartment_id: int,
@@ -740,6 +748,7 @@ async def create_additional_charge(
     summary="Listar cargos adicionales",
     description="Obtener lista de cargos con filtros opcionales"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def list_additional_charges(
     assignment_id: Optional[int] = Query(None, description="Filtrar por asignación"),
@@ -785,6 +794,7 @@ async def list_additional_charges(
     summary="Detalles de cargo",
     description="Obtener información de un cargo adicional específico"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_additional_charge(
     charge_id: int,
@@ -895,6 +905,7 @@ async def delete_additional_charge(
     summary="Deducciones del mes",
     description="Obtener todas las deducciones de renta para un mes específico"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_monthly_deductions(
     year: int,
@@ -983,6 +994,7 @@ async def generate_monthly_deductions(
     summary="Exportar deducciones a Excel",
     description="Exportar deducciones del mes a archivo Excel"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def export_deductions_excel(
     year: int,
@@ -1072,6 +1084,7 @@ async def update_deduction_status(
     summary="Detalles de deducción",
     description="Obtener información completa de una deducción específica"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_deduction(
     deduction_id: int,
@@ -1100,6 +1113,7 @@ async def get_deduction(
     summary="Reporte de ocupación",
     description="Obtener estadísticas de ocupación de apartamentos"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_occupancy_report(
     prefecture: Optional[str] = Query(None, description="Filtrar por prefectura"),
@@ -1148,6 +1162,7 @@ async def get_occupancy_report(
     summary="Reporte de pagos pendientes",
     description="Obtener reporte de deducciones y pagos pendientes"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_arrears_report(
     year: int = Query(..., ge=2020, le=2100, description="Año del reporte"),
@@ -1230,6 +1245,7 @@ async def get_arrears_report(
     summary="Reporte de mantenimiento",
     description="Obtener estado de mantenimiento de apartamentos"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_maintenance_report(
     period: str = Query("6months", description="Período: 3months, 6months, 1year"),
@@ -1329,6 +1345,7 @@ async def get_maintenance_report(
     summary="Análisis de costos",
     description="Obtener análisis completo de costos del sistema de apartamentos"
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_cost_analysis_report(
     year: int,

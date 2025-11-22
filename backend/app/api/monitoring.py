@@ -10,6 +10,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from app.core.config import settings
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.logging import app_logger
 from app.core.observability import get_runtime_metrics
@@ -20,6 +21,7 @@ router = APIRouter()
 
 
 @router.get("/health", summary="Detailed health information")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("100/minute")
 async def detailed_health(
     request: Request,
@@ -57,6 +59,7 @@ async def detailed_health(
 
 
 @router.get("/metrics", summary="Application metrics (Admin only)")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def metrics(
     current_user = Depends(AuthService.require_role("admin"))
 ) -> Dict[str, Any]:

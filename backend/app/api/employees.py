@@ -11,6 +11,7 @@ import io
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import (
     Employee,
@@ -241,6 +242,7 @@ def _list_staff_members(
 
 
 @router.get("")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")@router.get("/")
 @limiter.limit("30/minute")
 async def list_employees(
@@ -371,6 +373,7 @@ async def list_employees(
 
 
 @router.get("/available-for-apartment")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def list_available_for_apartment(
     page: int = Query(1, ge=1),
@@ -480,6 +483,7 @@ async def list_available_for_apartment(
 
 
 @router.get("/{employee_id}")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_employee(
     employee_id: int,
@@ -504,6 +508,7 @@ async def get_employee(
 
 
 @router.get("/by-rirekisho/{rirekisho_id}", response_model=EmployeeResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_employee_by_rirekisho(
     rirekisho_id: str,

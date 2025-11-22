@@ -7,6 +7,7 @@ from typing import Optional
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import Contract, Employee, User
 from app.schemas.contract import ContractCreate, ContractUpdate, ContractResponse
@@ -56,6 +57,7 @@ async def create_contract(
 
 
 @router.get("/", response_model=PaginatedResponse[ContractResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def list_contracts(
     employee_id: Optional[int] = Query(None, description="Filter by employee ID"),
@@ -99,6 +101,7 @@ async def list_contracts(
 
 
 @router.get("/{contract_id}", response_model=ContractResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_contract(
     contract_id: int,

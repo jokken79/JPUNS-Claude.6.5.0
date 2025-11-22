@@ -9,6 +9,7 @@ from pydantic import BaseModel
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import RolePagePermission, User, UserRole
 from app.api.deps import get_current_user, require_admin
@@ -258,6 +259,7 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
 # ================================
 
 @router.get("/roles", response_model=List[Dict[str, str]], summary="List available roles")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def list_roles(
     request: Request,
@@ -267,6 +269,7 @@ async def list_roles(
 
 
 @router.get("/pages", response_model=List[PageInfo], summary="List available pages")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def list_pages(
     request: Request,
@@ -276,6 +279,7 @@ async def list_pages(
 
 
 @router.get("/{role_key}", response_model=RolePermissionsResponse, summary="Get permissions for a role")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_role_permissions(
     role_key: str,
@@ -469,6 +473,7 @@ async def bulk_update_permissions(
 
 
 @router.get("/check/{role_key}/{page_key}", summary="Check if a role has access to a page")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def check_permission(
     role_key: str,
@@ -504,6 +509,7 @@ async def check_permission(
 
 
 @router.get("/user/{user_id}/permissions", response_model=UserPermissionsResponse, summary="Get current user's permissions")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_user_permissions(
     user_id: int,

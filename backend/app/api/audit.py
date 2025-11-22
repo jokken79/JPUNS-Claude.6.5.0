@@ -9,6 +9,7 @@ from datetime import datetime
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import User
 from app.api.deps import get_current_user, require_admin
@@ -48,6 +49,7 @@ def get_user_agent(request: Request) -> Optional[str]:
 # ============================================
 
 @router.get("", response_model=PaginatedResponse[AdminAuditLogResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_audit_logs(
     request: Request,
@@ -103,6 +105,7 @@ async def get_audit_logs(
 
 
 @router.get("/{log_id}", response_model=AdminAuditLogResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_audit_log_by_id(
     log_id: int,
@@ -122,6 +125,7 @@ async def get_audit_log_by_id(
 
 
 @router.get("/recent/{limit}", response_model=list[AdminAuditLogResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_recent_audit_logs(
     limit: int,
@@ -145,6 +149,7 @@ async def get_recent_audit_logs(
 # ============================================
 
 @router.get("/stats/summary", response_model=AdminAuditLogStats)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_audit_log_stats(
     db: Session = Depends(get_db),
@@ -198,6 +203,7 @@ async def export_audit_logs(
 # ============================================
 
 @router.get("/search/query", response_model=PaginatedResponse[AdminAuditLogResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def search_audit_logs(
     q: str = Query(..., min_length=1, description="Search query"),

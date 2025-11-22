@@ -7,6 +7,7 @@ from sqlalchemy import func
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.redis_client import redis_client, invalidate_cache
 from app.models.models import Factory, User, Employee
@@ -48,6 +49,7 @@ async def create_factory(
 
 
 @router.get("/", response_model=list[FactoryResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def list_factories(
     is_active: bool = True,
@@ -90,6 +92,7 @@ async def list_factories(
 
 
 @router.get("/stats", response_model=FactoryStats)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_factories_stats(
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -140,6 +143,7 @@ async def get_factories_stats(
 
 
 @router.get("/{factory_id}", response_model=FactoryResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_factory(
     factory_id: str,
@@ -202,6 +206,7 @@ async def delete_factory(
 # ============ Configuration Management Endpoints ============
 
 @router.get("/{factory_id}/config", response_model=FactoryConfig)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_factory_config(
     factory_id: str,
@@ -262,6 +267,7 @@ async def validate_factory_config(
     }
 
 @router.get("/{factory_id}/employees", response_model=FactoryWithEmployees)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_factory_with_employees(
     factory_id: str,

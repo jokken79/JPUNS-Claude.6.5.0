@@ -11,6 +11,7 @@ from typing import List
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.api.deps import get_current_user
 from app.models.models import PageVisibility, User, UserRole
@@ -51,6 +52,7 @@ class PageVisibilityToggle(BaseModel):
 # ============================================
 
 @router.get("/visibility", response_model=List[PageVisibilityResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_all_page_visibility(
     db: Session = Depends(get_db),
@@ -65,6 +67,7 @@ async def get_all_page_visibility(
 
 
 @router.get("/visibility/{page_key}", response_model=PageVisibilityResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_page_visibility(
     page_key: str,

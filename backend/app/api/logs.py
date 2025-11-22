@@ -24,6 +24,7 @@ from slowapi.util import get_remote_address
 
 from app.core.logging import get_logger, sanitize_message, get_request_id
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.rate_limiter import limiter
 
@@ -213,6 +214,7 @@ async def collect_frontend_logs(
     summary="Logging endpoint health check",
     description="Check if the logging endpoint is operational",
 )
+@cache.cached(ttl=CacheTTL.MEDIUM)
 async def logging_health(
     request: Request,
     ) -> Dict[str, Any]:

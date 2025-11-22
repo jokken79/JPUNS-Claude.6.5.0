@@ -12,6 +12,7 @@ Copy the relevant functions to timer_cards.py
 from datetime import datetime
 from app.core.rate_limiter import limiter
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 
 # ============================================
@@ -19,6 +20,7 @@ from app.core.response import success_response, created_response, paginated_resp
 # ============================================
 
 @router.get("/", response_model=list[TimerCardResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def list_timer_cards(
     employee_id: int = None,
@@ -104,6 +106,7 @@ async def list_timer_cards(
 # ============================================
 
 @router.get("/{timer_card_id}", response_model=TimerCardResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_timer_card(
     timer_card_id: int,

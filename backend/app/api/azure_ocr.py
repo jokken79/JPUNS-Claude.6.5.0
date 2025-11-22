@@ -18,6 +18,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.logging import app_logger
 from app.core.background_tasks import background_manager, JobStatus
@@ -210,6 +211,7 @@ async def process_ocr_document_async(
 
 
 @router.get("/jobs/{job_id}", response_model=JobStatusResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("20/hour")
 async def get_job_status(
     job_id: str,
@@ -257,6 +259,7 @@ async def get_job_status(
 
 
 @router.get("/health")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("20/hour")
 async def health_check(
     request: Request,

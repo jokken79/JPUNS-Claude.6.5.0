@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.api.deps import get_current_user
 from app.models.models import User, UserRole, YukyuRequest, RequestStatus
@@ -67,6 +68,7 @@ async def calculate_employee_yukyus(
 
 
 @router.get("/balances", response_model=YukyuBalanceSummary)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_current_user_yukyu_summary(
     current_user: User = Depends(auth_service.get_current_user),
@@ -154,6 +156,7 @@ async def get_current_user_yukyu_summary(
 
 
 @router.get("/balances/{employee_id}", response_model=YukyuBalanceSummary)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_employee_yukyu_summary(
     employee_id: int,
@@ -209,6 +212,7 @@ async def create_yukyu_request(
 
 
 @router.get("/requests/", response_model=List[YukyuRequestResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def list_yukyu_requests(
     factory_id: Optional[str] = Query(None, description="Filter by factory ID"),
@@ -308,6 +312,7 @@ async def reject_yukyu_request(
 # ============================================================================
 
 @router.get("/employees/by-factory/{factory_id}", response_model=List[EmployeeByFactoryResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_employees_by_factory(
     factory_id: str,
@@ -368,6 +373,7 @@ async def expire_old_yukyus(
 
 
 @router.get("/maintenance/scheduler-status", tags=["Maintenance"])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_scheduler_status(
     current_user: dict = Depends(get_current_user)
@@ -389,6 +395,7 @@ async def get_scheduler_status(
 
 
 @router.get("/reports/export-excel", tags=["Reports"])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def export_yukyu_to_excel(
     db: Session = Depends(get_db),
@@ -443,6 +450,7 @@ async def export_yukyu_to_excel(
 
 
 @router.get("/requests/{request_id}/pdf", tags=["Reports"])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def generate_request_pdf(
     request_id: int,
@@ -493,6 +501,7 @@ async def generate_request_pdf(
 
 
 @router.get("/payroll/summary", tags=["Payroll Integration"])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_payroll_yukyu_summary(
     year: int,
@@ -625,6 +634,7 @@ async def get_payroll_yukyu_summary(
 # ============================================================================
 
 @router.get("/usage-history/{employee_id}", response_model=List[YukyuUsageHistoryResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_yukyu_usage_history(
     employee_id: int,

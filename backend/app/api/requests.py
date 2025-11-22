@@ -18,6 +18,7 @@ from datetime import date, datetime
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import Request, Employee, User, RequestType, RequestStatus, Candidate, CandidateStatus, Factory, Apartment
 from app.schemas.request import RequestCreate, RequestUpdate, RequestResponse, RequestReview, EmployeeDataInput
@@ -85,6 +86,7 @@ async def create_request(
 
 
 @router.get("/", response_model=PaginatedResponse[RequestResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def list_requests(
     employee_id: int = Query(None, description="Filter by employee ID"),
@@ -141,6 +143,7 @@ async def list_requests(
 
 
 @router.get("/{request_id}", response_model=RequestResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("60/minute")
 async def get_request(
     request_id: int,

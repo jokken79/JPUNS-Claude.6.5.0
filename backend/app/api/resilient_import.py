@@ -12,6 +12,7 @@ import json
 
 from app.core.database import get_db
 from fastapi import Request
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.resilience import (
     ImportOrchestrator,
@@ -269,6 +270,7 @@ async def import_factories(
 
 
 @router.get("/status/{operation_id}")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def get_import_status(
     operation_id: str,
@@ -343,6 +345,7 @@ async def resume_import(
 
 
 @router.get("/checkpoints")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def list_checkpoints(
     db: Session = Depends(get_db),
@@ -371,6 +374,7 @@ async def list_checkpoints(
 
 
 @router.get("/health")
+@cache.cached(ttl=CacheTTL.MEDIUM)
 @limiter.limit("30/minute")
 async def health_check(
     request: Request,
