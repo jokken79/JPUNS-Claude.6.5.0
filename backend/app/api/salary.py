@@ -14,6 +14,7 @@ from typing import Optional
 from app.core.database import get_db
 from app.core.config import settings
 from app.core.rate_limiter import limiter
+from app.core.cache import cache, CacheKey, CacheTTL
 from app.models.models import SalaryCalculation, Employee, TimerCard, Factory, User
 from app.schemas.salary_unified import (
     SalaryCalculateRequest,
@@ -265,7 +266,13 @@ async def calculate_salaries_bulk(
     )
 
 
+def _salary_list_cache_key(employee_id=None, month=None, year=None, is_paid=None, page=1, page_size=50, **kwargs):
+    """Custom cache key for paginated salary list"""
+    return CacheKey.build("salary", "list", f"e{employee_id}", f"m{month}", f"y{year}", f"p{is_paid}", f"p{page}", f"ps{page_size}")
+
+
 @router.get("/", response_model=PaginatedResponse[SalaryCalculationResponse])
+@cache.cached(ttl=CacheTTL.MEDIUM, key_builder=_salary_list_cache_key)
 async def list_salaries(
     employee_id: int = Query(None, description="Filter by employee ID"),
     month: int = Query(None, ge=1, le=12, description="Filter by month (1-12)"),
@@ -316,7 +323,13 @@ async def list_salaries(
     )
 
 
+def _salary_detail_cache_key(salary_id: int, **kwargs):
+    """Custom cache key for salary detail"""
+    return CacheKey.build("salary", str(salary_id))
+
+
 @router.get("/{salary_id}", response_model=SalaryCalculationResponse)
+@cache.cached(ttl=CacheTTL.MEDIUM, key_builder=_salary_detail_cache_key)
 async def get_salary_calculation(
     salary_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -370,7 +383,13 @@ async def mark_salaries_paid(
     return {"message": f"Marked {len(salaries)} salaries as paid"}
 
 
+def _salary_stats_cache_key(month: int, year: int, **kwargs):
+    """Custom cache key for salary statistics"""
+    return CacheKey.build("salary", "statistics", f"{year}-{month:02d}")
+
+
 @router.get("/statistics", response_model=SalaryStatistics)
+@cache.cached(ttl=CacheTTL.LONG, key_builder=_salary_stats_cache_key)
 async def get_salary_statistics(
     month: int,
     year: int,
@@ -619,7 +638,13 @@ async def mark_salary_paid(
     return salary
 
 
+def _salary_reports_cache_key(start_date: str, end_date: str, employee_ids=None, factory_ids=None, is_paid=None, **kwargs):
+    """Custom cache key for salary reports"""
+    return CacheKey.build("salary", "reports", start_date, end_date, str(employee_ids), str(factory_ids), str(is_paid))
+
+
 @router.get("/reports", response_model=SalaryReportResponse)
+@cache.cached(ttl=CacheTTL.LONG, key_builder=_salary_reports_cache_key)
 async def get_salary_reports(
     start_date: str = Query(..., description="Start date in YYYY-MM-DD format"),
     end_date: str = Query(..., description="End date in YYYY-MM-DD format"),
