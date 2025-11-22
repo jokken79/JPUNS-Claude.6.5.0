@@ -38,6 +38,7 @@ from app.schemas.dashboard import (
 )
 from app.services.auth_service import auth_service
 from app.core.rate_limiter import limiter
+from app.core.cache import cache, CacheKey, CacheTTL
 
 router = APIRouter()
 
@@ -202,8 +203,10 @@ def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
     return _fallback_recent_activity(db, limit)
 
 
-@router.get("/stats", response_model=DashboardStats)
-@limiter.limit("60/minute")async def get_dashboard_stats(
+@router.get("/stats")
+@limiter.limit("60/minute")
+@cache.cached(ttl=CacheTTL.DASHBOARD)
+async def get_dashboard_stats(
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -258,8 +261,10 @@ def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
     )
 
 
-@router.get("/factories", response_model=list[FactoryDashboard])
-@limiter.limit("60/minute")async def get_factories_dashboard(
+@router.get("/factories")
+@limiter.limit("60/minute")
+@cache.cached(ttl=CacheTTL.DASHBOARD)
+async def get_factories_dashboard(
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -375,7 +380,9 @@ def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
 
 
 @router.get("/alerts", response_model=list[EmployeeAlert])
-@limiter.limit("60/minute")async def get_alerts(
+@limiter.limit("60/minute")
+@cache.cached(ttl=CacheTTL.DASHBOARD)
+async def get_alerts(
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -417,8 +424,15 @@ def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
     return sorted(alerts, key=lambda x: x.days_until)
 
 
+def _trends_cache_key(months: int, **kwargs):
+    """Custom cache key for monthly trends endpoint"""
+    return CacheKey.build("dashboard", "trends", str(months))
+
+
 @router.get("/trends", response_model=list[MonthlyTrend])
-@limiter.limit("60/minute")async def get_monthly_trends(
+@limiter.limit("60/minute")
+@cache.cached(ttl=CacheTTL.DASHBOARD, key_builder=_trends_cache_key)
+async def get_monthly_trends(
     months: int = 6,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -471,8 +485,10 @@ def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
     return list(reversed(trends))
 
 
-@router.get("/admin", response_model=AdminDashboard)
-@limiter.limit("60/minute")async def get_admin_dashboard(
+@router.get("/admin")
+@limiter.limit("60/minute")
+@cache.cached(ttl=CacheTTL.DASHBOARD)
+async def get_admin_dashboard(
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -493,8 +509,15 @@ def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
     )
 
 
+def _recent_activity_cache_key(limit: int = 20, **kwargs):
+    """Custom cache key for recent activity endpoint"""
+    return CacheKey.build("dashboard", "recent_activity", str(limit))
+
+
 @router.get("/recent-activity", response_model=list[RecentActivity])
-@limiter.limit("60/minute")async def get_recent_activity(
+@limiter.limit("60/minute")
+@cache.cached(ttl=CacheTTL.SHORT, key_builder=_recent_activity_cache_key)
+async def get_recent_activity(
     limit: int = Query(default=20, le=100),
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -506,8 +529,15 @@ def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
     return _build_recent_activities(db, limit)
 
 
-@router.get("/employee/{employee_id}", response_model=EmployeeDashboard)
-@limiter.limit("60/minute")async def get_employee_dashboard(
+def _employee_dashboard_cache_key(employee_id: int, **kwargs):
+    """Custom cache key for employee dashboard"""
+    return CacheKey.build("dashboard", "employee", str(employee_id))
+
+
+@router.get("/employee/{employee_id}")
+@limiter.limit("60/minute")
+@cache.cached(ttl=CacheTTL.DASHBOARD, key_builder=_employee_dashboard_cache_key)
+async def get_employee_dashboard(
     employee_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -578,8 +608,15 @@ def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
 # ============================================================================
 
 
+def _yukyu_trends_cache_key(months: int = 6, **kwargs):
+    """Custom cache key for yukyu trends endpoint"""
+    return CacheKey.build("dashboard", "yukyu_trends", str(months))
+
+
 @router.get("/yukyu-trends-monthly", response_model=list[YukyuTrendMonth])
-@limiter.limit("60/minute")async def get_yukyu_trends_monthly(
+@limiter.limit("60/minute")
+@cache.cached(ttl=CacheTTL.LONG, key_builder=_yukyu_trends_cache_key)
+async def get_yukyu_trends_monthly(
     months: int = Query(default=6, ge=1, le=24, description="Number of months to retrieve"),
     current_user: User = Depends(auth_service.require_yukyu_access()),
     db: Session = Depends(get_db)
@@ -654,8 +691,15 @@ def _build_recent_activities(db: Session, limit: int) -> List[RecentActivity]:
     return list(reversed(trends))
 
 
+def _yukyu_compliance_cache_key(period: str = "current", **kwargs):
+    """Custom cache key for yukyu compliance status endpoint"""
+    return CacheKey.build("dashboard", "yukyu_compliance", period)
+
+
 @router.get("/yukyu-compliance-status", response_model=YukyuComplianceStatus)
-@limiter.limit("60/minute")async def get_yukyu_compliance_status(
+@limiter.limit("60/minute")
+@cache.cached(ttl=CacheTTL.LONG, key_builder=_yukyu_compliance_cache_key)
+async def get_yukyu_compliance_status(
     period: str = Query(default="current", description="Period: 'current' for current fiscal year or YYYY-MM"),
     current_user: User = Depends(auth_service.require_yukyu_access()),
     db: Session = Depends(get_db)
