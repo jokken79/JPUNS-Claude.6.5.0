@@ -32,7 +32,8 @@ router = APIRouter()
 
 
 @router.post("/", response_model=RequestResponse, status_code=201)
-@limiter.limit("60/minute")async def create_request(
+@limiter.limit("60/minute")
+async def create_request(
     request_data: RequestCreate,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -82,7 +83,8 @@ router = APIRouter()
 
 
 @router.get("/", response_model=PaginatedResponse[RequestResponse])
-@limiter.limit("60/minute")async def list_requests(
+@limiter.limit("60/minute")
+async def list_requests(
     employee_id: int = Query(None, description="Filter by employee ID"),
     status: RequestStatus = Query(None, description="Filter by request status"),
     request_type: RequestType = Query(None, description="Filter by request type"),
@@ -137,7 +139,8 @@ router = APIRouter()
 
 
 @router.get("/{request_id}", response_model=RequestResponse)
-@limiter.limit("60/minute")async def get_request(
+@limiter.limit("60/minute")
+async def get_request(
     request_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -150,7 +153,8 @@ router = APIRouter()
 
 
 @router.put("/{request_id}", response_model=RequestResponse)
-@limiter.limit("60/minute")async def update_request(
+@limiter.limit("60/minute")
+async def update_request(
     request_id: int,
     request_update: RequestUpdate,
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -175,7 +179,8 @@ router = APIRouter()
 
 
 @router.post("/{request_id}/review", response_model=RequestResponse)
-@limiter.limit("60/minute")async def review_request(
+@limiter.limit("60/minute")
+async def review_request(
     request_id: int,
     review_data: RequestReview,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -209,7 +214,8 @@ router = APIRouter()
 
 
 @router.post("/{request_id}/approve", response_model=RequestResponse)
-@limiter.limit("60/minute")async def approve_request(
+@limiter.limit("60/minute")
+async def approve_request(
     request_id: int,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -245,7 +251,8 @@ router = APIRouter()
 
 
 @router.post("/{request_id}/reject", response_model=RequestResponse)
-@limiter.limit("60/minute")async def reject_request_endpoint(
+@limiter.limit("60/minute")
+async def reject_request_endpoint(
     request_id: int,
     reason: str,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -273,7 +280,8 @@ router = APIRouter()
 
 
 @router.delete("/{request_id}")
-@limiter.limit("60/minute")async def delete_request(
+@limiter.limit("60/minute")
+async def delete_request(
     request_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)

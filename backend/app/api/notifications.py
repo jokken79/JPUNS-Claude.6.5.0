@@ -44,7 +44,8 @@ class YukyuNotificationRequest(BaseModel):
 
 
 @router.post("/send-email")
-@limiter.limit("60/minute")async def send_email(
+@limiter.limit("60/minute")
+async def send_email(
     request: EmailRequest,
     current_user=Depends(AuthService.require_role("admin")),
 ):
@@ -79,7 +80,8 @@ class YukyuNotificationRequest(BaseModel):
 
 
 @router.post("/send-line")
-@limiter.limit("60/minute")async def send_line_notification(
+@limiter.limit("60/minute")
+async def send_line_notification(
     request: LINERequest,
     current_user=Depends(AuthService.require_role("admin")),
 ):
@@ -112,7 +114,8 @@ class YukyuNotificationRequest(BaseModel):
 
 
 @router.post("/yukyu-approval")
-@limiter.limit("60/minute")async def notify_yukyu_approval(
+@limiter.limit("60/minute")
+async def notify_yukyu_approval(
     request: YukyuNotificationRequest,
     current_user=Depends(AuthService.require_role("admin")),
 ):
@@ -148,7 +151,8 @@ class YukyuNotificationRequest(BaseModel):
 
 
 @router.post("/payslip-ready")
-@limiter.limit("60/minute")async def notify_payslip_ready(
+@limiter.limit("60/minute")
+async def notify_payslip_ready(
     employee_email: EmailStr,
     employee_name: str,
     year: int,
@@ -192,7 +196,8 @@ class YukyuNotificationRequest(BaseModel):
 
 
 @router.get("/test-email")
-@limiter.limit("60/minute")async def test_email_configuration(
+@limiter.limit("60/minute")
+async def test_email_configuration(
     current_user=Depends(AuthService.require_role("admin")),
 ):
     """Test email configuration"""

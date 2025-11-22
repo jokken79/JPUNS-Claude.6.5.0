@@ -49,7 +49,8 @@ class PageVisibilityToggle(BaseModel):
 # ============================================
 
 @router.get("/visibility", response_model=List[PageVisibilityResponse])
-@limiter.limit("60/minute")async def get_all_page_visibility(
+@limiter.limit("60/minute")
+async def get_all_page_visibility(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -62,7 +63,8 @@ class PageVisibilityToggle(BaseModel):
 
 
 @router.get("/visibility/{page_key}", response_model=PageVisibilityResponse)
-@limiter.limit("60/minute")async def get_page_visibility(
+@limiter.limit("60/minute")
+async def get_page_visibility(
     page_key: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -80,7 +82,8 @@ class PageVisibilityToggle(BaseModel):
 
 
 @router.put("/visibility/{page_key}")
-@limiter.limit("60/minute")async def toggle_page_visibility(
+@limiter.limit("60/minute")
+async def toggle_page_visibility(
     page_key: str,
     toggle_data: PageVisibilityToggle,
     db: Session = Depends(get_db),
@@ -122,7 +125,8 @@ class PageVisibilityToggle(BaseModel):
 
 
 @router.post("/visibility/init")
-@limiter.limit("60/minute")async def initialize_page_visibility(
+@limiter.limit("60/minute")
+async def initialize_page_visibility(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):

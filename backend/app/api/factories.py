@@ -23,7 +23,8 @@ router = APIRouter()
 
 
 @router.post("/", response_model=FactoryResponse, status_code=status.HTTP_201_CREATED)
-@limiter.limit("60/minute")async def create_factory(
+@limiter.limit("60/minute")
+async def create_factory(
     factory: FactoryCreate,
     current_user: User = Depends(auth_service.require_role("super_admin")),
     db: Session = Depends(get_db)
@@ -45,7 +46,8 @@ router = APIRouter()
 
 
 @router.get("/", response_model=list[FactoryResponse])
-@limiter.limit("60/minute")async def list_factories(
+@limiter.limit("60/minute")
+async def list_factories(
     is_active: bool = True,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -86,7 +88,8 @@ router = APIRouter()
 
 
 @router.get("/stats", response_model=FactoryStats)
-@limiter.limit("60/minute")async def get_factories_stats(
+@limiter.limit("60/minute")
+async def get_factories_stats(
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
 ):
@@ -135,7 +138,8 @@ router = APIRouter()
 
 
 @router.get("/{factory_id}", response_model=FactoryResponse)
-@limiter.limit("60/minute")async def get_factory(
+@limiter.limit("60/minute")
+async def get_factory(
     factory_id: str,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -148,7 +152,8 @@ router = APIRouter()
 
 
 @router.put("/{factory_id}", response_model=FactoryResponse)
-@limiter.limit("60/minute")async def update_factory(
+@limiter.limit("60/minute")
+async def update_factory(
     factory_id: str,
     factory_update: FactoryUpdate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -172,7 +177,8 @@ router = APIRouter()
 
 
 @router.delete("/{factory_id}")
-@limiter.limit("60/minute")async def delete_factory(
+@limiter.limit("60/minute")
+async def delete_factory(
     factory_id: str,
     current_user: User = Depends(auth_service.require_role("super_admin")),
     db: Session = Depends(get_db)
@@ -194,7 +200,8 @@ router = APIRouter()
 # ============ Configuration Management Endpoints ============
 
 @router.get("/{factory_id}/config", response_model=FactoryConfig)
-@limiter.limit("60/minute")async def get_factory_config(
+@limiter.limit("60/minute")
+async def get_factory_config(
     factory_id: str,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -212,7 +219,8 @@ router = APIRouter()
 
 
 @router.put("/{factory_id}/config", response_model=FactoryResponse)
-@limiter.limit("60/minute")async def update_factory_config(
+@limiter.limit("60/minute")
+async def update_factory_config(
     factory_id: str,
     config: FactoryConfig,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -232,7 +240,8 @@ router = APIRouter()
 
 
 @router.post("/{factory_id}/config/validate", response_model=dict)
-@limiter.limit("60/minute")async def validate_factory_config(
+@limiter.limit("60/minute")
+async def validate_factory_config(
     factory_id: str,
     config: FactoryConfig,
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -251,7 +260,8 @@ router = APIRouter()
     }
 
 @router.get("/{factory_id}/employees", response_model=FactoryWithEmployees)
-@limiter.limit("60/minute")async def get_factory_with_employees(
+@limiter.limit("60/minute")
+async def get_factory_with_employees(
     factory_id: str,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)

@@ -112,7 +112,8 @@ def _create_template_response(
 
 
 @router.post("/employees")
-@limiter.limit("30/minute")async def import_employees(
+@limiter.limit("30/minute")
+async def import_employees(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
     current_user = Depends(_admin_guard_dependency)
@@ -152,7 +153,8 @@ def _create_template_response(
 
 
 @router.post("/timer-cards")
-@limiter.limit("30/minute")async def import_timer_cards(
+@limiter.limit("30/minute")
+async def import_timer_cards(
     file: UploadFile = File(...),
     factory_id: str = Query(...),
     year: int = Query(...),
@@ -200,7 +202,8 @@ def _create_template_response(
 
 
 @router.post("/factory-configs")
-@limiter.limit("30/minute")async def import_factory_configs(
+@limiter.limit("30/minute")
+async def import_factory_configs(
     directory_path: str,
     db: Session = Depends(get_db),
     current_user=Depends(_admin_guard_dependency),
@@ -221,7 +224,8 @@ def _create_template_response(
 
 
 @router.get("/template/employees")
-@limiter.limit("30/minute")async def download_employee_template():
+@limiter.limit("30/minute")
+async def download_employee_template():
     """Download Excel template for employee import"""
     try:
         columns = [
@@ -272,7 +276,8 @@ def _create_template_response(
 
 
 @router.get("/template/timer-cards")
-@limiter.limit("30/minute")async def download_timer_cards_template():
+@limiter.limit("30/minute")
+async def download_timer_cards_template():
     """Download Excel template for timer cards import"""
     try:
         columns = [

@@ -44,7 +44,8 @@ class ChangeTypeRequest(BaseModel):
 
 
 @router.post("/", response_model=EmployeeResponse, status_code=status.HTTP_201_CREATED)
-@limiter.limit("30/minute")async def create_employee(
+@limiter.limit("30/minute")
+async def create_employee(
     employee: EmployeeCreate,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -238,7 +239,8 @@ def _list_staff_members(
 
 @router.get("")
 @limiter.limit("30/minute")@router.get("/")
-@limiter.limit("30/minute")async def list_employees(
+@limiter.limit("30/minute")
+async def list_employees(
     page: int = 1,
     page_size: int = 20,
     factory_id: Optional[str] = None,
@@ -366,7 +368,8 @@ def _list_staff_members(
 
 
 @router.get("/available-for-apartment")
-@limiter.limit("30/minute")async def list_available_for_apartment(
+@limiter.limit("30/minute")
+async def list_available_for_apartment(
     page: int = Query(1, ge=1),
     page_size: int = Query(1000, ge=1, le=2000),
     search: Optional[str] = Query(None),
@@ -475,7 +478,8 @@ from app.core.rate_limiter import limiter
 
 
 @router.get("/{employee_id}")
-@limiter.limit("30/minute")async def get_employee(
+@limiter.limit("30/minute")
+async def get_employee(
     employee_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -498,7 +502,8 @@ from app.core.rate_limiter import limiter
 
 
 @router.get("/by-rirekisho/{rirekisho_id}", response_model=EmployeeResponse)
-@limiter.limit("30/minute")async def get_employee_by_rirekisho(
+@limiter.limit("30/minute")
+async def get_employee_by_rirekisho(
     rirekisho_id: str,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -519,7 +524,8 @@ from app.core.rate_limiter import limiter
 
 
 @router.put("/{employee_id}", response_model=EmployeeResponse)
-@limiter.limit("30/minute")async def update_employee(
+@limiter.limit("30/minute")
+async def update_employee(
     employee_id: int,
     employee_update: EmployeeUpdate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -678,7 +684,8 @@ from app.core.rate_limiter import limiter
 
 
 @router.post("/{employee_id}/terminate")
-@limiter.limit("30/minute")async def terminate_employee(
+@limiter.limit("30/minute")
+async def terminate_employee(
     employee_id: int,
     termination: EmployeeTerminate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -698,7 +705,8 @@ from app.core.rate_limiter import limiter
 
 
 @router.put("/{employee_id}/yukyu", response_model=EmployeeResponse)
-@limiter.limit("30/minute")async def update_yukyu(
+@limiter.limit("30/minute")
+async def update_yukyu(
     employee_id: int,
     yukyu_update: YukyuUpdate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -718,7 +726,8 @@ from app.core.rate_limiter import limiter
 
 
 @router.delete("/{employee_id}")
-@limiter.limit("30/minute")async def delete_employee(
+@limiter.limit("30/minute")
+async def delete_employee(
     employee_id: int,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -744,7 +753,8 @@ from app.core.rate_limiter import limiter
 
 
 @router.post("/{employee_id}/restore")
-@limiter.limit("30/minute")async def restore_employee(
+@limiter.limit("30/minute")
+async def restore_employee(
     employee_id: int,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -769,7 +779,8 @@ from app.core.rate_limiter import limiter
 
 
 @router.post("/import-excel")
-@limiter.limit("30/minute")async def import_employees_from_excel(
+@limiter.limit("30/minute")
+async def import_employees_from_excel(
     file: UploadFile = File(...),
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -921,7 +932,8 @@ from app.core.rate_limiter import limiter
 
 
 @router.patch("/{employee_id}/change-type", response_model=EmployeeResponse)
-@limiter.limit("30/minute")async def change_employee_type(
+@limiter.limit("30/minute")
+async def change_employee_type(
     employee_id: int,
     change_request: ChangeTypeRequest,
     current_user: User = Depends(auth_service.require_role("admin")),

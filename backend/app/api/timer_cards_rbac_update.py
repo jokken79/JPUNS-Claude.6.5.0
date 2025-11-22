@@ -17,7 +17,8 @@ from app.core.rate_limiter import limiter
 # ============================================
 
 @router.get("/", response_model=list[TimerCardResponse])
-@limiter.limit("30/minute")async def list_timer_cards(
+@limiter.limit("30/minute")
+async def list_timer_cards(
     employee_id: int = None,
     factory_id: str = None,
     is_approved: bool = None,
@@ -101,7 +102,8 @@ from app.core.rate_limiter import limiter
 # ============================================
 
 @router.get("/{timer_card_id}", response_model=TimerCardResponse)
-@limiter.limit("30/minute")async def get_timer_card(
+@limiter.limit("30/minute")
+async def get_timer_card(
     timer_card_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -185,7 +187,8 @@ from app.core.rate_limiter import limiter
 # ============================================
 
 @router.put("/{timer_card_id}", response_model=TimerCardResponse)
-@limiter.limit("30/minute")async def update_timer_card(
+@limiter.limit("30/minute")
+async def update_timer_card(
     timer_card_id: int,
     timer_card_update: TimerCardUpdate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -258,7 +261,8 @@ from app.core.rate_limiter import limiter
 # ============================================
 
 @router.post("/approve", response_model=dict)
-@limiter.limit("30/minute")async def approve_timer_cards(
+@limiter.limit("30/minute")
+async def approve_timer_cards(
     approve_data: TimerCardApprove,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)

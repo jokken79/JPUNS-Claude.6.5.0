@@ -256,19 +256,22 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
 # ================================
 
 @router.get("/roles", response_model=List[Dict[str, str]], summary="List available roles")
-@limiter.limit("60/minute")async def list_roles():
+@limiter.limit("60/minute")
+async def list_roles():
     """Get list of all available roles"""
     return AVAILABLE_ROLES
 
 
 @router.get("/pages", response_model=List[PageInfo], summary="List available pages")
-@limiter.limit("60/minute")async def list_pages():
+@limiter.limit("60/minute")
+async def list_pages():
     """Get list of all available pages"""
     return AVAILABLE_PAGES
 
 
 @router.get("/{role_key}", response_model=RolePermissionsResponse, summary="Get permissions for a role")
-@limiter.limit("60/minute")async def get_role_permissions(
+@limiter.limit("60/minute")
+async def get_role_permissions(
     role_key: str,
     current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
@@ -323,7 +326,8 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
 
 
 @router.put("/{role_key}/{page_key}", response_model=PermissionResponse, summary="Update a single permission")
-@limiter.limit("60/minute")async def update_permission(
+@limiter.limit("60/minute")
+async def update_permission(
     role_key: str,
     page_key: str,
     permission: PermissionUpdate,
@@ -387,7 +391,8 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
 
 
 @router.post("/bulk-update/{role_key}", response_model=RolePermissionsResponse, summary="Bulk update permissions for a role")
-@limiter.limit("60/minute")async def bulk_update_permissions(
+@limiter.limit("60/minute")
+async def bulk_update_permissions(
     role_key: str,
     bulk_update: BulkPermissionUpdate,
     request: Request,
@@ -458,7 +463,8 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
 
 
 @router.get("/check/{role_key}/{page_key}", summary="Check if a role has access to a page")
-@limiter.limit("60/minute")async def check_permission(
+@limiter.limit("60/minute")
+async def check_permission(
     role_key: str,
     page_key: str,
     db: Session = Depends(get_db)
@@ -492,7 +498,8 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
 
 
 @router.get("/user/{user_id}/permissions", response_model=UserPermissionsResponse, summary="Get current user's permissions")
-@limiter.limit("60/minute")async def get_user_permissions(
+@limiter.limit("60/minute")
+async def get_user_permissions(
     user_id: int,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -519,7 +526,8 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
 
 
 @router.post("/reset/{role_key}", summary="Reset permissions to default for a role")
-@limiter.limit("60/minute")async def reset_permissions(
+@limiter.limit("60/minute")
+async def reset_permissions(
     role_key: str,
     current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
@@ -547,7 +555,8 @@ def get_default_permissions_matrix() -> Dict[str, List[str]]:
 
 
 @router.post("/initialize-defaults", summary="Initialize default permissions for all roles")
-@limiter.limit("60/minute")async def initialize_default_permissions(
+@limiter.limit("60/minute")
+async def initialize_default_permissions(
     current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
 ):

@@ -15,7 +15,8 @@ router = APIRouter()
 
 
 @router.get("/visibility", response_model=VisibilityToggleResponse)
-@limiter.limit("60/minute")async def get_visibility_toggle(db: Session = Depends(get_db)):
+@limiter.limit("60/minute")
+async def get_visibility_toggle(db: Session = Depends(get_db)):
     """
     Get visibility toggle status
     Public endpoint - anyone can check if content is visible
@@ -53,7 +54,8 @@ router = APIRouter()
 
 
 @router.put("/visibility", response_model=VisibilityToggleResponse)
-@limiter.limit("60/minute")async def update_visibility_toggle(
+@limiter.limit("60/minute")
+async def update_visibility_toggle(
     toggle_data: VisibilityToggleUpdate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)

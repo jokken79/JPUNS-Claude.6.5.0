@@ -18,7 +18,8 @@ router = APIRouter()
 
 
 @router.get("/health", summary="Detailed health information")
-@limiter.limit("100/minute")async def detailed_health() -> Dict[str, Any]:
+@limiter.limit("100/minute")
+async def detailed_health() -> Dict[str, Any]:
     try:
         # OCR service removed - using Azure OCR service instead
         process = psutil.Process()
