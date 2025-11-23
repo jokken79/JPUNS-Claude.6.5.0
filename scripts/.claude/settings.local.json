@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(REINSTALAR.bat)",
+      "Bash(cmd.exe /c \"D:\\JPUNS-Claude.6.0.0\\scripts\\REINSTALAR.bat\")",
+      "Bash(cmd.exe /c \"echo N | REINSTALAR.bat 2>&1\")",
+      "Bash(docker:*)",
+      "Bash(powershell -Command \"Start-Process ''C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe''\")",
+      "Bash(for i in {1..15})",
+      "Bash(do echo \"Intento $i/15...\")",
+      "Bash(/dev/null)",
+      "Bash(exit 0)",
+      "Bash(done)",
+      "Bash(cmd.exe /c \"REINSTALAR.bat < respuestas.txt\")",
+      "Bash(cmd.exe /c REINSTALAR_AUTO.bat)",
+      "Bash(powershell -Command \"& {cd ''D:\\JPUNS-Claude.6.0.0\\scripts''; Start-Process cmd.exe -ArgumentList ''/c REINSTALAR_AUTO.bat > reinstalar_log.txt 2>&1'' -NoNewWindow -Wait}\")",
+      "Bash(if [ -f \"D:\\JPUNS-Claude.6.0.0\\scripts\\reinstalar_log.txt\" ])",
+      "Bash(then tail -50 \"D:\\JPUNS-Claude.6.0.0\\scripts\\reinstalar_log.txt\")",
+      "Bash(else echo \"Log file not found yet\")",
+      "Bash(fi)",
+      "Bash(cmd.exe /c \"scripts\\REINSTALAR_AUTO.bat\")",
+      "Bash(REINSTALAR_AUTO.bat)",
+      "Bash(cmd.exe /c \"cd /d D:\\JPUNS-Claude.6.0.0\\scripts && REINSTALAR_AUTO.bat\")",
+      "Bash(python scripts/utilities/generate_env.py:*)",
+      "Bash(timeout 300 bash -c 'while ! docker images | grep -q \"\"uns-claudejp-650-backend\"\"; do echo \"\"Esperando backend build...\"\"; sleep 15; done; echo \"\"Backend build completado!\"\"')",
+      "Bash(powershell -Command \"& {Start-Process powershell -ArgumentList ''-NoProfile -ExecutionPolicy Bypass -File scripts/REINSTALAR_AUTO.bat'' -Wait -NoNewWindow}\")",
+      "Bash(powershell -Command \"Start-Process cmd.exe -ArgumentList ''/c REINSTALAR_AUTO.bat'' -Wait -NoNewWindow\")",
+      "Bash(nul)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
