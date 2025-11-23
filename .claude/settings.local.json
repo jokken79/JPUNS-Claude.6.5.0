@@ -19,7 +19,9 @@
       "Bash(/usr/bin/git mv:*)",
       "Bash(git mv:*)",
       "Bash(git remote set-url:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
