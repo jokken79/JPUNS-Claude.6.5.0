@@ -1,5 +1,5 @@
 # Nginx Reverse Proxy Dockerfile
-# UNS-ClaudeJP 6.0.0
+# UNS-ClaudeJP 6.5.0
 #
 # Purpose: Reverse proxy and load balancer for multi-service architecture
 # - Routes /api/* to FastAPI backend (with load balancing)

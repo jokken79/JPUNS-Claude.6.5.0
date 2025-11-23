@@ -6,20 +6,15 @@ from sqlalchemy.orm import Session
 from typing import Optional
 
 from app.core.database import get_db
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import Contract, Employee, User
 from app.schemas.contract import ContractCreate, ContractUpdate, ContractResponse
 from app.schemas.base import PaginatedResponse, create_paginated_response
 from app.services.auth_service import auth_service
-from app.core.rate_limiter import limiter
 
 router = APIRouter()
 
 
 @router.post("/", response_model=ContractResponse, status_code=status.HTTP_201_CREATED)
-@limiter.limit("60/minute")
 async def create_contract(
     contract: ContractCreate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -57,8 +52,6 @@ async def create_contract(
 
 
 @router.get("/", response_model=PaginatedResponse[ContractResponse])
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("60/minute")
 async def list_contracts(
     employee_id: Optional[int] = Query(None, description="Filter by employee ID"),
     signed: Optional[bool] = Query(None, description="Filter by signed status"),
@@ -101,8 +94,6 @@ async def list_contracts(
 
 
 @router.get("/{contract_id}", response_model=ContractResponse)
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("60/minute")
 async def get_contract(
     contract_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -124,7 +115,6 @@ async def get_contract(
 
 
 @router.put("/{contract_id}", response_model=ContractResponse)
-@limiter.limit("60/minute")
 async def update_contract(
     contract_id: int,
     contract_update: ContractUpdate,
@@ -179,7 +169,6 @@ async def update_contract(
 
 
 @router.delete("/{contract_id}")
-@limiter.limit("60/minute")
 async def delete_contract(
     contract_id: int,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -203,11 +192,10 @@ async def delete_contract(
     contract.soft_delete()
     db.commit()
 
-    return no_content_response(data={"message": "Contract deleted successfully"}, request=request)
+    return {"message": "Contract deleted successfully"}
 
 
 @router.post("/{contract_id}/restore")
-@limiter.limit("60/minute")
 async def restore_contract(
     contract_id: int,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -231,4 +219,4 @@ async def restore_contract(
     contract.restore()
     db.commit()
 
-    return created_response(data={"message": "Contract restored successfully"}, request=request)
+    return {"message": "Contract restored successfully"}

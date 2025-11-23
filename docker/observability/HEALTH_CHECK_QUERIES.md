@@ -1,4 +1,4 @@
-# Health Check Queries - UNS-ClaudeJP 6.0.0
+# Health Check Queries - UNS-ClaudeJP 6.5.0
 
 ## Overview
 
@@ -42,7 +42,7 @@ curl -f http://localhost:8000/api/health
     "memory_percent": 45.8
   },
   "application": {
-    "version": "6.0.0",
+    "version": "6.5.0",
     "environment": "development"
   }
 }
@@ -144,7 +144,7 @@ SELECT version();
 **Bash Command**:
 ```bash
 # Test connection from backend container
-docker exec -it uns-claudejp-600-backend python -c "
+docker exec -it uns-claudejp-650-backend python -c "
 from app.core.database import engine
 try:
     with engine.connect() as conn:
@@ -407,14 +407,14 @@ LIMIT 10;
 **Bash Command**:
 ```bash
 # Ping Redis
-docker exec -it uns-claudejp-600-redis redis-cli ping
+docker exec -it uns-claudejp-650-redis redis-cli ping
 # Expected: PONG
 
 # Check Redis is responding
-docker exec -it uns-claudejp-600-redis redis-cli --stat
+docker exec -it uns-claudejp-650-redis redis-cli --stat
 
 # Test connection from backend
-docker exec -it uns-claudejp-600-backend python -c "
+docker exec -it uns-claudejp-650-backend python -c "
 import redis
 r = redis.from_url('redis://redis:6379/0')
 print(r.ping())  # Should print True
@@ -428,15 +428,15 @@ print(r.ping())  # Should print True
 **Redis CLI Commands**:
 ```bash
 # Memory info
-docker exec -it uns-claudejp-600-redis redis-cli info memory
+docker exec -it uns-claudejp-650-redis redis-cli info memory
 
 # Specific memory metrics
-docker exec -it uns-claudejp-600-redis redis-cli info memory | grep used_memory_human
-docker exec -it uns-claudejp-600-redis redis-cli info memory | grep used_memory_peak_human
-docker exec -it uns-claudejp-600-redis redis-cli info memory | grep maxmemory_human
+docker exec -it uns-claudejp-650-redis redis-cli info memory | grep used_memory_human
+docker exec -it uns-claudejp-650-redis redis-cli info memory | grep used_memory_peak_human
+docker exec -it uns-claudejp-650-redis redis-cli info memory | grep maxmemory_human
 
 # Memory usage percentage
-docker exec -it uns-claudejp-600-redis redis-cli --eval - <<EOF
+docker exec -it uns-claudejp-650-redis redis-cli --eval - <<EOF
 local used = redis.call('INFO', 'memory'):match('used_memory:(%d+)')
 local max = redis.call('CONFIG', 'GET', 'maxmemory')[2]
 if max == '0' then
@@ -458,14 +458,14 @@ EOF
 **Redis CLI Commands**:
 ```bash
 # Total keys in database
-docker exec -it uns-claudejp-600-redis redis-cli dbsize
+docker exec -it uns-claudejp-650-redis redis-cli dbsize
 
 # Keys by pattern
-docker exec -it uns-claudejp-600-redis redis-cli --scan --pattern "session:*" | wc -l
-docker exec -it uns-claudejp-600-redis redis-cli --scan --pattern "cache:*" | wc -l
+docker exec -it uns-claudejp-650-redis redis-cli --scan --pattern "session:*" | wc -l
+docker exec -it uns-claudejp-650-redis redis-cli --scan --pattern "cache:*" | wc -l
 
 # Keyspace info
-docker exec -it uns-claudejp-600-redis redis-cli info keyspace
+docker exec -it uns-claudejp-650-redis redis-cli info keyspace
 ```
 
 ---
@@ -475,17 +475,17 @@ docker exec -it uns-claudejp-600-redis redis-cli info keyspace
 **Redis CLI Commands**:
 ```bash
 # Server stats
-docker exec -it uns-claudejp-600-redis redis-cli info stats
+docker exec -it uns-claudejp-650-redis redis-cli info stats
 
 # Operations per second
-docker exec -it uns-claudejp-600-redis redis-cli info stats | grep instantaneous_ops_per_sec
+docker exec -it uns-claudejp-650-redis redis-cli info stats | grep instantaneous_ops_per_sec
 
 # Connected clients
-docker exec -it uns-claudejp-600-redis redis-cli info clients | grep connected_clients
+docker exec -it uns-claudejp-650-redis redis-cli info clients | grep connected_clients
 
 # Latency monitoring
-docker exec -it uns-claudejp-600-redis redis-cli --latency
-docker exec -it uns-claudejp-600-redis redis-cli --latency-history
+docker exec -it uns-claudejp-650-redis redis-cli --latency
+docker exec -it uns-claudejp-650-redis redis-cli --latency-history
 ```
 
 ---
@@ -824,7 +824,7 @@ rate(otelcol_processor_dropped_spans[5m])
 **Bash Command**:
 ```bash
 # Check OTel Collector logs
-docker logs uns-claudejp-600-otel --tail 50
+docker logs uns-claudejp-650-otel --tail 50
 
 # Check if receiving metrics
 curl -s http://localhost:13133/metrics | head -20
@@ -855,11 +855,11 @@ curl -sf http://localhost:8000/api/health > /dev/null && echo "✅ Backend: OK" 
 
 # Database
 echo "Database Health:"
-docker exec uns-claudejp-600-db pg_isready -U postgres > /dev/null 2>&1 && echo "✅ Database: OK" || echo "❌ Database: FAILED"
+docker exec uns-claudejp-650-db pg_isready -U postgres > /dev/null 2>&1 && echo "✅ Database: OK" || echo "❌ Database: FAILED"
 
 # Redis
 echo "Redis Health:"
-docker exec uns-claudejp-600-redis redis-cli ping > /dev/null 2>&1 && echo "✅ Redis: OK" || echo "❌ Redis: FAILED"
+docker exec uns-claudejp-650-redis redis-cli ping > /dev/null 2>&1 && echo "✅ Redis: OK" || echo "❌ Redis: FAILED"
 
 # Prometheus
 echo "Prometheus Health:"
@@ -886,7 +886,7 @@ free -h | grep Mem | awk '{print "Used: "$3" / "$2" ("$3/$2*100"%)"}'
 # Docker containers
 echo ""
 echo "Container Status:"
-docker ps --filter "name=uns-claudejp-600" --format "table {{.Names}}\t{{.Status}}" | grep -v "STATUS" | while read line; do
+docker ps --filter "name=uns-claudejp-650" --format "table {{.Names}}\t{{.Status}}" | grep -v "STATUS" | while read line; do
   echo "$line"
 done
 

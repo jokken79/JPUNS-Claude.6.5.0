@@ -9,10 +9,6 @@ from pydantic import BaseModel, EmailStr
 
 from app.services.auth_service import AuthService
 from app.services.notification_service import notification_service
-from app.core.rate_limiter import limiter
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -47,7 +43,6 @@ class YukyuNotificationRequest(BaseModel):
 
 
 @router.post("/send-email")
-@limiter.limit("60/minute")
 async def send_email(
     request: EmailRequest,
     current_user=Depends(AuthService.require_role("admin")),
@@ -73,7 +68,7 @@ async def send_email(
         if not success:
             raise HTTPException(status_code=500, detail="Failed to send email")
         
-        return success_response(data={"success": True, "message": "Email sent successfully"}, request=request)
+        return {"success": True, "message": "Email sent successfully"}
         
     except HTTPException:
         raise
@@ -83,7 +78,6 @@ async def send_email(
 
 
 @router.post("/send-line")
-@limiter.limit("60/minute")
 async def send_line_notification(
     request: LINERequest,
     current_user=Depends(AuthService.require_role("admin")),
@@ -107,7 +101,7 @@ async def send_line_notification(
         if not success:
             raise HTTPException(status_code=500, detail="Failed to send LINE notification")
         
-        return success_response(data={"success": True, "message": "LINE notification sent"}, request=request)
+        return {"success": True, "message": "LINE notification sent"}
         
     except HTTPException:
         raise
@@ -117,7 +111,6 @@ async def send_line_notification(
 
 
 @router.post("/yukyu-approval")
-@limiter.limit("60/minute")
 async def notify_yukyu_approval(
     request: YukyuNotificationRequest,
     current_user=Depends(AuthService.require_role("admin")),
@@ -144,7 +137,7 @@ async def notify_yukyu_approval(
         if not success:
             raise HTTPException(status_code=500, detail="Failed to send notification")
         
-        return success_response(data={"success": True, "message": "Notification sent"}, request=request)
+        return {"success": True, "message": "Notification sent"}
         
     except HTTPException:
         raise
@@ -154,7 +147,6 @@ async def notify_yukyu_approval(
 
 
 @router.post("/payslip-ready")
-@limiter.limit("60/minute")
 async def notify_payslip_ready(
     employee_email: EmailStr,
     employee_name: str,
@@ -189,7 +181,7 @@ async def notify_payslip_ready(
         if not success:
             raise HTTPException(status_code=500, detail="Failed to send notification")
         
-        return success_response(data={"success": True, "message": "Payslip notification sent"}, request=request)
+        return {"success": True, "message": "Payslip notification sent"}
         
     except HTTPException:
         raise
@@ -199,8 +191,6 @@ async def notify_payslip_ready(
 
 
 @router.get("/test-email")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("60/minute")
 async def test_email_configuration(
     current_user=Depends(AuthService.require_role("admin")),
 ):
@@ -214,14 +204,14 @@ async def test_email_configuration(
             is_html=True,
         )
         
-        return success_response(data={
+        return {
             "success": test_result,
             "message": "Email configuration test completed"
-        }, request=request)
+        }
         
     except Exception as e:
         logger.error(f"Email test failed: {e}")
-        return success_response(data={
+        return {
             "success": False,
             "error": str(e)
-        }, request=request)
+        }

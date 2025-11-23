@@ -12,7 +12,14 @@
       "Bash(node test-page.js:*)",
       "Bash(docker exec:*)",
       "Bash(__NEW_LINE__ curl -s -X POST \"http://localhost:8000/api/auth/login/\" -H \"Content-Type: application/x-www-form-urlencoded\" -d \"username=admin&password=admin123\")",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(git restore:*)",
+      "Bash(/usr/bin/git mv:*)",
+      "Bash(git mv:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

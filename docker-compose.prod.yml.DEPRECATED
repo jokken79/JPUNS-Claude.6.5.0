@@ -1,0 +1,801 @@
+# Production Docker Compose Configuration
+# UNS-CLAUDEJP 5.4 - Production Security Hardening
+#
+# This file defines the production Docker services with security hardening,
+# resource limits, monitoring, and proper networking.
+#
+# Usage:
+#   docker-compose -f docker-compose.prod.yml up -d
+#
+# Environment variables should be loaded from .env.production
+
+version: '3.8'
+
+services:
+  # =============================================================================
+  # APPLICATION SERVICES
+  # =============================================================================
+  
+  # Main Application
+  uns-claudejp-app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+      args:
+        - BUILD_DATE=${BUILD_DATE:-$(date -u +'%Y-%m-%dT%H:%M:%SZ')}
+        - VCS_REF=${VCS_REF:-$(git rev-parse HEAD)}
+        - VCS_URL=${VCS_URL:-$(git config --get remote.origin.url)}
+    image: uns-claudejp/backend:5.4.0-prod
+    container_name: uns-claudejp-app-prod
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - ENVIRONMENT=production
+    volumes:
+      # Application data
+      - app_data:/app/data
+      - app_logs:/app/logs
+      - app_uploads:/app/uploads
+      - app_cache:/app/cache
+      - app_temp:/app/temp
+      # SSL certificates
+      - ./ssl:/app/ssl:ro
+      # Configuration
+      - ./config:/app/config:ro
+    networks:
+      - uns-network
+    depends_on:
+      - uns-claudejp-db
+      - uns-claudejp-redis
+      - uns-claudejp-otel-collector
+    # Security hardening
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:uns-claudejp-app
+      - seccomp:default
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=uns-claudejp-app,environment=production"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.uns-claudejp-app.rule=Host(`uns-kikaku.com`)"
+      - "traefik.http.routers.uns-claudejp-app.entrypoints=websecure"
+      - "traefik.http.routers.uns-claudejp-app.tls=true"
+      - "traefik.http.routers.uns-claudejp-app.tls.certresolver=letsencrypt"
+      - "service=uns-claudejp-app"
+      - "environment=production"
+      - "version=5.4.0"
+
+  # =============================================================================
+  # DATABASE SERVICES
+  # =============================================================================
+  
+  # PostgreSQL Database
+  uns-claudejp-db:
+    image: postgres:15-alpine
+    container_name: uns-claudejp-db-prod
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-unsclaudejp_prod}
+      - POSTGRES_USER=${POSTGRES_USER:-unsclaudejp_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - db_logs:/var/log/postgresql
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+      - ./database/config/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    networks:
+      - uns-network
+      - db-network
+    # Security hardening
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:postgres
+      - seccomp:default
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    # Health check
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-unsclaudejp_user} -d ${POSTGRES_DB:-unsclaudejp_prod}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=uns-claudejp-db,environment=production"
+    labels:
+      - "service=uns-claudejp-db"
+      - "environment=production"
+      - "database=postgresql"
+
+  # =============================================================================
+  # CACHE SERVICES
+  # =============================================================================
+  
+  # Redis Cache
+  uns-claudejp-redis:
+    image: redis:7-alpine
+    container_name: uns-claudejp-redis-prod
+    restart: unless-stopped
+    command: redis-server /usr/local/etc/redis/redis.conf
+    env_file:
+      - .env.production
+    volumes:
+      - redis_data:/data
+      - redis_logs:/var/log/redis
+      - ./cache/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    networks:
+      - uns-network
+      - cache-network
+    # Security hardening
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:redis
+      - seccomp:default
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    # Health check
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=uns-claudejp-redis,environment=production"
+    labels:
+      - "service=uns-claudejp-redis"
+      - "environment=production"
+
+  # =============================================================================
+  # MONITORING SERVICES
+  # =============================================================================
+  
+  # OpenTelemetry Collector
+  uns-claudejp-otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.88.0
+    container_name: uns-claudejp-otel-collector-prod
+    restart: unless-stopped
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    env_file:
+      - .env.production
+    volumes:
+      - ./monitoring/otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+      - otel_collector_data:/var/lib/otel-collector
+      - otel_collector_logs:/var/log/otel-collector
+    networks:
+      - uns-network
+      - monitoring-network
+    # Security hardening
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:otel-collector
+      - seccomp:default
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:4317/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=uns-claudejp-otel-collector,environment=production"
+    labels:
+      - "service=uns-claudejp-otel-collector"
+      - "environment=production"
+
+  # Prometheus
+  uns-claudejp-prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: uns-claudejp-prometheus-prod
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    env_file:
+      - .env.production
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+      - prometheus_logs:/var/log/prometheus
+    networks:
+      - uns-network
+      - monitoring-network
+    ports:
+      - "${UNS_PROMETHEUS_PORT:-9090}:9090"
+    # Security hardening
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:prometheus
+      - seccomp:default
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=uns-claudejp-prometheus,environment=production"
+    labels:
+      - "service=uns-claudejp-prometheus"
+      - "environment=production"
+
+  # Grafana
+  uns-claudejp-grafana:
+    image: grafana/grafana:10.0.0
+    container_name: uns-claudejp-grafana-prod
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_DOMAIN=uns-kikaku.com
+      - GF_SERVER_ROOT_URL=https://uns-kikaku.com/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_AUTH_BASIC_ENABLED=true
+      - GF_AUTH_LDAP_ENABLED=false
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=${SMTP_SERVER}
+      - GF_SMTP_USER=${SMTP_USER}
+      - GF_SMTP_PASSWORD=${SMTP_PASSWORD}
+      - GF_SMTP_FROM_ADDRESS=${SMTP_FROM}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - grafana_logs:/var/log/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    networks:
+      - uns-network
+      - monitoring-network
+    ports:
+      - "${UNS_GRAFANA_PORT:-3000}:3000"
+    # Security hardening
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:grafana
+      - seccomp:default
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    # Health check
+    healthcheck:
+      test: ["CMD-SHELL", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=uns-claudejp-grafana,environment=production"
+    labels:
+      - "service=uns-claudejp-grafana"
+      - "environment=production"
+
+  # =============================================================================
+  # REVERSE PROXY AND LOAD BALANCER
+  # =============================================================================
+  
+  # Traefik Reverse Proxy
+  uns-claudejp-traefik:
+    image: traefik:v3.0
+    container_name: uns-claudejp-traefik-prod
+    restart: unless-stopped
+    command:
+      - '--api.dashboard=true'
+      - '--api.insecure=false'
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+      - '--entrypoints.web.address=:80'
+      - '--entrypoints.websecure.address=:443'
+      - '--certificatesresolvers.letsencrypt.acme.tlschallenge=true'
+      - '--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}'
+      - '--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json'
+      - '--certificatesresolvers.letsencrypt.acme.caserver=https://acme-v02.api.letsencrypt.org/directory'
+      - '--global.checknewversion=false'
+      - '--log.level=INFO'
+      - '--accesslog=true'
+      - '--accesslog.filepath=/var/log/traefik/access.log'
+      - '--accesslog.format=json'
+      - '--tracing.jaeger=true'
+      - '--tracing.jaeger.samplingRate=0.1'
+      - '--tracing.jaeger.localAgentHostPort=6831'
+      - '--metrics.prometheus=true'
+      - '--metrics.prometheus.addEntryPointsLabels=true'
+      - '--metrics.prometheus.addServicesLabels=true'
+      - '--entrypoints.web.http.redirections.entrypoint.to=websecure'
+      - '--entrypoints.web.http.redirections.scheme=https'
+    env_file:
+      - .env.production
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt_data:/letsencrypt
+      - traefik_logs:/var/log/traefik
+      - ./monitoring/traefik/dynamic_conf:/etc/traefik/dynamic_conf:ro
+    networks:
+      - uns-network
+      - monitoring-network
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    # Security hardening
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:traefik
+      - seccomp:default
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    # Health check
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=uns-claudejp-traefik,environment=production"
+    labels:
+      - "service=uns-claudejp-traefik"
+      - "environment=production"
+
+  # =============================================================================
+  # BACKUP SERVICES
+  # =============================================================================
+  
+  # Automated Backup Service
+  uns-claudejp-backup:
+    build:
+      context: ./backup
+      dockerfile: Dockerfile
+    image: uns-claudejp/backup:5.4.0
+    container_name: uns-claudejp-backup-prod
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      - BACKUP_SCHEDULE=${BACKUP_SCHEDULE:-0 2 * * *}
+      - BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-30}
+      - BACKUP_ENCRYPTION=${BACKUP_ENCRYPTION:-true}
+      - BACKUP_COMPRESSION=${BACKUP_COMPRESSION:-true}
+      - OFFSITE_BACKUP=${OFFSITE_BACKUP:-false}
+      - OFFSITE_ENDPOINT=${OFFSITE_ENDPOINT}
+      - OFFSITE_CREDENTIALS=${OFFSITE_CREDENTIALS}
+    volumes:
+      - backup_data:/backup
+      - backup_logs:/var/log/backup
+      - db_data:/data/db:ro
+      - app_data:/data/app:ro
+      - app_uploads:/data/uploads:ro
+      - ./backup/scripts:/scripts:ro
+      - ./backup/config:/config:ro
+      - ./ssl:/ssl:ro
+    networks:
+      - uns-network
+      - backup-network
+    # Security hardening
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:backup
+      - seccomp:default
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=uns-claudejp-backup,environment=production"
+    labels:
+      - "service=uns-claudejp-backup"
+      - "environment=production"
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+
+networks:
+  # Application network
+  uns-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+    labels:
+      - "network=uns-network"
+      - "environment=production"
+  
+  # Database network (isolated)
+  db-network:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+          gateway: 172.21.0.1
+    labels:
+      - "network=db-network"
+      - "environment=production"
+  
+  # Cache network (isolated)
+  cache-network:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+          gateway: 172.22.0.1
+    labels:
+      - "network=cache-network"
+      - "environment=production"
+  
+  # Monitoring network (isolated)
+  monitoring-network:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.23.0.0/16
+          gateway: 172.23.0.1
+    labels:
+      - "network=monitoring-network"
+      - "environment=production"
+  
+  # Backup network (isolated)
+  backup-network:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.24.0.0/16
+          gateway: 172.24.0.1
+    labels:
+      - "network=backup-network"
+      - "environment=production"
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+
+volumes:
+  # Application volumes
+  app_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=10G
+    labels:
+      - "volume=app_data"
+      - "environment=production"
+  
+  app_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=5G
+    labels:
+      - "volume=app_logs"
+      - "environment=production"
+  
+  app_uploads:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=50G
+    labels:
+      - "volume=app_uploads"
+      - "environment=production"
+  
+  app_cache:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=2G
+    labels:
+      - "volume=app_cache"
+      - "environment=production"
+  
+  app_temp:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      o: size=1G
+    labels:
+      - "volume=app_temp"
+      - "environment=production"
+  
+  # Database volumes
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=100G
+    labels:
+      - "volume=db_data"
+      - "environment=production"
+  
+  db_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=5G
+    labels:
+      - "volume=db_logs"
+      - "environment=production"
+  
+  # Cache volumes
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=2G
+    labels:
+      - "volume=redis_data"
+      - "environment=production"
+  
+  redis_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=1G
+    labels:
+      - "volume=redis_logs"
+      - "environment=production"
+  
+  # Monitoring volumes
+  prometheus_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=20G
+    labels:
+      - "volume=prometheus_data"
+      - "environment=production"
+  
+  prometheus_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=2G
+    labels:
+      - "volume=prometheus_logs"
+      - "environment=production"
+  
+  grafana_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=5G
+    labels:
+      - "volume=grafana_data"
+      - "environment=production"
+  
+  grafana_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=1G
+    labels:
+      - "volume=grafana_logs"
+      - "environment=production"
+  
+  otel_collector_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=5G
+    labels:
+      - "volume=otel_collector_data"
+      - "environment=production"
+  
+  otel_collector_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=1G
+    labels:
+      - "volume=otel_collector_logs"
+      - "environment=production"
+  
+  # Backup volumes
+  backup_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=200G
+    labels:
+      - "volume=backup_data"
+      - "environment=production"
+  
+  backup_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=2G
+    labels:
+      - "volume=backup_logs"
+      - "environment=production"
+  
+  # SSL certificates
+  letsencrypt:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=1G
+    labels:
+      - "volume=letsencrypt"
+      - "environment=production"
+  
+  traefik_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: size=2G
+    labels:
+      - "volume=traefik_logs"
+      - "environment=production"

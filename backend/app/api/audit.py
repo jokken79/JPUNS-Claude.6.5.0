@@ -8,9 +8,6 @@ from typing import Optional
 from datetime import datetime
 
 from app.core.database import get_db
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import User
 from app.api.deps import get_current_user, require_admin
 from app.services.audit_service import AuditService
@@ -24,7 +21,6 @@ from app.schemas.audit import (
     ResourceType
 )
 from app.schemas.base import PaginatedResponse, create_paginated_response
-from app.core.rate_limiter import limiter
 
 router = APIRouter(prefix="/api/admin/audit-log", tags=["admin-audit"])
 
@@ -32,16 +28,16 @@ router = APIRouter(prefix="/api/admin/audit-log", tags=["admin-audit"])
 def get_client_ip(request: Request) -> Optional[str]:
     """Extract client IP address from request"""
     if "x-forwarded-for" in request.headers:
-        return success_response(data=request.headers["x-forwarded-for"].split(",")[0].strip(), request=request)
+        return request.headers["x-forwarded-for"].split(",")[0].strip()
     elif "x-real-ip" in request.headers:
-        return success_response(data=request.headers["x-real-ip"], request=request)
+        return request.headers["x-real-ip"]
     else:
-        return success_response(data=request.client.host if request.client else None, request=request)
+        return request.client.host if request.client else None
 
 
 def get_user_agent(request: Request) -> Optional[str]:
     """Extract user agent from request"""
-    return success_response(data=request.headers.get("user-agent"), request=request)
+    return request.headers.get("user-agent")
 
 
 # ============================================
@@ -49,8 +45,6 @@ def get_user_agent(request: Request) -> Optional[str]:
 # ============================================
 
 @router.get("", response_model=PaginatedResponse[AdminAuditLogResponse])
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("60/minute")
 async def get_audit_logs(
     request: Request,
     action_type: Optional[AdminActionType] = Query(None, description="Filter by action type"),
@@ -105,8 +99,6 @@ async def get_audit_logs(
 
 
 @router.get("/{log_id}", response_model=AdminAuditLogResponse)
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("60/minute")
 async def get_audit_log_by_id(
     log_id: int,
     db: Session = Depends(get_db),
@@ -121,12 +113,10 @@ async def get_audit_log_by_id(
     if not log:
         raise HTTPException(status_code=404, detail="Audit log entry not found")
 
-    return success_response(data=AdminAuditLogResponse.model_validate(log), request=request)
+    return AdminAuditLogResponse.model_validate(log)
 
 
 @router.get("/recent/{limit}", response_model=list[AdminAuditLogResponse])
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("60/minute")
 async def get_recent_audit_logs(
     limit: int,
     db: Session = Depends(get_db),
@@ -138,10 +128,10 @@ async def get_recent_audit_logs(
     """
     logs = AuditService.get_recent_logs(db, limit)
 
-    return success_response(data=[
+    return [
         AdminAuditLogResponse.model_validate(log)
         for log in logs
-    ], request=request)
+    ]
 
 
 # ============================================
@@ -149,8 +139,6 @@ async def get_recent_audit_logs(
 # ============================================
 
 @router.get("/stats/summary", response_model=AdminAuditLogStats)
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("60/minute")
 async def get_audit_log_stats(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
@@ -159,7 +147,7 @@ async def get_audit_log_stats(
     Get statistics about audit logs.
     Requires ADMIN or SUPER_ADMIN role.
     """
-    return success_response(data=AuditService.get_audit_stats(db), request=request)
+    return AuditService.get_audit_stats(db)
 
 
 # ============================================
@@ -167,7 +155,6 @@ async def get_audit_log_stats(
 # ============================================
 
 @router.post("/export")
-@limiter.limit("60/minute")
 async def export_audit_logs(
     export_request: AdminAuditLogExportRequest,
     db: Session = Depends(get_db),
@@ -189,13 +176,13 @@ async def export_audit_logs(
         media_type = "text/csv"
         filename = f"audit_logs_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.csv"
 
-    return success_response(data=Response(
+    return Response(
         content=export_data,
         media_type=media_type,
         headers={
             "Content-Disposition": f"attachment; filename={filename}"
         }
-    ), request=request)
+    )
 
 
 # ============================================
@@ -203,8 +190,6 @@ async def export_audit_logs(
 # ============================================
 
 @router.get("/search/query", response_model=PaginatedResponse[AdminAuditLogResponse])
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("60/minute")
 async def search_audit_logs(
     q: str = Query(..., min_length=1, description="Search query"),
     skip: int = Query(0, ge=0),
@@ -247,7 +232,6 @@ async def search_audit_logs(
 # ============================================
 
 @router.delete("/{log_id}")
-@limiter.limit("60/minute")
 async def delete_audit_log(
     log_id: int,
     db: Session = Depends(get_db),
@@ -269,4 +253,4 @@ async def delete_audit_log(
     if not success:
         raise HTTPException(status_code=404, detail="Audit log entry not found")
 
-    return success_response(data={"success": True, "message": f"Audit log {log_id} deleted successfully"}, request=request)
+    return {"success": True, "message": f"Audit log {log_id} deleted successfully"}

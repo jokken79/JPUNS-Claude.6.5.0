@@ -18,7 +18,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.models.models import Base, Employee, TimerCard, Factory
-from app.services.payroll.payroll_service import PayrollService
+from app.services.payroll_service import PayrollService
 from app.models.payroll_models import PayrollRun
 
 # TODO SEMANA 6.3: Implement the timer card payroll integration methods

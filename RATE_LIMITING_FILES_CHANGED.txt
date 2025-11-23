@@ -1,0 +1,138 @@
+RATE LIMITING IMPLEMENTATION - FILES CHANGED
+UNS-ClaudeJP 6.0.0 - 2025-11-19
+
+═══════════════════════════════════════════════════════════════════════════
+MODIFIED FILES (5)
+═══════════════════════════════════════════════════════════════════════════
+
+1. /home/user/UNS-ClaudeJP-6.0.0/backend/app/core/rate_limiter.py
+   Lines: 1-288 (complete rewrite)
+   Changes:
+   - get_storage_uri() function for Redis fallback
+   - Migrated from memory:// to redis://redis:6379/0
+   - calculate_retry_after() helper function
+   - format_retry_time() helper function
+   - handle_rate_limit_error() improved error handler
+   - Enhanced logging with extra context
+
+2. /home/user/UNS-ClaudeJP-6.0.0/backend/app/api/auth.py
+   Line: 73
+   Changes:
+   - @limiter.limit("10/minute") → @limiter.limit("5/minute")
+   - Updated comment
+
+3. /home/user/UNS-ClaudeJP-6.0.0/backend/app/api/salary.py
+   Lines: 4, 16, 146-148
+   Changes:
+   - Added import: Request, limiter
+   - Added @limiter.limit("10/hour") decorator
+   - Added request: Request parameter to calculate_salary()
+
+4. /home/user/UNS-ClaudeJP-6.0.0/backend/app/api/timer_cards.py
+   Line: 314
+   Changes:
+   - @limiter.limit("5/minute") → @limiter.limit("20/hour")
+   - Updated comment
+
+5. /home/user/UNS-ClaudeJP-6.0.0/backend/app/main.py
+   Lines: 21, 101
+   Changes:
+   - Added import: handle_rate_limit_error
+   - Removed: _rate_limit_exceeded_handler
+   - Updated exception handler registration
+
+═══════════════════════════════════════════════════════════════════════════
+NEW FILES (5)
+═══════════════════════════════════════════════════════════════════════════
+
+1. /home/user/UNS-ClaudeJP-6.0.0/RATE_LIMITING_IMPLEMENTATION.md
+   Size: 24 KB
+   Type: Documentation
+   Description: Complete implementation guide with architecture, configuration,
+                testing, monitoring, and troubleshooting
+
+2. /home/user/UNS-ClaudeJP-6.0.0/RATE_LIMITING_SUMMARY.md
+   Size: 9.4 KB
+   Type: Documentation
+   Description: Executive summary with changes, testing guide, and checklist
+
+3. /home/user/UNS-ClaudeJP-6.0.0/backend/config/rate_limits.json
+   Size: 3.0 KB
+   Type: Configuration
+   Description: JSON configuration for all endpoints and monitoring settings
+
+4. /home/user/UNS-ClaudeJP-6.0.0/backend/tests/test_rate_limiting_critical_endpoints.py
+   Size: 14 KB
+   Type: Tests
+   Description: Comprehensive test suite with 20+ test cases
+
+5. /home/user/UNS-ClaudeJP-6.0.0/scripts/test_rate_limiting.sh
+   Size: 5.2 KB
+   Type: Shell Script
+   Description: Manual verification script with 8 automated tests
+   Executable: chmod +x
+
+6. /home/user/UNS-ClaudeJP-6.0.0/RATE_LIMITING_FILES_CHANGED.txt
+   Size: ~2 KB
+   Type: Documentation
+   Description: This file (list of all changes)
+
+═══════════════════════════════════════════════════════════════════════════
+QUICK REVIEW COMMANDS
+═══════════════════════════════════════════════════════════════════════════
+
+# View modified lines in each file:
+
+git diff backend/app/core/rate_limiter.py
+git diff backend/app/api/auth.py
+git diff backend/app/api/salary.py
+git diff backend/app/api/timer_cards.py
+git diff backend/app/main.py
+
+# View new files:
+
+cat RATE_LIMITING_IMPLEMENTATION.md
+cat RATE_LIMITING_SUMMARY.md
+cat backend/config/rate_limits.json
+cat backend/tests/test_rate_limiting_critical_endpoints.py
+cat scripts/test_rate_limiting.sh
+
+# Check file sizes:
+
+ls -lh RATE_LIMITING*.md
+ls -lh backend/config/rate_limits.json
+ls -lh backend/tests/test_rate_limiting*.py
+ls -lh scripts/test_rate_limiting.sh
+
+═══════════════════════════════════════════════════════════════════════════
+CODE STATISTICS
+═══════════════════════════════════════════════════════════════════════════
+
+Modified files:       5 files
+New files:            6 files
+Total lines added:    ~1200 lines
+Total lines modified: ~15 lines
+Documentation:        ~1000 lines
+Test code:            ~400 lines
+Configuration:        ~100 lines
+
+═══════════════════════════════════════════════════════════════════════════
+VERIFICATION CHECKLIST
+═══════════════════════════════════════════════════════════════════════════
+
+[ ] Review backend/app/core/rate_limiter.py changes
+[ ] Review backend/app/api/auth.py changes (line 73)
+[ ] Review backend/app/api/salary.py changes (lines 4, 16, 146-148)
+[ ] Review backend/app/api/timer_cards.py changes (line 314)
+[ ] Review backend/app/main.py changes (lines 21, 101)
+[ ] Review RATE_LIMITING_IMPLEMENTATION.md documentation
+[ ] Review RATE_LIMITING_SUMMARY.md summary
+[ ] Review backend/config/rate_limits.json configuration
+[ ] Review test_rate_limiting_critical_endpoints.py tests
+[ ] Execute scripts/test_rate_limiting.sh
+[ ] Restart backend: docker-compose restart backend
+[ ] Verify logs: docker logs uns-claudejp-600-backend | grep "Rate limiter"
+[ ] Test manually: curl login endpoint 6 times
+[ ] Run pytest: pytest backend/tests/test_rate_limiting_critical_endpoints.py -v
+
+═══════════════════════════════════════════════════════════════════════════

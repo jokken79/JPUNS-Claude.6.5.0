@@ -1,4 +1,4 @@
-"""Configuration settings for UNS-ClaudeJP 6.0.0."""
+"""Configuration settings for UNS-ClaudeJP 6.5.0."""
 
 import logging
 import os
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class Settings(BaseSettings):
     # App Info
     APP_NAME: str = "UNS-ClaudeJP"
-    APP_VERSION: str = "6.0.0"
+    APP_VERSION: str = "6.5.0"
     COMPANY_NAME: str = "UNS-Kikaku"
     COMPANY_WEBSITE: str = "https://uns-kikaku.com"
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:3000")
@@ -27,15 +27,15 @@ class Settings(BaseSettings):
     # Security - REQUIRED, no defaults
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30  # 30 minutes (security best practice - reduced from 480)
-    REFRESH_TOKEN_EXPIRE_DAYS: int = 7  # 7 days - refresh tokens expire after 7 days
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 480  # 8 horas
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7  # 7 días - refresh tokens expire after 7 days
     JWT_AUDIENCE: str = "uns-claudejp::api"
     JWT_ISSUER: str = "uns-claudejp"
 
     # Cookie Settings (for HttpOnly JWT cookies)
     COOKIE_SECURE: bool = os.getenv("ENVIRONMENT", "development") == "production"  # True in production (HTTPS only)
     COOKIE_HTTPONLY: bool = True  # Always true - prevents XSS attacks
-    COOKIE_SAMESITE: str = "strict"  # "strict" - Enhanced CSRF protection (changed from "lax")
+    COOKIE_SAMESITE: str = "lax"  # "strict", "lax", or "none" - CSRF protection
     COOKIE_DOMAIN: Optional[str] = None  # None = current domain only
     ACCESS_TOKEN_COOKIE_NAME: str = "access_token"
     REFRESH_TOKEN_COOKIE_NAME: str = "refresh_token"
@@ -65,33 +65,8 @@ class Settings(BaseSettings):
     @field_validator("DATABASE_URL")
     @classmethod
     def validate_database_url(cls, v):
-        """Validate DATABASE_URL and enforce SSL in production"""
         if not v or "CHANGE_THIS" in v:
             raise ValueError("DATABASE_URL must be properly configured")
-
-        # Get environment setting (may not be set yet during class definition)
-        import os
-        environment = os.getenv("ENVIRONMENT", "development")
-
-        # Check for PostgreSQL connections
-        if "postgresql://" in v or "postgres://" in v:
-            # Production MUST use SSL
-            if environment == "production" and "sslmode=" not in v:
-                raise ValueError(
-                    "🔒 SECURITY ERROR: Production database connections MUST use SSL.\n"
-                    "Add ?sslmode=require to your DATABASE_URL.\n"
-                    "Example: postgresql://user:pass@host:5432/db?sslmode=require\n"
-                    "SSL modes: require (minimum), verify-ca (recommended), verify-full (most secure)"
-                )
-
-            # Warning for development without SSL
-            if environment != "production" and "sslmode=" not in v:
-                import logging
-                logger = logging.getLogger(__name__)
-                logger.warning("⚠️ DATABASE_URL missing sslmode parameter")
-                logger.warning("Recommendation: Add ?sslmode=prefer for better security")
-                logger.warning("Example: postgresql://user:pass@localhost:5432/db?sslmode=prefer")
-
         return v
 
     # File Upload

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { formAnimations, statusColors } from '@/lib/animations';
+import { formAnimations, statusColors } from '@/lib/form-animations';
 import {
   CheckCircleIcon,
   XCircleIcon,
@@ -11,7 +11,6 @@ import {
   InformationCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import { InputLabel, ErrorShakeContainer, ErrorMessage, HintText, StatusIcon, ClearButton, getStatusColors } from './input-parts';
 
 export type InputStatus = 'success' | 'error' | 'warning' | 'info' | 'default';
 
@@ -55,8 +54,8 @@ const EnhancedInput = React.forwardRef<HTMLInputElement, EnhancedInputProps>(
     ref
   ) => {
     const hasValue = !!value;
-    const StatusIconComponent = status !== 'default' ? statusIcons[status] : null;
-    const colors = getStatusColors(status) || null;
+    const StatusIcon = status !== 'default' ? statusIcons[status] : null;
+    const colors = status !== 'default' ? statusColors[status] : null;
 
     const handleClear = () => {
       onClear?.();
@@ -65,16 +64,29 @@ const EnhancedInput = React.forwardRef<HTMLInputElement, EnhancedInputProps>(
     return (
       <div className="w-full space-y-1.5">
         {/* Label */}
-        <InputLabel
-          label={label}
-          error={status === 'error' ? 'error' : undefined}
-          disabled={disabled}
-          required={required}
-          className={status !== 'default' && status !== 'error' ? colors?.text : undefined}
-        />
+        {label && (
+          <label
+            className={cn(
+              'block text-sm font-medium',
+              status !== 'default' ? colors?.text : 'text-foreground',
+              disabled && 'opacity-50'
+            )}
+          >
+            {label}
+            {required && (
+              <span className="text-red-500 ml-1" aria-label="required">
+                *
+              </span>
+            )}
+          </label>
+        )}
 
         {/* Input Container */}
-        <ErrorShakeContainer error={status === 'error' ? 'error' : undefined}>
+        <motion.div
+          className="relative"
+          animate={status === 'error' ? 'animate' : 'initial'}
+          variants={status === 'error' ? formAnimations.shake : undefined}
+        >
           <div className="relative flex items-center">
             {/* Input */}
             <input
@@ -146,17 +158,30 @@ const EnhancedInput = React.forwardRef<HTMLInputElement, EnhancedInputProps>(
                   {/* Clear Button */}
                   <AnimatePresence>
                     {clearable && hasValue && !disabled && (
-                      <ClearButton onClick={handleClear} disabled={disabled} ariaLabel="Clear input" />
+                      <motion.button
+                        type="button"
+                        onClick={handleClear}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <XMarkIcon className="w-4 h-4" />
+                      </motion.button>
                     )}
                   </AnimatePresence>
 
                   {/* Status Icon */}
-                  {showIcon && StatusIconComponent && (
-                    <StatusIcon
-                      icon={StatusIconComponent}
-                      status={status}
-                      colors={colors}
-                    />
+                  {showIcon && StatusIcon && (
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                    >
+                      <StatusIcon className={cn('w-5 h-5', colors?.text)} />
+                    </motion.div>
                   )}
                 </>
               )}
@@ -174,12 +199,14 @@ const EnhancedInput = React.forwardRef<HTMLInputElement, EnhancedInputProps>(
               </motion.div>
             )}
           </div>
-        </ErrorShakeContainer>
+        </motion.div>
 
-        {/* Hint Text and Message */}
-        <HintText hint={hint} error={message} className={colors?.text} />
+        {/* Hint Text */}
+        {hint && !message && (
+          <p className="text-xs text-muted-foreground">{hint}</p>
+        )}
 
-        {/* Message (Error/Success/Warning/Info) - with status icon */}
+        {/* Message (Error/Success/Warning/Info) */}
         <AnimatePresence>
           {message && (
             <motion.div
@@ -189,8 +216,8 @@ const EnhancedInput = React.forwardRef<HTMLInputElement, EnhancedInputProps>(
               animate="animate"
               exit="exit"
             >
-              {showIcon && StatusIconComponent && (
-                <StatusIconComponent className="w-3.5 h-3.5 flex-shrink-0" />
+              {showIcon && StatusIcon && (
+                <StatusIcon className="w-3.5 h-3.5 flex-shrink-0" />
               )}
               <span>{message}</span>
             </motion.div>

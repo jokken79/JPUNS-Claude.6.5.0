@@ -17,16 +17,12 @@ from sqlalchemy import func
 from datetime import date, datetime
 
 from app.core.database import get_db
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import Request, Employee, User, RequestType, RequestStatus, Candidate, CandidateStatus, Factory, Apartment
 from app.schemas.request import RequestCreate, RequestUpdate, RequestResponse, RequestReview, EmployeeDataInput
 from app.schemas.base import PaginatedResponse, create_paginated_response
 from app.services.auth_service import auth_service
 from app.services.audit_service import audit_service, AuditAction
 from app.services.notification_service import NotificationService
-from app.core.rate_limiter import limiter
 import logging
 
 logger = logging.getLogger(__name__)
@@ -35,7 +31,6 @@ router = APIRouter()
 
 
 @router.post("/", response_model=RequestResponse, status_code=201)
-@limiter.limit("60/minute")
 async def create_request(
     request_data: RequestCreate,
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -86,8 +81,6 @@ async def create_request(
 
 
 @router.get("/", response_model=PaginatedResponse[RequestResponse])
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("60/minute")
 async def list_requests(
     employee_id: int = Query(None, description="Filter by employee ID"),
     status: RequestStatus = Query(None, description="Filter by request status"),
@@ -143,8 +136,6 @@ async def list_requests(
 
 
 @router.get("/{request_id}", response_model=RequestResponse)
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("60/minute")
 async def get_request(
     request_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -158,7 +149,6 @@ async def get_request(
 
 
 @router.put("/{request_id}", response_model=RequestResponse)
-@limiter.limit("60/minute")
 async def update_request(
     request_id: int,
     request_update: RequestUpdate,
@@ -184,7 +174,6 @@ async def update_request(
 
 
 @router.post("/{request_id}/review", response_model=RequestResponse)
-@limiter.limit("60/minute")
 async def review_request(
     request_id: int,
     review_data: RequestReview,
@@ -219,7 +208,6 @@ async def review_request(
 
 
 @router.post("/{request_id}/approve", response_model=RequestResponse)
-@limiter.limit("60/minute")
 async def approve_request(
     request_id: int,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -256,7 +244,6 @@ async def approve_request(
 
 
 @router.post("/{request_id}/reject", response_model=RequestResponse)
-@limiter.limit("60/minute")
 async def reject_request_endpoint(
     request_id: int,
     reason: str,
@@ -285,7 +272,6 @@ async def reject_request_endpoint(
 
 
 @router.delete("/{request_id}")
-@limiter.limit("60/minute")
 async def delete_request(
     request_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -301,7 +287,7 @@ async def delete_request(
 
     db.delete(request)
     db.commit()
-    return no_content_response(data={"message": "Request deleted"}, request=request)
+    return {"message": "Request deleted"}
 
 
 # ═══════════════════════════════════════════════════════════════════════════

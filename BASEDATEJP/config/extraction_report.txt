@@ -1,0 +1,29 @@
+================================================================================
+URGENT PHOTO EXTRACTION REPORT
+================================================================================
+Date: 2025-11-17 19:41:39
+Database: D:\UNS-ClaudeJP-6.0.0\BASEDATEJP\ユニバーサル企画㈱データベースv25.3.24_be.accdb
+Table: T_履歴書
+Photo field: 写真
+
+STATISTICS:
+--------------------------------------------------------------------------------
+Total records: 1,156
+Processed: 1,156
+With photos: 1,139
+Without photos: 17
+Extraction successful: 1,139
+Extraction failed: 0
+Errors: 0
+
+Success rate: 100.0%
+
+OUTPUT FILES:
+--------------------------------------------------------------------------------
+JSON: D:\UNS-ClaudeJP-6.0.0\config\all_candidates_with_photos.json
+Report: D:\UNS-ClaudeJP-6.0.0\config\extraction_report.txt
+Log: extract_photos_urgente_20251117_192353.log
+
+================================================================================
+END OF REPORT
+================================================================================

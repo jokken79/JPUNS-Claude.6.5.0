@@ -46,17 +46,6 @@ out/
 .env.local
 .env.*.local
 *.env
-.env.production
-
-# Security-sensitive files
-*.pem
-*.key
-*.crt
-*.p12
-*.pfx
-secrets/
-credentials.json
-service-account-*.json
 
 # IDEs
 .vscode/

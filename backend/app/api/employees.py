@@ -10,9 +10,6 @@ from datetime import datetime, date
 import io
 
 from app.core.database import get_db
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import (
     Employee,
     Candidate,
@@ -34,7 +31,6 @@ from app.schemas.employee import (
 )
 from app.services.auth_service import auth_service
 from pydantic import BaseModel
-from app.core.rate_limiter import limiter
 
 router = APIRouter()
 
@@ -48,7 +44,6 @@ class ChangeTypeRequest(BaseModel):
 
 
 @router.post("/", response_model=EmployeeResponse, status_code=status.HTTP_201_CREATED)
-@limiter.limit("30/minute")
 async def create_employee(
     employee: EmployeeCreate,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -185,7 +180,7 @@ def _list_contract_workers(
     # Usar ContractWorkerResponse directamente (sin mapeo manual)
     items = [ContractWorkerResponse.model_validate(worker).model_dump() for worker in workers]
 
-    return created_response(data=_paginate_response(items, total, page, page_size), request=request)
+    return _paginate_response(items, total, page, page_size)
 
 
 def _list_staff_members(
@@ -238,13 +233,11 @@ def _list_staff_members(
     # Usar StaffResponse directamente (sin mapeo manual)
     items = [StaffResponse.model_validate(member).model_dump() for member in staff_members]
 
-    return created_response(data=_paginate_response(items, total, page, page_size), request=request)
+    return _paginate_response(items, total, page, page_size)
 
 
 @router.get("")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")@router.get("/")
-@limiter.limit("30/minute")
+@router.get("/")
 async def list_employees(
     page: int = 1,
     page_size: int = 20,
@@ -369,12 +362,10 @@ async def list_employees(
             emp_dict['factory_name'] = factory.name if factory else None
         items.append(emp_dict)
 
-    return success_response(data=_paginate_response(items, total, page, page_size), request=request)
+    return _paginate_response(items, total, page, page_size)
 
 
 @router.get("/available-for-apartment")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def list_available_for_apartment(
     page: int = Query(1, ge=1),
     page_size: int = Query(1000, ge=1, le=2000),
@@ -479,12 +470,10 @@ async def list_available_for_apartment(
 
         items.append(worker_dict)
 
-    return success_response(data=_paginate_response(items, total_query, page, page_size), request=request)
+    return _paginate_response(items, total_query, page, page_size)
 
 
 @router.get("/{employee_id}")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_employee(
     employee_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -508,8 +497,6 @@ async def get_employee(
 
 
 @router.get("/by-rirekisho/{rirekisho_id}", response_model=EmployeeResponse)
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_employee_by_rirekisho(
     rirekisho_id: str,
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -531,7 +518,6 @@ async def get_employee_by_rirekisho(
 
 
 @router.put("/{employee_id}", response_model=EmployeeResponse)
-@limiter.limit("30/minute")
 async def update_employee(
     employee_id: int,
     employee_update: EmployeeUpdate,
@@ -691,7 +677,6 @@ async def update_employee(
 
 
 @router.post("/{employee_id}/terminate")
-@limiter.limit("30/minute")
 async def terminate_employee(
     employee_id: int,
     termination: EmployeeTerminate,
@@ -708,11 +693,10 @@ async def terminate_employee(
     employee.termination_reason = termination.termination_reason
     
     db.commit()
-    return created_response(data={"message": "Employee terminated successfully"}, request=request)
+    return {"message": "Employee terminated successfully"}
 
 
 @router.put("/{employee_id}/yukyu", response_model=EmployeeResponse)
-@limiter.limit("30/minute")
 async def update_yukyu(
     employee_id: int,
     yukyu_update: YukyuUpdate,
@@ -733,7 +717,6 @@ async def update_yukyu(
 
 
 @router.delete("/{employee_id}")
-@limiter.limit("30/minute")
 async def delete_employee(
     employee_id: int,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -756,11 +739,10 @@ async def delete_employee(
     employee.soft_delete()
     db.commit()
 
-    return no_content_response(data={"message": "Employee deleted successfully"}, request=request)
+    return {"message": "Employee deleted successfully"}
 
 
 @router.post("/{employee_id}/restore")
-@limiter.limit("30/minute")
 async def restore_employee(
     employee_id: int,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -782,11 +764,10 @@ async def restore_employee(
     employee.restore()
     db.commit()
 
-    return created_response(data={"message": "Employee restored successfully"}, request=request)
+    return {"message": "Employee restored successfully"}
 
 
 @router.post("/import-excel")
-@limiter.limit("30/minute")
 async def import_employees_from_excel(
     file: UploadFile = File(...),
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -825,9 +806,9 @@ async def import_employees_from_excel(
                     if pd.isna(value) or value == '' or value == '-':
                         return None
                     if isinstance(value, datetime):
-                        return created_response(data=value.date(), request=request)
+                        return value.date()
                     try:
-                        return created_response(data=pd.to_datetime(value).date(), request=request)
+                        return pd.to_datetime(value).date()
                     except (ValueError, TypeError):
                         # Return None for unparseable date formats
                         return None
@@ -837,7 +818,7 @@ async def import_employees_from_excel(
                     if pd.isna(value) or value == '' or value == '-':
                         return None
                     try:
-                        return created_response(data=int(value), request=request)
+                        return int(value)
                     except (ValueError, TypeError):
                         # Return None for non-integer values
                         return None
@@ -939,7 +920,6 @@ async def import_employees_from_excel(
 
 
 @router.patch("/{employee_id}/change-type", response_model=EmployeeResponse)
-@limiter.limit("30/minute")
 async def change_employee_type(
     employee_id: int,
     change_request: ChangeTypeRequest,
@@ -976,7 +956,7 @@ async def change_employee_type(
     # No hacer nada si el tipo es el mismo
     if current_type == change_request.new_type:
         # Retornar el empleado actual como EmployeeResponse
-        return success_response(data=EmployeeResponse.model_validate(employee, from_attributes=True), request=request)
+        return EmployeeResponse.model_validate(employee, from_attributes=True)
 
     # Guardar el hakenmoto_id/staff_id actual
     if current_type == "staff":
@@ -1090,7 +1070,7 @@ async def change_employee_type(
         db.refresh(new_record)
 
         # Retornar como EmployeeResponse
-        return success_response(data=EmployeeResponse.model_validate(new_record, from_attributes=True), request=request)
+        return EmployeeResponse.model_validate(new_record, from_attributes=True)
 
     except Exception as e:
         db.rollback()

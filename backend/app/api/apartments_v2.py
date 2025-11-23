@@ -21,9 +21,6 @@ from datetime import date, datetime, timedelta
 from calendar import monthrange
 
 from app.core.database import get_db
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.api.deps import get_current_user
 from app.models.models import User, UserRole
 import logging
@@ -76,7 +73,6 @@ from app.services.assignment_service import AssignmentService
 from app.services.additional_charge_service import AdditionalChargeService
 from app.services.deduction_service import DeductionService
 from app.services.report_service import ReportService
-from app.core.rate_limiter import limiter
 
 # NOTE: Prefix is now empty because this router will be registered at /api/apartments in main.py
 # This is the official Apartments API (formerly V2, now the only version)
@@ -93,8 +89,6 @@ router = APIRouter(prefix="", tags=["apartments"])
     summary="Lista de apartamentos",
     description="Obtener lista paginada de apartamentos con filtros opcionales"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def list_apartments(
     page: int = Query(1, ge=1, description="Número de página"),
     page_size: int = Query(12, ge=1, le=100, description="Tamaño de página"),
@@ -146,7 +140,6 @@ async def list_apartments(
     summary="Crear apartamento",
     description="Crear un nuevo apartamento en el sistema"
 )
-@limiter.limit("30/minute")
 async def create_apartment(
     apartment: ApartmentCreate,
     db: Session = Depends(get_db),
@@ -181,7 +174,7 @@ async def create_apartment(
     ```
     """
     service = ApartmentService(db)
-    return created_response(data=await service.create_apartment(apartment, current_user.id), request=request)
+    return await service.create_apartment(apartment, current_user.id)
 
 
 @router.get(
@@ -190,8 +183,6 @@ async def create_apartment(
     summary="Detalles de apartamento",
     description="Obtener información completa de un apartamento específico"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_apartment(
     apartment_id: int,
     db: Session = Depends(get_db),
@@ -206,7 +197,7 @@ async def get_apartment(
     - Cargos adicionales recientes
     """
     service = ApartmentService(db)
-    return success_response(data=await service.get_apartment_with_stats(apartment_id), request=request)
+    return await service.get_apartment_with_stats(apartment_id)
 
 
 @router.put(
@@ -215,7 +206,6 @@ async def get_apartment(
     summary="Actualizar apartamento",
     description="Actualizar información de un apartamento existente"
 )
-@limiter.limit("30/minute")
 async def update_apartment(
     apartment_id: int,
     apartment: ApartmentUpdate,
@@ -232,7 +222,7 @@ async def update_apartment(
     - Estado (active/inactive)
     """
     service = ApartmentService(db)
-    return success_response(data=await service.update_apartment(apartment_id, apartment, current_user.id), request=request)
+    return await service.update_apartment(apartment_id, apartment, current_user.id)
 
 
 @router.delete(
@@ -263,8 +253,6 @@ async def delete_apartment(
     summary="Búsqueda avanzada",
     description="Búsqueda avanzada con múltiples filtros combinables"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def search_apartments(
     q: Optional[str] = Query(None, description="Búsqueda de texto libre"),
     capacity_min: Optional[int] = Query(None, ge=1, description="Capacidad mínima"),
@@ -319,7 +307,6 @@ async def search_apartments(
     summary="Asignar empleado",
     description="Asignar un empleado a un apartamento"
 )
-@limiter.limit("30/minute")
 async def create_assignment(
     assignment: AssignmentCreate,
     db: Session = Depends(get_db),
@@ -355,7 +342,7 @@ async def create_assignment(
     ```
     """
     service = AssignmentService(db)
-    return created_response(data=await service.create_assignment(assignment, current_user.id), request=request)
+    return await service.create_assignment(assignment, current_user.id)
 
 
 @router.get(
@@ -364,8 +351,6 @@ async def create_assignment(
     summary="Listar asignaciones",
     description="Obtener lista paginada de asignaciones con filtros"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def list_assignments(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),
@@ -404,8 +389,6 @@ async def list_assignments(
     summary="Detalles de asignación",
     description="Obtener información completa de una asignación específica"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_assignment(
     assignment_id: int,
     db: Session = Depends(get_db),
@@ -420,7 +403,7 @@ async def get_assignment(
     - Deducciones generadas
     """
     service = AssignmentService(db)
-    return success_response(data=await service.get_assignment(assignment_id), request=request)
+    return await service.get_assignment(assignment_id)
 
 
 @router.get(
@@ -429,8 +412,6 @@ async def get_assignment(
     summary="Asignaciones activas",
     description="Obtener todas las asignaciones actualmente activas"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_active_assignments(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -442,7 +423,7 @@ async def get_active_assignments(
     - Verificación de disponibilidad
     """
     service = AssignmentService(db)
-    return success_response(data=await service.get_active_assignments(), request=request)
+    return await service.get_active_assignments()
 
 
 @router.put(
@@ -491,7 +472,7 @@ async def end_assignment(
     ```
     """
     service = AssignmentService(db)
-    return success_response(data=await service.end_assignment(assignment_id, update, current_user.id), request=request)
+    return await service.end_assignment(assignment_id, update, current_user.id)
 
 
 @router.post(
@@ -547,7 +528,7 @@ async def transfer_assignment(
     - Breakdown de deducciones
     """
     service = AssignmentService(db)
-    return created_response(data=await service.transfer_assignment(transfer, current_user.id), request=request)
+    return await service.transfer_assignment(transfer, current_user.id)
 
 
 # =============================================================================
@@ -560,7 +541,6 @@ async def transfer_assignment(
     summary="Calcular renta prorrateada",
     description="Calcular renta prorrateada basada en días ocupados"
 )
-@limiter.limit("30/minute")
 async def calculate_prorated_rent(
     calculation: ProratedCalculationRequest,
     db: Session = Depends(get_db),
@@ -607,7 +587,7 @@ async def calculate_prorated_rent(
     ```
     """
     service = AssignmentService(db)
-    return created_response(data=await service.calculate_prorated_rent(calculation), request=request)
+    return await service.calculate_prorated_rent(calculation)
 
 
 @router.get(
@@ -616,8 +596,6 @@ async def calculate_prorated_rent(
     summary="Obtener cargo de limpieza",
     description="Obtener el cargo de limpieza configurado para un apartamento"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_cleaning_fee(
     apartment_id: int,
     custom_amount: Optional[int] = Query(None, description="Sobrescribir monto por defecto"),
@@ -636,7 +614,7 @@ async def get_cleaning_fee(
     - Validación del monto
     """
     service = ApartmentService(db)
-    return success_response(data=await service.get_cleaning_fee(apartment_id, custom_amount), request=request)
+    return await service.get_cleaning_fee(apartment_id, custom_amount)
 
 
 @router.post(
@@ -694,7 +672,7 @@ async def calculate_total_deduction(
     ```
     """
     service = AssignmentService(db)
-    return created_response(data=await service.calculate_total_deduction(calculation), request=request)
+    return await service.calculate_total_deduction(calculation)
 
 
 # =============================================================================
@@ -708,7 +686,6 @@ async def calculate_total_deduction(
     summary="Agregar cargo adicional",
     description="Agregar un cargo adicional a una asignación"
 )
-@limiter.limit("30/minute")
 async def create_additional_charge(
     charge: AdditionalChargeCreate,
     db: Session = Depends(get_db),
@@ -739,7 +716,7 @@ async def create_additional_charge(
     - ADMIN+: Aprobar cargos
     """
     service = AdditionalChargeService(db)
-    return created_response(data=await service.create_additional_charge(charge, current_user.id), request=request)
+    return await service.create_additional_charge(charge, current_user.id)
 
 
 @router.get(
@@ -748,8 +725,6 @@ async def create_additional_charge(
     summary="Listar cargos adicionales",
     description="Obtener lista de cargos con filtros opcionales"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def list_additional_charges(
     assignment_id: Optional[int] = Query(None, description="Filtrar por asignación"),
     employee_id: Optional[int] = Query(None, description="Filtrar por empleado"),
@@ -794,8 +769,6 @@ async def list_additional_charges(
     summary="Detalles de cargo",
     description="Obtener información de un cargo adicional específico"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_additional_charge(
     charge_id: int,
     db: Session = Depends(get_db),
@@ -809,7 +782,7 @@ async def get_additional_charge(
     - Datos de aprobación (si aplica)
     """
     service = AdditionalChargeService(db)
-    return success_response(data=await service.get_additional_charge(charge_id), request=request)
+    return await service.get_additional_charge(charge_id)
 
 
 @router.put(
@@ -841,7 +814,7 @@ async def approve_additional_charge(
     ```
     """
     service = AdditionalChargeService(db)
-    return success_response(data=await service.approve_additional_charge(charge_id, update, current_user), request=request)
+    return await service.approve_additional_charge(charge_id, update, current_user)
 
 
 @router.put(
@@ -850,7 +823,6 @@ async def approve_additional_charge(
     summary="Cancelar cargo",
     description="Cancelar un cargo adicional"
 )
-@limiter.limit("30/minute")
 async def cancel_additional_charge(
     charge_id: int,
     update: AdditionalChargeUpdate,
@@ -867,7 +839,7 @@ async def cancel_additional_charge(
     - Confirmación de cancelación
     """
     service = AdditionalChargeService(db)
-    return success_response(data=await service.cancel_additional_charge(charge_id, update, current_user.id), request=request)
+    return await service.cancel_additional_charge(charge_id, update, current_user.id)
 
 
 @router.delete(
@@ -905,8 +877,6 @@ async def delete_additional_charge(
     summary="Deducciones del mes",
     description="Obtener todas las deducciones de renta para un mes específico"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_monthly_deductions(
     year: int,
     month: int,
@@ -954,7 +924,6 @@ async def get_monthly_deductions(
     summary="Generar deducciones automáticas",
     description="Generar deducciones automáticas para el mes especificado"
 )
-@limiter.limit("30/minute")
 async def generate_monthly_deductions(
     year: int,
     month: int,
@@ -986,7 +955,7 @@ async def generate_monthly_deductions(
     - ADMIN+ (para sobreescribir si ya existen)
     """
     service = DeductionService(db)
-    return created_response(data=await service.generate_monthly_deductions(year, month, current_user.id), request=request)
+    return await service.generate_monthly_deductions(year, month, current_user.id)
 
 
 @router.get(
@@ -994,8 +963,6 @@ async def generate_monthly_deductions(
     summary="Exportar deducciones a Excel",
     description="Exportar deducciones del mes a archivo Excel"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def export_deductions_excel(
     year: int,
     month: int,
@@ -1033,7 +1000,7 @@ async def export_deductions_excel(
     - ADMIN+ (exportar datos sensibles)
     """
     service = DeductionService(db)
-    return success_response(data=await service.export_deductions_excel(year, month, apartment_id, current_user.id), request=request)
+    return await service.export_deductions_excel(year, month, apartment_id, current_user.id)
 
 
 @router.put(
@@ -1042,7 +1009,6 @@ async def export_deductions_excel(
     summary="Actualizar estado de deducción",
     description="Marcar deducción como procesada o pagada"
 )
-@limiter.limit("30/minute")
 async def update_deduction_status(
     deduction_id: int,
     update: DeductionStatusUpdate,
@@ -1075,7 +1041,7 @@ async def update_deduction_status(
     - ADMIN+ (marcar como paid)
     """
     service = DeductionService(db)
-    return success_response(data=await service.update_deduction_status(deduction_id, update, current_user.id), request=request)
+    return await service.update_deduction_status(deduction_id, update, current_user.id)
 
 
 @router.get(
@@ -1084,8 +1050,6 @@ async def update_deduction_status(
     summary="Detalles de deducción",
     description="Obtener información completa de una deducción específica"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_deduction(
     deduction_id: int,
     db: Session = Depends(get_db),
@@ -1100,7 +1064,7 @@ async def get_deduction(
     - Historial de cambios de estado
     """
     service = DeductionService(db)
-    return success_response(data=await service.get_deduction(deduction_id), request=request)
+    return await service.get_deduction(deduction_id)
 
 
 # =============================================================================
@@ -1113,8 +1077,6 @@ async def get_deduction(
     summary="Reporte de ocupación",
     description="Obtener estadísticas de ocupación de apartamentos"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_occupancy_report(
     prefecture: Optional[str] = Query(None, description="Filtrar por prefectura"),
     building_name: Optional[str] = Query(None, description="Filtrar por edificio"),
@@ -1153,7 +1115,7 @@ async def get_occupancy_report(
     ```
     """
     service = ReportService(db)
-    return success_response(data=service.get_occupancy_report(prefecture, building_name), request=request)
+    return service.get_occupancy_report(prefecture, building_name)
 
 
 @router.get(
@@ -1162,8 +1124,6 @@ async def get_occupancy_report(
     summary="Reporte de pagos pendientes",
     description="Obtener reporte de deducciones y pagos pendientes"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_arrears_report(
     year: int = Query(..., ge=2020, le=2100, description="Año del reporte"),
     month: int = Query(..., ge=1, le=12, description="Mes (1-12)"),
@@ -1245,8 +1205,6 @@ async def get_arrears_report(
     summary="Reporte de mantenimiento",
     description="Obtener estado de mantenimiento de apartamentos"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_maintenance_report(
     period: str = Query("6months", description="Período: 3months, 6months, 1year"),
     charge_type: Optional[str] = Query(None, description="Filtrar por tipo: cleaning, repair, deposit, penalty, other"),
@@ -1345,8 +1303,6 @@ async def get_maintenance_report(
     summary="Análisis de costos",
     description="Obtener análisis completo de costos del sistema de apartamentos"
 )
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_cost_analysis_report(
     year: int,
     month: Optional[int] = Query(None, description="Mes específico (opcional)"),
@@ -1387,4 +1343,4 @@ async def get_cost_analysis_report(
     - ADMIN+ (información financiera)
     """
     service = ReportService(db)
-    return success_response(data=service.get_cost_analysis_report(year, month), request=request)
+    return service.get_cost_analysis_report(year, month)

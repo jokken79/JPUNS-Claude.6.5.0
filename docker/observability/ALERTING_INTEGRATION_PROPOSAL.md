@@ -1,4 +1,4 @@
-# Alerting Integration Proposal - UNS-ClaudeJP 6.0.0
+# Alerting Integration Proposal - UNS-ClaudeJP 6.5.0
 
 ## Executive Summary
 
@@ -563,8 +563,8 @@ The FastAPI backend service is not responding to health checks.
 
 ## Immediate Actions
 1. Check backend container status: `docker ps | grep backend`
-2. View recent logs: `docker logs uns-claudejp-600-backend --tail 100`
-3. Restart if needed: `docker restart uns-claudejp-600-backend`
+2. View recent logs: `docker logs uns-claudejp-650-backend --tail 100`
+3. Restart if needed: `docker restart uns-claudejp-650-backend`
 
 ## Root Cause Investigation
 - Check database connectivity

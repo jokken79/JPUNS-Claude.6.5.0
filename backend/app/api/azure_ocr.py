@@ -17,16 +17,12 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.database import get_db
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.logging import app_logger
 from app.core.background_tasks import background_manager, JobStatus
 from app.schemas.responses import CacheStatsResponse, ErrorResponse, OCRResponse
 from app.schemas.job import JobResponse, JobStatusResponse, OCRJobRequest
 from app.services.auth_service import AuthService
 from app.services.hybrid_ocr_service import HybridOCRService
-from app.core.rate_limiter import limiter
 
 router = APIRouter()
 ocr_service = HybridOCRService()  # Consolidated OCR service (Azure primary, with fallbacks)
@@ -39,7 +35,7 @@ def process_ocr_sync(image_path: str, document_type: str) -> Dict[str, Any]:
     try:
         result = ocr_service.process_document(image_path, document_type)
         result["document_type"] = document_type
-        return success_response(data={"success": True, "data": result}, request=request)
+        return {"success": True, "data": result}
     except Exception as e:
         app_logger.exception("OCR processing failed in background", document_type=document_type)
         raise
@@ -49,26 +45,21 @@ def process_ocr_sync(image_path: str, document_type: str) -> Dict[str, Any]:
 
 
 @router.options("/process")
-async def process_options(
-    request: Request,
-    ):
+async def process_options():
     """Handle OPTIONS request for CORS preflight."""
-    return success_response(data={"success": True}, request=request)
+    return {"success": True}
 
 
 @router.options("/process-from-base64")
-async def process_base64_options(
-    request: Request,
-    ):
+async def process_base64_options():
     """Handle OPTIONS request for CORS preflight."""
-    return success_response(data={"success": True}, request=request)
+    return {"success": True}
 
 
 @router.post(
     "/process",
     responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
 )
-@limiter.limit("20/hour")
 async def process_ocr_document(
     file: UploadFile = File(..., description="Imagen a procesar"),
     document_type: str = Form("zairyu_card", description="Tipo de documento"),
@@ -114,7 +105,7 @@ async def process_ocr_document(
 
         app_logger.info(f"OCR processing completed successfully for {document_type}")
 
-        return success_response(data={"success": True, "data": result, "message": "Document processed successfully"}, request=request)
+        return {"success": True, "data": result, "message": "Document processed successfully"}
     except Exception as exc:  # pragma: no cover - fallback
         app_logger.exception("OCR processing failed", document_type=document_type)
         raise HTTPException(status_code=500, detail=str(exc)) from exc
@@ -126,7 +117,6 @@ async def process_ocr_document(
     "/process-from-base64",
     responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
 )
-@limiter.limit("20/hour")
 async def process_ocr_from_base64(
     image_base64: str = Form(..., description="Imagen en base64"),
     mime_type: str = Form(..., description="Tipo MIME"),
@@ -146,7 +136,7 @@ async def process_ocr_from_base64(
 
         try:
             result = ocr_service.process_document(temp_file.name, document_type)
-            return success_response(data={"success": True, "data": result, "message": "Document processed successfully"}, request=request)
+            return {"success": True, "data": result, "message": "Document processed successfully"}
         finally:
             Path(temp_file.name).unlink(missing_ok=True)
     except Exception as exc:  # pragma: no cover
@@ -155,7 +145,6 @@ async def process_ocr_from_base64(
 
 
 @router.post("/process-async", response_model=JobResponse)
-@limiter.limit("20/hour")
 async def process_ocr_document_async(
     file: UploadFile = File(..., description="Imagen a procesar"),
     document_type: str = Form("zairyu_card", description="Tipo de documento"),
@@ -202,17 +191,15 @@ async def process_ocr_document_async(
 
     app_logger.info(f"📋 OCR job creado: {job_id} ({document_type})")
 
-    return success_response(data=JobResponse(
+    return JobResponse(
         job_id=job_id,
         job_type="ocr_processing",
         status="pending",
         message=f"OCR job created. Check status at /api/azure_ocr/jobs/{job_id}"
-    ), request=request)
+    )
 
 
 @router.get("/jobs/{job_id}", response_model=JobStatusResponse)
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("20/hour")
 async def get_job_status(
     job_id: str,
     current_user = Depends(AuthService.get_current_active_user)
@@ -245,7 +232,7 @@ async def get_job_status(
     elif job.status == JobStatus.FAILED:
         progress = 0
 
-    return success_response(data=JobStatusResponse(
+    return JobStatusResponse(
         job_id=job.job_id,
         job_type=job.job_type,
         status=job.status.value,
@@ -255,26 +242,21 @@ async def get_job_status(
         started_at=job.started_at,
         finished_at=job.finished_at,
         progress_percentage=progress
-    ), request=request)
+    )
 
 
 @router.get("/health")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("20/hour")
-async def health_check(
-    request: Request,
-    ):
+async def health_check():
     """Health check endpoint"""
-    return success_response(data={
+    return {
         "status": "healthy",
         "service": "azure_ocr",
         "provider": "Azure Computer Vision",
         "api_version": ocr_service.api_version
-    }, request=request)
+    }
 
 
 @router.post("/warm-up")
-@limiter.limit("20/hour")
 async def warm_up_ocr_service(
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
@@ -308,4 +290,4 @@ async def warm_up_ocr_service(
             app_logger.warning("Warm up failed", error=str(exc))
 
     background_tasks.add_task(_warm_up)
-    return success_response(data={"success": True, "message": "Azure OCR warm-up started"}, request=request)
+    return {"success": True, "message": "Azure OCR warm-up started"}

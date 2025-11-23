@@ -1,7 +1,7 @@
 /**
  * Apartment Components - Barrel Export
  *
- * Modular components for apartment management in UNS-ClaudeJP 5.4.1
+ * Modular components for apartment management in UNS-ClaudeJP 6.5.0
  * All components use TypeScript strict mode, React 19, and Shadcn/ui
  */
 

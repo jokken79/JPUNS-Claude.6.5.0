@@ -11,15 +11,11 @@ from datetime import datetime
 import json
 
 from app.core.database import get_db
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.resilience import (
     ImportOrchestrator,
     CheckpointManager,
     StructuredLogger,
 )
-from app.core.rate_limiter import limiter
 from app.models.models import (
     Factory, Employee, ContractWorker, Staff,
     SocialInsuranceRate, Candidate, User
@@ -32,7 +28,6 @@ logger = StructuredLogger(name="resilient_import_api")
 
 
 @router.post("/employees")
-@limiter.limit("30/minute")
 async def import_employees(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
@@ -185,7 +180,6 @@ async def import_employees(
 
 
 @router.post("/factories")
-@limiter.limit("30/minute")
 async def import_factories(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
@@ -270,8 +264,6 @@ async def import_factories(
 
 
 @router.get("/status/{operation_id}")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_import_status(
     operation_id: str,
     db: Session = Depends(get_db),
@@ -301,7 +293,6 @@ async def get_import_status(
 
 
 @router.post("/resume/{operation_id}")
-@limiter.limit("30/minute")
 async def resume_import(
     operation_id: str,
     db: Session = Depends(get_db),
@@ -345,8 +336,6 @@ async def resume_import(
 
 
 @router.get("/checkpoints")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def list_checkpoints(
     db: Session = Depends(get_db),
 ):
@@ -374,11 +363,7 @@ async def list_checkpoints(
 
 
 @router.get("/health")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
-async def health_check(
-    request: Request,
-    db: Session = Depends(get_db)):
+async def health_check(db: Session = Depends(get_db)):
     """
     Health check for resilient import system.
 

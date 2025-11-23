@@ -1,6 +1,6 @@
 # Catálogo de Componentes - Frontend
 
-> Biblioteca completa de componentes React para **UNS-ClaudeJP 5.0**
+> Biblioteca completa de componentes React para **UNS-ClaudeJP 6.5.0**
 
 [![Total Components](https://img.shields.io/badge/Componentes-103-blue)]()
 [![React](https://img.shields.io/badge/React-19.0.0-61DAFB)]()

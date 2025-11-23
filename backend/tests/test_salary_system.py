@@ -24,7 +24,8 @@ from app.services.config_service import PayrollConfigService
 from app.services.payslip_service import PayslipService
 from app.models.models import Employee, SalaryCalculation, TimerCard, Factory, Apartment
 from app.models.payroll_models import PayrollSettings
-from app.schemas.salary_unified import SalaryCalculationResponse, BulkCalculateResponse, SalaryStatistics, ValidationResult
+from app.schemas.salary import SalaryCalculationResponse, SalaryBulkResult, SalaryStatistics
+from app.schemas.payroll import ValidationResult
 from app.core.config import PayrollConfig
 
 

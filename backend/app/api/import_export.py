@@ -17,10 +17,6 @@ from app.services.import_service import import_service
 from app.services.auth_service import AuthService
 from app.core.config import settings
 from app.core.database import get_db
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
-from app.core.rate_limiter import limiter
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -58,7 +54,7 @@ def _write_upload_to_temp(upload: UploadFile, expected_suffixes: tuple[str, ...]
         with temp_file as buffer:
             upload.file.seek(0)
             shutil.copyfileobj(upload.file, buffer)
-        return success_response(data=Path(temp_file.name), request=request)
+        return Path(temp_file.name)
     except HTTPException:
         raise
     except Exception:  # pragma: no cover - defensive programming
@@ -107,15 +103,14 @@ def _create_template_response(
         "Content-Disposition": f'attachment; filename="{filename}"',
         "Cache-Control": "no-cache",
     }
-    return success_response(data=StreamingResponse(
+    return StreamingResponse(
         output,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers=headers,
-    ), request=request)
+    )
 
 
 @router.post("/employees")
-@limiter.limit("30/minute")
 async def import_employees(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
@@ -138,7 +133,7 @@ async def import_employees(
         # Import
         results = import_service.import_employees_from_excel(str(temp_file), db)
 
-        return success_response(data=results, request=request)
+        return results
         
     except HTTPException:
         raise
@@ -156,7 +151,6 @@ async def import_employees(
 
 
 @router.post("/timer-cards")
-@limiter.limit("30/minute")
 async def import_timer_cards(
     file: UploadFile = File(...),
     factory_id: str = Query(...),
@@ -187,7 +181,7 @@ async def import_timer_cards(
             db,
         )
         
-        return success_response(data=results, request=request)
+        return results
         
     except HTTPException:
         raise
@@ -205,7 +199,6 @@ async def import_timer_cards(
 
 
 @router.post("/factory-configs")
-@limiter.limit("30/minute")
 async def import_factory_configs(
     directory_path: str,
     db: Session = Depends(get_db),
@@ -219,7 +212,7 @@ async def import_factory_configs(
     """
     try:
         results = import_service.import_factory_configs_from_json(directory_path, db)
-        return success_response(data=results, request=request)
+        return results
         
     except Exception as e:
         logger.error(f"Error importing factory configs: {e}")
@@ -227,11 +220,7 @@ async def import_factory_configs(
 
 
 @router.get("/template/employees")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
-async def download_employee_template(
-    request: Request,
-    ):
+async def download_employee_template():
     """Download Excel template for employee import"""
     try:
         columns = [
@@ -269,12 +258,12 @@ async def download_employee_template(
             "2026-12-31",
         ]]
 
-        return success_response(data=_create_template_response(
+        return _create_template_response(
             columns,
             sheet_name="Employees",
             filename="empleados_template.xlsx",
             sample_rows=sample_rows,
-        ), request=request)
+        )
 
     except Exception as exc:  # pragma: no cover - defensive
         logger.exception("Error creating employee template")
@@ -282,11 +271,7 @@ async def download_employee_template(
 
 
 @router.get("/template/timer-cards")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
-async def download_timer_cards_template(
-    request: Request,
-    ):
+async def download_timer_cards_template():
     """Download Excel template for timer cards import"""
     try:
         columns = [
@@ -304,12 +289,12 @@ async def download_timer_cards_template(
             "18:00",
         ]]
 
-        return success_response(data=_create_template_response(
+        return _create_template_response(
             columns,
             sheet_name="TimerCards",
             filename="tarjetas_tiempo_template.xlsx",
             sample_rows=sample_rows,
-        ), request=request)
+        )
 
     except Exception as exc:  # pragma: no cover - defensive
         logger.exception("Error creating timer cards template")

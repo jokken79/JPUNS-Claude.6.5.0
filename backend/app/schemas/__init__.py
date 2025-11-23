@@ -100,22 +100,34 @@ from app.schemas.timer_card import (
     TimerCardApprove,
 )
 
-# Salary schemas (consolidated from legacy salary.py and payroll.py)
+# Salary schemas (legacy - use salary_unified for new code)
+from app.schemas.salary import (
+    SalaryCalculationBase,
+    SalaryCalculate,
+    SalaryCalculationResponse,
+    SalaryBulkCalculate,
+    SalaryBulkResult,
+    SalaryMarkPaid,
+    SalaryReport,
+    SalaryStatistics,
+)
+
+# Unified Salary schemas (NEW - recommended for all new code)
 from app.schemas.salary_unified import (
     # Enums
     SalaryStatus,
     PayrollRunStatus,
 
     # Helper Models
-    HoursBreakdown,
+    HoursBreakdown as UnifiedHoursBreakdown,
     RatesConfiguration,
     SalaryAmounts,
-    DeductionsDetail,
+    DeductionsDetail as UnifiedDeductionsDetail,
     PayrollSummary,
-    TimerRecord,
+    TimerRecord as UnifiedTimerRecord,
 
     # Core Response
-    SalaryCalculationResponse,
+    SalaryCalculationResponse as UnifiedSalaryCalculationResponse,
 
     # Request Models
     SalaryCalculateRequest,
@@ -129,7 +141,7 @@ from app.schemas.salary_unified import (
     SalaryListResponse,
     BulkCalculateResponse,
     ValidationResult,
-    SalaryStatistics,
+    SalaryStatistics as UnifiedSalaryStatistics,
 
     # Payslip Models
     PayslipGenerateRequest,
@@ -303,6 +315,16 @@ from app.schemas.role_page_permission import (
     RolePagePermissionResponse,
 )
 
+# Apartment V2 Complete schemas (with all 35 fields)
+from app.schemas.apartment_v2_complete import (
+    RoomType,
+    ApartmentStatus,
+    ApartmentBaseV2Complete,
+    ApartmentCreateV2Complete,
+    ApartmentUpdateV2Complete,
+    ApartmentResponseV2Complete,
+    ApartmentWithEmployeesV2Complete,
+)
 
 __all__ = [
     # Authentication
@@ -525,4 +547,13 @@ __all__ = [
     "RolePagePermissionCreate",
     "RolePagePermissionUpdate",
     "RolePagePermissionResponse",
+
+    # Apartment V2 Complete (all 35 fields)
+    "RoomType",
+    "ApartmentStatus",
+    "ApartmentBaseV2Complete",
+    "ApartmentCreateV2Complete",
+    "ApartmentUpdateV2Complete",
+    "ApartmentResponseV2Complete",
+    "ApartmentWithEmployeesV2Complete",
 ]

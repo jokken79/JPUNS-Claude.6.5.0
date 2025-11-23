@@ -10,9 +10,6 @@ from datetime import datetime
 from typing import List
 
 from app.core.database import get_db
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.api.deps import get_current_user
 from app.models.models import PageVisibility, User, UserRole
 
@@ -24,7 +21,6 @@ router = APIRouter(prefix="/api/pages", tags=["pages"])
 # ============================================
 
 from pydantic import BaseModel
-from app.core.rate_limiter import limiter
 
 class PageVisibilityResponse(BaseModel):
     id: int
@@ -52,10 +48,7 @@ class PageVisibilityToggle(BaseModel):
 # ============================================
 
 @router.get("/visibility", response_model=List[PageVisibilityResponse])
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("60/minute")
 async def get_all_page_visibility(
-    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -64,15 +57,12 @@ async def get_all_page_visibility(
     Available to all authenticated users
     """
     pages = db.query(PageVisibility).order_by(PageVisibility.page_key).all()
-    return paginated_response(data=pages, request=request)
+    return pages
 
 
 @router.get("/visibility/{page_key}", response_model=PageVisibilityResponse)
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("60/minute")
 async def get_page_visibility(
     page_key: str,
-    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -85,15 +75,13 @@ async def get_page_visibility(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Page '{page_key}' not found"
         )
-    return success_response(data=page, request=request)
+    return page
 
 
 @router.put("/visibility/{page_key}")
-@limiter.limit("60/minute")
 async def toggle_page_visibility(
     page_key: str,
     toggle_data: PageVisibilityToggle,
-    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -124,20 +112,16 @@ async def toggle_page_visibility(
     db.commit()
     db.refresh(page)
 
-    return success_response(
-        data={
-            "page_key": page.page_key,
-            "is_enabled": page.is_enabled,
-            "message": f"Page '{page.page_name}' is now {'enabled' if page.is_enabled else 'disabled'}"
-        },
-        request=request
-    )
+    return {
+        "status": "success",
+        "page_key": page.page_key,
+        "is_enabled": page.is_enabled,
+        "message": f"Page '{page.page_name}' is now {'enabled' if page.is_enabled else 'disabled'}"
+    }
 
 
 @router.post("/visibility/init")
-@limiter.limit("60/minute")
 async def initialize_page_visibility(
-    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -223,10 +207,8 @@ async def initialize_page_visibility(
 
     db.commit()
 
-    return created_response(
-        data={
-            "message": f"Initialized {len(default_pages)} pages",
-            "pages": len(default_pages)
-        },
-        request=request
-    )
+    return {
+        "status": "success",
+        "message": f"Initialized {len(default_pages)} pages",
+        "pages": len(default_pages)
+    }

@@ -1,5 +1,5 @@
 # CI/CD Pipeline Setup Guide
-# Quick Start for UNS-ClaudeJP 6.0.0
+# Quick Start for UNS-ClaudeJP 6.5.0
 
 This guide will help you set up the GitHub Actions CI/CD pipeline in 5 minutes.
 
@@ -12,7 +12,7 @@ This guide will help you set up the GitHub Actions CI/CD pipeline in 5 minutes.
 pip install pre-commit
 
 # Install the hooks
-cd /path/to/UNS-ClaudeJP-6.0.0
+cd /path/to/UNS-ClaudeJP-6.5.0
 pre-commit install
 pre-commit install --hook-type commit-msg
 
@@ -66,9 +66,9 @@ pre-commit run --all-files
 Add this to your `README.md`:
 
 ```markdown
-# UNS-ClaudeJP 6.0.0
+# UNS-ClaudeJP 6.5.0
 
-![CI/CD Pipeline](https://github.com/YOUR_USERNAME/UNS-ClaudeJP-6.0.0/workflows/CI%2FCD%20Pipeline/badge.svg)
+![CI/CD Pipeline](https://github.com/YOUR_USERNAME/UNS-ClaudeJP-6.5.0/workflows/CI%2FCD%20Pipeline/badge.svg)
 ![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ```

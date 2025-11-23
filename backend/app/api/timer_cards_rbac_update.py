@@ -10,18 +10,12 @@ Copy the relevant functions to timer_cards.py
 """
 
 from datetime import datetime
-from app.core.rate_limiter import limiter
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 
 # ============================================
 # UPDATED LIST ENDPOINT WITH RBAC
 # ============================================
 
 @router.get("/", response_model=list[TimerCardResponse])
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def list_timer_cards(
     employee_id: int = None,
     factory_id: str = None,
@@ -58,7 +52,7 @@ async def list_timer_cards(
         else:
             # If no employee record found for this user, return empty list
             logger.warning(f"User {current_user.username} (role: {user_role}) has no employee record")
-            return success_response(data=[], request=request)
+            return []
 
     elif user_role == "KANRININSHA":
         # Managers can see timer cards from their factory
@@ -68,7 +62,7 @@ async def list_timer_cards(
             logger.info(f"Manager {current_user.username} filtering timer cards for factory_id={employee.factory_id}")
         else:
             logger.warning(f"Manager {current_user.username} has no factory assignment")
-            return success_response(data=[], request=request)
+            return []
 
     elif user_role == "COORDINATOR":
         # Coordinators can see timer cards from their assigned factories
@@ -85,7 +79,7 @@ async def list_timer_cards(
             query = query.filter(TimerCard.hakenmoto_id == employee.hakenmoto_id)
         else:
             # If employee not found, return empty result
-            return success_response(data=[], request=request)
+            return []
     if factory_id:
         query = query.filter(TimerCard.factory_id == factory_id)
     if is_approved is not None:
@@ -106,8 +100,6 @@ async def list_timer_cards(
 # ============================================
 
 @router.get("/{timer_card_id}", response_model=TimerCardResponse)
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def get_timer_card(
     timer_card_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -192,7 +184,6 @@ async def get_timer_card(
 # ============================================
 
 @router.put("/{timer_card_id}", response_model=TimerCardResponse)
-@limiter.limit("30/minute")
 async def update_timer_card(
     timer_card_id: int,
     timer_card_update: TimerCardUpdate,
@@ -266,7 +257,6 @@ async def update_timer_card(
 # ============================================
 
 @router.post("/approve", response_model=dict)
-@limiter.limit("30/minute")
 async def approve_timer_cards(
     approve_data: TimerCardApprove,
     current_user: User = Depends(auth_service.require_role("admin")),

@@ -1,0 +1,306 @@
+════════════════════════════════════════════════════════════════════════════════
+                    AUDITORÍA DEL FRONTEND - UNS-ClaudeJP v6.0.0
+════════════════════════════════════════════════════════════════════════════════
+
+RESUMEN EJECUTIVO
+─────────────────────────────────────────────────────────────────────────────
+
+Total de Rutas: 99 (detectadas en /frontend/app)
+  - Rutas Funcionales: ~45 (con APIs activas)
+  - Rutas Parcialmente Funcionales: ~25 (con TODOs)
+  - Rutas Vacías/Placeholder: ~20
+  - Rutas Alternativas: ~9
+
+Total de Componentes: 45 principales + 50 UI
+Componentes Potencialmente Huérfanos: 261
+Archivos con Marcadores TODO: 6
+Duplicados Detectados: 4
+
+════════════════════════════════════════════════════════════════════════════════
+TABLA DE RUTAS ACTIVAS Y APIS
+════════════════════════════════════════════════════════════════════════════════
+
+RUTA                                    ARCHIVO                                  APIS LLAMADAS                          ESTADO
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+[PRODUCCIÓN CRÍTICA]
+/                                       app/page.tsx                             -                                      Activa
+/login                                  app/login/page.tsx                       authService                            Activa
+/dashboard                              app/dashboard/page.tsx                   4 servicios (employees,               Activa
+                                                                                  candidates, factories, timercards)
+
+[CRUD PRINCIPALES]
+/dashboard/candidates                   app/dashboard/candidates/page.tsx        candidateService.getCandidates()       Activa
+/dashboard/candidates/[id]              app/dashboard/candidates/[id]/page.tsx   candidateService.*                     Activa
+/dashboard/candidates/[id]/edit         app/dashboard/candidates/[id]/edit       candidateService.*                     Activa
+/dashboard/employees                    app/dashboard/employees/page.tsx         employeeService.getEmployees()         Activa
+/dashboard/employees/[id]               app/dashboard/employees/[id]/page.tsx    employeeService, apartmentsV2          Activa
+/dashboard/employees/[id]/edit          app/dashboard/employees/[id]/edit        (NO DETECTADO)                        ROTA
+/dashboard/apartments                   app/dashboard/apartments/page.tsx        apartmentsV2Service                    Activa
+/dashboard/apartments/[id]              app/dashboard/apartments/[id]            apartmentsV2Service                    Activa
+/dashboard/apartments/[id]/edit         app/dashboard/apartments/[id]/edit       apartmentsV2Service                    Activa
+/dashboard/apartments/[id]/assign       app/dashboard/apartments/[id]/assign     apartmentsV2, employeeService          Activa
+/dashboard/factories                    app/dashboard/factories/page.tsx         api.get('/factories/stats')            Activa
+/dashboard/factories/[factory_id]       app/dashboard/factories/[factory_id]     (NO DETECTADO)                        ROTA
+/dashboard/factories/[factory_id]/config app/dashboard/factories/[factory_id]/    (NO DETECTADO)                        ROTA
+
+[REPORTES]
+/dashboard/apartment-reports            app/dashboard/apartment-reports          apartmentsV2Service                    Activa
+/dashboard/apartment-reports/occupancy  app/dashboard/apartment-reports/occ...   apartmentsV2Service                    Activa
+/dashboard/apartment-reports/arrears    app/dashboard/apartment-reports/arr...   apartmentsV2Service                    Activa (TODO: PDF)
+/dashboard/apartment-reports/costs      app/dashboard/apartment-reports/costs    apartmentsV2Service                    Activa
+/dashboard/apartment-reports/maintenance app/dashboard/apartment-reports/main... apartmentsV2Service                    Activa
+/dashboard/salary/reports               app/dashboard/salary/reports             salaryService                          Activa
+/dashboard/yukyu-reports                app/dashboard/yukyu-reports              yukyu.balances, export-excel API       Activa
+
+[ADMINISTRACIÓN]
+/dashboard/admin/control-panel          app/dashboard/admin/control-panel        adminControlPanelService, /admin/*     Activa
+/dashboard/admin/yukyu-management       app/dashboard/admin/yukyu-management     /yukyu/balances/calculate, /...        Activa (TODO: cálculos)
+/dashboard/admin/audit-logs             app/dashboard/admin/audit-logs           (NO DETECTADO)                        ROTA
+
+[INCOMPLETAS/PLACEHOLDERS]
+/dashboard/payroll                      app/dashboard/payroll/page.tsx           -                                      INCOMPLETA
+/dashboard/payroll/[id]                 app/dashboard/payroll/[id]               -                                      INCOMPLETA (TODO)
+/dashboard/payroll/create               app/dashboard/payroll/create             /employees                             INCOMPLETA
+/dashboard/payroll/calculate            app/dashboard/payroll/calculate          -                                      INCOMPLETA
+/dashboard/payroll/timer-cards          app/dashboard/payroll/timer-cards        -                                      VACÍA
+/dashboard/payroll/settings             app/dashboard/payroll/settings           -                                      VACÍA
+/dashboard/settings                     app/dashboard/settings                   -                                      VACÍA
+/dashboard/settings/appearance          app/dashboard/settings/appearance        -                                      VACÍA
+/dashboard/themes                       app/dashboard/themes                     -                                      VACÍA
+/dashboard/themes/customizer            app/dashboard/themes/customizer          -                                      VACÍA
+/dashboard/design-preferences           app/dashboard/design-preferences         -                                      VACÍA
+/dashboard/design-system                app/dashboard/design-system              -                                      VACÍA
+/dashboard/support                      app/dashboard/support                    -                                      VACÍA
+/dashboard/help                         app/dashboard/help                       -                                      PLACEHOLDER
+/dashboard/construction                 app/dashboard/construction               -                                      PLACEHOLDER
+
+[ALTERNATIVAS TOP-LEVEL - NO FUNCIONALES]
+/admin                                  app/admin/page.tsx                       -                                      SIN SERVICIOS
+/apartments                             app/apartments/page.tsx                  -                                      SIN SERVICIOS
+/candidates                             app/candidates/page.tsx                  -                                      SIN SERVICIOS
+/employees                              app/employees/page.tsx                   -                                      SIN SERVICIOS
+/factories                              app/factories/page.tsx                   -                                      SIN SERVICIOS
+/payroll                                app/payroll/page.tsx                     -                                      SIN SERVICIOS
+/profile                                app/profile/page.tsx                     -                                      SIN SERVICIOS
+/reports                                app/reports/page.tsx                     -                                      SIN SERVICIOS
+/requests                               app/requests/page.tsx                    -                                      SIN SERVICIOS
+/settings                               app/settings/page.tsx                    -                                      SIN SERVICIOS
+/themes                                 app/themes/page.tsx                      -                                      SIN SERVICIOS
+/timercards                             app/timercards/page.tsx                  -                                      SIN SERVICIOS
+
+[OTRAS RUTAS]
+/dashboard/apartment-assignments        app/dashboard/apartment-assignments      apartmentsV2Service                    VACÍA
+/dashboard/apartment-assignments/[id]   app/dashboard/apartment-assignments/[id] apartmentsV2Service                    VACÍA
+/dashboard/apartment-assignments/[id]/end app/dashboard/apartment-assignments/   apartmentsV2Service                    INCOMPLETA
+/dashboard/apartment-assignments/create app/dashboard/apartment-assignments/cre  apartmentsV2, /employees               INCOMPLETA
+/dashboard/apartment-assignments/transfer app/dashboard/apartment-assignments/tr apartmentsV2Service                    INCOMPLETA
+/dashboard/apartment-calculations       app/dashboard/apartment-calculations     /apartment-calculations/stats          Activa
+/dashboard/apartment-calculations/prorated app/dashboard/apartment-calculations  apartmentsV2Service                    Activa
+/dashboard/apartment-calculations/total app/dashboard/apartment-calculations/total apartmentsV2Service                  Activa
+/dashboard/database-management          app/dashboard/database-management        databaseService                        ACTIVA
+/dashboard/employees/excel-view         app/dashboard/employees/excel-view       employeeService                        ESTÁTICA
+/dashboard/examples/forms               app/dashboard/examples/forms             -                                      DEMO
+/dashboard/factories/new                app/dashboard/factories/new              factoryService                         INCOMPLETA
+/dashboard/keiri/yukyu-dashboard        app/dashboard/keiri/yukyu-dashboard      /api/dashboard/yukyu-*, /api/yukyu/*   Activa
+/dashboard/monitoring                   app/dashboard/monitoring                 /api/monitoring/health                 Activa
+/dashboard/monitoring/health            app/dashboard/monitoring/health          /api/monitoring/health                 Activa
+/dashboard/monitoring/performance       app/dashboard/monitoring/performance     /api/monitoring/metrics                Activa
+/dashboard/privacy                      app/dashboard/privacy                    -                                      ESTÁTICA
+/dashboard/profile                      app/dashboard/profile                    -                                      ESTÁTICA
+/dashboard/rent-deductions              app/dashboard/rent-deductions            apartmentsV2Service                    Activa
+/dashboard/rent-deductions/[year]/[month] app/dashboard/rent-deductions/[year]/  apartmentsV2Service                    Activa
+/dashboard/reports                      app/dashboard/reports                    -                                      VACÍA
+/dashboard/requests                     app/dashboard/requests                   requestService                         Activa
+/dashboard/requests/[id]                app/dashboard/requests/[id]              -                                      VACÍA
+/dashboard/salary                       app/dashboard/salary                     salaryService                          Activa
+/dashboard/salary/[id]                  app/dashboard/salary/[id]                salaryService                          Activa
+/dashboard/terms                        app/dashboard/terms                      -                                      ESTÁTICA
+/dashboard/timercards                   app/dashboard/timercards                 timerCardService                       Activa (Con guard)
+/dashboard/timercards/upload            app/dashboard/timercards/upload          timerCardService                       Activa
+/dashboard/yukyu                        app/dashboard/yukyu                      yukyuService, /yukyu/*                 Activa
+/dashboard/yukyu-history                app/dashboard/yukyu-history              /employees                             Activa
+/dashboard/yukyu-requests               app/dashboard/yukyu-requests             -                                      INCOMPLETA
+/dashboard/yukyu-requests/create        app/dashboard/yukyu-requests/create      /api/factories, /api/yukyu/requests    INCOMPLETA
+/candidates/[id]/print                  app/dashboard/candidates/[id]/print      -                                      ACTIVA
+/candidates/rirekisho                   app/dashboard/candidates/rirekisho       -                                      ACTIVA
+/under-construction                     app/under-construction/page.tsx          -                                      BAJO CONSTRUCCIÓN
+
+════════════════════════════════════════════════════════════════════════════════
+ARCHIVOS CON MARCADORES PROBLEMÁTICOS
+════════════════════════════════════════════════════════════════════════════════
+
+TODO (Funcionalidad incompleta):
+  1. /dashboard/admin/yukyu-management/page.tsx:
+     - totalUsed: 0, // TODO: calcular desde requests
+     - totalExpired: 0 // TODO: calcular desde balances
+
+  2. /dashboard/payroll/[id]/page.tsx:
+     - approved_by: 'admin', // TODO: Get from auth context
+
+  3. /dashboard/apartment-reports/arrears/page.tsx:
+     - // TODO: Implement PDF export
+
+OLD/DEPRECATED:
+  - /dashboard/candidates/rirekisho/page.tsx: Comentarios en japonés
+
+════════════════════════════════════════════════════════════════════════════════
+COMPONENTES DUPLICADOS (CRÍTICO)
+════════════════════════════════════════════════════════════════════════════════
+
+1. Error Boundaries (4 variantes):
+   - error-boundary.tsx
+   - ErrorBoundary.tsx
+   - error-boundary-wrapper.tsx
+   - theme-error-boundary.tsx
+   ACCIÓN: Consolidar en un único componente robusto
+
+2. Selectores de Apartamento:
+   - ApartmentSelector.tsx
+   - ApartmentSelector-enhanced.tsx
+   ACCIÓN: Fusionar o documentar diferencias
+
+3. Cargadores OCR:
+   - OCRUploader.tsx
+   - AzureOCRUploader.tsx
+   ACCIÓN: Aclarar cuál usar y consolidar
+
+4. Transiciones/Animaciones:
+   - PageTransition.tsx
+   - animated-link.tsx
+   ACCIÓN: Consolidar o establecer convención
+
+════════════════════════════════════════════════════════════════════════════════
+COMPONENTES HUÉRFANOS (No se importan en ninguna página)
+════════════════════════════════════════════════════════════════════════════════
+
+Total: 261 componentes detectados como potencialmente no utilizados
+
+PRINCIPALES CATEGORÍAS:
+
+Componentes de Diseño/Tema (No usados - solo en customizer):
+  - advanced-color-picker.tsx
+  - border-radius-visualizer.tsx
+  - color-palette-generator.tsx
+  - color-picker.tsx (duplicado)
+  - contrast-checker.tsx
+  - enhanced-theme-selector.tsx
+  - font-selector.tsx
+  - gradient-builder.tsx
+  - preset-card.tsx
+  - spacing-scale-generator.tsx
+  - typography-scale-generator.tsx
+
+Editores Complejos:
+  - ThemeEditor/* (todos)
+  - TemplateManager.tsx
+
+Componentes de Pestaña (Posibles duplicados):
+  - ApartmentsTab.tsx
+  - EmployeesTab.tsx
+  - FinancialsTab.tsx
+  - Todos en /components/* con sufijo Tab
+
+Componentes de Apartamento (Muchos sin importación detectada):
+  - AdditionalChargeForm.tsx
+  - ApartmentCard.tsx
+  - ApartmentSelector-enhanced.tsx
+  - AssignmentCard.tsx
+  - AssignmentForm.tsx
+  - DeductionCard.tsx
+  - DeductionsTable.tsx
+  - OccupancyStats.tsx
+  - RentCalculator.tsx
+  - ReportCard.tsx
+  - StatCard.tsx
+
+Componentes de Salario (Muchos sin importación detectada):
+  - BonusesConfig.tsx
+  - DeductionsTable.tsx
+  - SalaryBreakdownTable.tsx
+  - SalaryCharts.tsx
+  - SalaryDeductionsTable.tsx
+  - SalaryReportFilters.tsx
+  - SalarySummaryCards.tsx
+
+Gráficos (Muchos sin uso detectado):
+  - AreaChartCard.tsx
+  - BarChartCard.tsx
+  - DonutChartCard.tsx
+  - LineChartCard.tsx
+  - PieChartCard.tsx
+
+════════════════════════════════════════════════════════════════════════════════
+RESUMEN DE VEREDICTOS
+════════════════════════════════════════════════════════════════════════════════
+
+CRÍTICOS - REQUIEREN ATENCIÓN INMEDIATA:
+─────────────────────────────────────────
+✓ 4 duplicados de componentes (error boundaries, selectores, OCR, animaciones)
+✓ 3 páginas con TODOs funcionales incompletos
+✓ 3 rutas dinámicas sin funcionalidad (/factories/[id], /employees/[id]/edit)
+✓ 9 rutas top-level sin servicios (deberían redirigir a /dashboard/* o eliminarse)
+✓ 261 componentes potencialmente huérfanos
+
+ALTO - LIMPIEZA RECOMENDADA:
+──────────────────────────────
+✓ 6 páginas completamente vacías (settings, payroll sections, support)
+✓ 4 páginas de demostración/desarrollo (examples/forms, design-system, etc)
+✓ Componentes de diseño no utilizados en producción
+
+MODERADO - REFACTORIZACIÓN:
+──────────────────────────────
+✓ Inconsistencia en patrones de API (algunos servicios, otros directo)
+✓ Estructura de componentes desorganizada
+✓ Múltiples variantes del mismo componente sin consolidación
+
+════════════════════════════════════════════════════════════════════════════════
+SERVICIOS API DETECTADOS
+════════════════════════════════════════════════════════════════════════════════
+
+Servicios Importados en Páginas:
+  1. candidateService → /api/candidates/*
+  2. employeeService → /api/employees/*
+  3. apartmentsV2Service → /api/apartments-v2/*
+  4. factoryService → /api/factories/*
+  5. timerCardService → /api/timercards/*
+  6. yukyuService → /api/yukyu/*
+  7. salaryService → /api/salary/*
+  8. requestService → /api/requests/*
+  9. authService → /api/auth/*
+  10. databaseService → /api/database/*
+  11. adminControlPanelService → /api/admin/*
+
+Endpoints Detectados Directamente:
+  /api/admin/*
+  /api/dashboard/*
+  /api/factories
+  /api/monitoring/*
+  /api/role-permissions/*
+  /api/yukyu/*
+  /additional-charges/*
+  /apartments-v2/*
+  /employees/
+  /factories
+  /requests
+  /timercards
+
+════════════════════════════════════════════════════════════════════════════════
+ARCHIVOS PARA INVESTIGACIÓN ADICIONAL
+════════════════════════════════════════════════════════════════════════════════
+
+Rutas sin imports detectados (verificar manualmente):
+  - /dashboard/factories/[factory_id]/page.tsx
+  - /dashboard/factories/[factory_id]/config/page.tsx
+  - /dashboard/employees/[id]/edit/page.tsx
+  - /dashboard/requests/[id]/page.tsx
+  - /dashboard/admin/audit-logs/page.tsx
+
+Páginas que importan pero parecen vacías:
+  - /dashboard/payroll/timer-cards/page.tsx
+  - /dashboard/support/page.tsx
+  - /dashboard/help/page.tsx
+
+════════════════════════════════════════════════════════════════════════════════
+
+Fin de Auditoría

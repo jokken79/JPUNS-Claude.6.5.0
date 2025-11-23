@@ -1,24 +1,22 @@
 /**
  * Salary Store - Zustand State Management
  * Gestión de estado para el módulo de salarios
- *
- * Created using the factory pattern to reduce code duplication.
- * Maintains 100% backward compatibility with existing exports.
  */
 import { create } from 'zustand';
 import { SalaryCalculation, SalaryReportFilters } from '@/types/api';
 
-// Define the data structure
-interface SalaryData {
+interface SalaryState {
+  // Data
   salaries: SalaryCalculation[];
   selectedSalary: SalaryCalculation | null;
   reportFilters: SalaryReportFilters;
   reportData: any | null;
-}
 
-type SalaryState = SalaryData & {
+  // UI State
   loading: boolean;
   error: string | null;
+
+  // Actions
   setSalaries: (salaries: SalaryCalculation[]) => void;
   setSelectedSalary: (salary: SalaryCalculation | null) => void;
   setReportFilters: (filters: SalaryReportFilters) => void;
@@ -27,7 +25,7 @@ type SalaryState = SalaryData & {
   setError: (error: string | null) => void;
   clearError: () => void;
   reset: () => void;
-};
+}
 
 export const useSalaryStore = create<SalaryState>((set) => ({
   // Initial state
@@ -38,18 +36,14 @@ export const useSalaryStore = create<SalaryState>((set) => ({
   loading: false,
   error: null,
 
-  // Data setters
+  // Actions
   setSalaries: (salaries) => set({ salaries }),
   setSelectedSalary: (salary) => set({ selectedSalary: salary }),
   setReportFilters: (filters) => set({ reportFilters: filters }),
   setReportData: (data) => set({ reportData: data }),
-
-  // Standard setters (always present with factory pattern)
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
   clearError: () => set({ error: null }),
-
-  // Reset action for clearing all state
   reset: () =>
     set({
       salaries: [],
@@ -61,7 +55,7 @@ export const useSalaryStore = create<SalaryState>((set) => ({
     }),
 }));
 
-// Helper hooks - All maintained for backward compatibility
+// Helper hooks
 export const useSalaries = () => useSalaryStore((state) => state.salaries);
 export const useSelectedSalary = () => useSalaryStore((state) => state.selectedSalary);
 export const useReportFilters = () => useSalaryStore((state) => state.reportFilters);

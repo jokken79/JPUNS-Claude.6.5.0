@@ -1,6 +1,6 @@
 # ========================================
 # PyProject Configuration
-# UNS-ClaudeJP 6.0.0 Backend
+# UNS-ClaudeJP 6.5.0 Backend
 # ========================================
 
 [build-system]
@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "uns-claudejp-backend"
-version = "6.0.0"
+version = "6.5.0"
 description = "FastAPI backend for UNS-ClaudeJP access management system"
 authors = [
     {name = "UNS-ClaudeJP Team", email = "dev@uns-claudejp.com"}
@@ -29,10 +29,10 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/UNS-ClaudeJP-6.0.0"
-Documentation = "https://github.com/yourusername/UNS-ClaudeJP-6.0.0/wiki"
-Repository = "https://github.com/yourusername/UNS-ClaudeJP-6.0.0"
-Issues = "https://github.com/yourusername/UNS-ClaudeJP-6.0.0/issues"
+Homepage = "https://github.com/yourusername/UNS-ClaudeJP-6.5.0"
+Documentation = "https://github.com/yourusername/UNS-ClaudeJP-6.5.0/wiki"
+Repository = "https://github.com/yourusername/UNS-ClaudeJP-6.5.0"
+Issues = "https://github.com/yourusername/UNS-ClaudeJP-6.5.0/issues"
 
 # ========================================
 # Tool Configurations

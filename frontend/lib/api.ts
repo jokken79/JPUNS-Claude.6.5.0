@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 import { useAuthStore } from '@/stores/auth-store';
-import { logger } from '@/lib/logging';
 import type {
   AuthResponse,
   User,
@@ -76,7 +75,7 @@ const getAuthToken = (): string | null => {
   return useAuthStore.getState().token;
 };
 
-// Request interceptor to add auth token and logging
+// Request interceptor to add auth token
 api.interceptors.request.use(
   (config: any) => {
     const token = getAuthToken();
@@ -98,74 +97,21 @@ api.interceptors.request.use(
       }
     }
 
-    // Add request start time for performance tracking
-    config.metadata = {
-      startTime: Date.now(),
-    };
-
-    // Log API request (only in browser)
-    if (typeof window !== 'undefined') {
-      const url = `${config.baseURL || ''}${config.url || ''}`;
-      logger.debug('API request started', {
-        method: config.method?.toUpperCase(),
-        url,
-        params: config.params,
-      });
-    }
-
     return config;
   },
   (error: unknown) => {
-    if (typeof window !== 'undefined') {
-      logger.error('API request failed', {
-        error: error instanceof Error ? error.message : String(error),
-      });
-    }
     return Promise.reject(error);
   }
 );
 
-// Response interceptor to handle auth errors and logging
+// Response interceptor to handle auth errors
 api.interceptors.response.use(
-  (response: any) => {
-    // Calculate request duration
-    const duration = response.config.metadata?.startTime
-      ? Date.now() - response.config.metadata.startTime
-      : undefined;
-
-    // Log successful API response (only in browser)
-    if (typeof window !== 'undefined') {
-      const url = `${response.config.baseURL || ''}${response.config.url || ''}`;
-
-      // Log level based on duration and status
-      if (duration && duration > 3000) {
-        // Slow request warning
-        logger.warn('Slow API request', {
-          method: response.config.method?.toUpperCase(),
-          url,
-          status: response.status,
-          duration_ms: duration,
-        });
-      } else {
-        logger.debug('API request completed', {
-          method: response.config.method?.toUpperCase(),
-          url,
-          status: response.status,
-          duration_ms: duration,
-        });
-      }
-    }
-
-    return response;
-  },
+  (response: any) => response,
   async (error: any) => {
-    // Calculate request duration
-    const duration = error.config?.metadata?.startTime
-      ? Date.now() - error.config.metadata.startTime
-      : undefined;
-
-    // Log detailed error information (only in browser)
-    if (typeof window !== 'undefined') {
+    // Log detallado para depurar errores de red y respuesta
+    if (error.response) {
+      console.error('Response error:', error.response.status);
+    } else if (error.request) {
       const url = (() => {
         try {
           const base = error.config?.baseURL ?? '';
@@ -175,52 +121,9 @@ api.interceptors.response.use(
           return undefined;
         }
       })();
-
-      if (error.response) {
-        // Server responded with error status
-        logger.error('API response error', {
-          method: error.config?.method?.toUpperCase(),
-          url,
-          status: error.response.status,
-          statusText: error.response.statusText,
-          duration_ms: duration,
-          errorData: error.response.data,
-        });
-      } else if (error.request) {
-        // Request was made but no response received (network error)
-        logger.error('API network error', {
-          method: error.config?.method?.toUpperCase(),
-          url,
-          message: error.message,
-          code: error.code,
-          duration_ms: duration,
-        });
-      } else {
-        // Something else happened
-        logger.error('API request error', {
-          message: error.message,
-          error: String(error),
-        });
-      }
-    } else {
-      // Fallback console logging for SSR/debugging
-      if (error.response) {
-        console.error('Response error:', error.response.status);
-      } else if (error.request) {
-        const url = (() => {
-          try {
-            const base = error.config?.baseURL ?? '';
-            const path = error.config?.url ?? '';
-            return `${base}${path}`;
-          } catch {
-            return undefined;
-          }
-        })();
-        console.error('Network error:', error.message, '| code:', error.code, '| url:', url);
-      }
+      console.error('Network error:', error.message, '| code:', error.code, '| url:', url);
     }
 
-    // Handle authentication errors
     if (error.response?.status === 401) {
       useAuthStore.getState().logout();
       if (typeof window !== 'undefined' && window.location.pathname !== '/login') {

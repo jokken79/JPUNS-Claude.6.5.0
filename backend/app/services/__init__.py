@@ -22,7 +22,7 @@ from app.services.face_detection_service import FaceDetectionService
 from app.services.hybrid_ocr_service import HybridOCRService
 from app.services.import_service import ImportService
 from app.services.notification_service import NotificationService
-from app.services.payroll.payroll_service import PayrollService
+from app.services.payroll_service import PayrollService
 from app.services.report_service import ReportService
 
 __all__ = [

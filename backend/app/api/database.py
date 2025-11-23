@@ -10,11 +10,7 @@ from sqlalchemy import text, inspect, MetaData, Table, select, func, String
 from typing import List, Dict, Any, Optional
 
 from app.core.database import get_db
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.services.auth_service import AuthService
-from app.core.rate_limiter import limiter
 
 router = APIRouter()
 
@@ -37,8 +33,6 @@ def _get_table_safely(db: Session, table_name: str) -> Table:
 
 
 @router.get("/tables")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("10/minute")
 async def get_tables(
     current_user = Depends(AuthService.require_role("admin")),
     db: Session = Depends(get_db)
@@ -80,7 +74,7 @@ async def get_tables(
                 "columns": column_info
             })
         
-        return success_response(data=table_info, request=request)
+        return table_info
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -89,8 +83,6 @@ async def get_tables(
 
 
 @router.get("/tables/{table_name}/data")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("10/minute")
 async def get_table_data(
     table_name: str,
     limit: int = 20,
@@ -156,13 +148,13 @@ async def get_table_data(
         # Convert to dict format
         data_rows = [dict(row) for row in rows]
         
-        return success_response(data={
+        return {
             "columns": columns,
             "rows": data_rows,
             "totalCount": total_count,
             "page": (offset // limit) + 1,
             "pageSize": limit
-        }, request=request)
+        }
     except HTTPException:
         raise
     except Exception as e:
@@ -173,8 +165,6 @@ async def get_table_data(
 
 
 @router.get("/tables/{table_name}/export")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("10/minute")
 async def export_table(
     table_name: str,
     current_user = Depends(AuthService.require_role("admin")),
@@ -206,11 +196,11 @@ async def export_table(
         # Create response
         output.seek(0)
         from fastapi.responses import StreamingResponse
-        return success_response(data=StreamingResponse(
+        return StreamingResponse(
             io.BytesIO(output.getvalue().encode('utf-8-sig')),
             media_type="text/csv",
             headers={"Content-Disposition": f"attachment; filename={table_name}_export.csv"}
-        ), request=request)
+        )
     except HTTPException:
         raise
     except Exception as e:
@@ -221,7 +211,6 @@ async def export_table(
 
 
 @router.post("/tables/{table_name}/import")
-@limiter.limit("10/minute")
 async def import_table(
     table_name: str,
     file: UploadFile = File(...),
@@ -320,10 +309,10 @@ async def import_table(
         
         db.commit()
         
-        return success_response(data={
+        return {
             "message": f"Successfully imported {inserted_count} rows to {table_name}",
             "insertedCount": inserted_count
-        }, request=request)
+        }
     except HTTPException:
         raise
     except Exception as e:
@@ -335,7 +324,6 @@ async def import_table(
 
 
 @router.put("/tables/{table_name}/rows/{row_id}")
-@limiter.limit("10/minute")
 async def update_row(
     table_name: str,
     row_id: str,
@@ -377,7 +365,7 @@ async def update_row(
         db.execute(text(query), {"value": new_value, "id": row_id})
         db.commit()
         
-        return success_response(data={"message": "Row updated successfully"}, request=request)
+        return {"message": "Row updated successfully"}
     except HTTPException:
         raise
     except Exception as e:
@@ -389,7 +377,6 @@ async def update_row(
 
 
 @router.delete("/tables/{table_name}/rows/{row_id}")
-@limiter.limit("10/minute")
 async def delete_row(
     table_name: str,
     row_id: str,
@@ -420,7 +407,7 @@ async def delete_row(
                 detail=f"Row with id '{row_id}' not found in table '{table_name}'"
             )
         
-        return success_response(data={"message": "Row deleted successfully"}, request=request)
+        return {"message": "Row deleted successfully"}
     except HTTPException:
         raise
     except Exception as e:
@@ -432,7 +419,6 @@ async def delete_row(
 
 
 @router.delete("/tables/{table_name}/truncate")
-@limiter.limit("10/minute")
 async def truncate_table(
     table_name: str,
     current_user = Depends(AuthService.require_role("admin")),
@@ -458,10 +444,10 @@ async def truncate_table(
         db.execute(text(f"TRUNCATE TABLE {table_name} RESTART IDENTITY CASCADE"))
         db.commit()
 
-        return success_response(data={
+        return {
             "message": f"Successfully deleted all rows from '{table_name}'",
             "rowsDeleted": row_count_before
-        }, request=request)
+        }
     except HTTPException:
         raise
     except Exception as e:
@@ -473,7 +459,6 @@ async def truncate_table(
 
 
 @router.post("/tables/{table_name}/create")
-@limiter.limit("10/minute")
 async def create_table(
     table_name: str,
     table_schema: Dict[str, Any],
@@ -508,7 +493,7 @@ async def create_table(
         db.execute(text(query))
         db.commit()
 
-        return success_response(data={"message": f"Table '{table_name}' created successfully"}, request=request)
+        return {"message": f"Table '{table_name}' created successfully"}
     except HTTPException:
         raise
     except Exception as e:

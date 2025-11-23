@@ -12,24 +12,16 @@ import os
 from typing import Optional
 
 from app.core.database import get_db
-from fastapi import Request
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.core.config import settings
 from app.core.rate_limiter import limiter
-from app.core.cache import cache, CacheKey, CacheTTL
 from app.models.models import SalaryCalculation, Employee, TimerCard, Factory, User
+from app.schemas.salary import (
+    SalaryCalculate, SalaryCalculationResponse, SalaryBulkCalculate,
+    SalaryBulkResult, SalaryMarkPaid, SalaryStatistics
+)
 from app.schemas.salary_unified import (
-    SalaryCalculateRequest,
-    SalaryCalculationResponse,
-    SalaryBulkCalculateRequest,
-    BulkCalculateResponse,
-    SalaryMarkPaidRequest,
-    SalaryStatistics,
-    SalaryUpdate,
-    MarkSalaryPaidRequest,
-    SalaryReportFilters,
-    SalaryExportResponse,
-    SalaryReportResponse
+    SalaryUpdate, MarkSalaryPaidRequest, SalaryReportFilters,
+    SalaryExportResponse, SalaryReportResponse
 )
 from app.schemas.base import PaginatedResponse, create_paginated_response
 from app.services.auth_service import auth_service
@@ -154,7 +146,7 @@ def calculate_employee_salary(db: Session, employee_id: int, month: int, year: i
 @limiter.limit("10/hour")  # Expensive salary calculation operation
 async def calculate_salary(
     request: Request,
-    salary_data: SalaryCalculateRequest,
+    salary_data: SalaryCalculate,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -209,9 +201,9 @@ async def calculate_salary(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.post("/calculate/bulk", response_model=BulkCalculateResponse)
+@router.post("/calculate/bulk", response_model=SalaryBulkResult)
 async def calculate_salaries_bulk(
-    bulk_data: SalaryBulkCalculateRequest,
+    bulk_data: SalaryBulkCalculate,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -256,8 +248,8 @@ async def calculate_salaries_bulk(
             errors.append(f"Employee {employee.hakenmoto_id}: {str(e)}")
     
     db.commit()
-
-    return BulkCalculateResponse(
+    
+    return SalaryBulkResult(
         total_employees=len(employees),
         successful=successful,
         failed=failed,
@@ -268,13 +260,7 @@ async def calculate_salaries_bulk(
     )
 
 
-def _salary_list_cache_key(employee_id=None, month=None, year=None, is_paid=None, page=1, page_size=50, **kwargs):
-    """Custom cache key for paginated salary list"""
-    return CacheKey.build("salary", "list", f"e{employee_id}", f"m{month}", f"y{year}", f"p{is_paid}", f"p{page}", f"ps{page_size}")
-
-
 @router.get("/", response_model=PaginatedResponse[SalaryCalculationResponse])
-@cache.cached(ttl=CacheTTL.MEDIUM, key_builder=_salary_list_cache_key)
 async def list_salaries(
     employee_id: int = Query(None, description="Filter by employee ID"),
     month: int = Query(None, ge=1, le=12, description="Filter by month (1-12)"),
@@ -325,13 +311,7 @@ async def list_salaries(
     )
 
 
-def _salary_detail_cache_key(salary_id: int, **kwargs):
-    """Custom cache key for salary detail"""
-    return CacheKey.build("salary", str(salary_id))
-
-
 @router.get("/{salary_id}", response_model=SalaryCalculationResponse)
-@cache.cached(ttl=CacheTTL.MEDIUM, key_builder=_salary_detail_cache_key)
 async def get_salary_calculation(
     salary_id: int,
     current_user: User = Depends(auth_service.get_current_active_user),
@@ -385,37 +365,18 @@ async def mark_salaries_paid(
     return {"message": f"Marked {len(salaries)} salaries as paid"}
 
 
-def _salary_stats_cache_key(month: int, year: int, **kwargs):
-    """Custom cache key for salary statistics"""
-    return CacheKey.build("salary", "statistics", f"{year}-{month:02d}")
-
-
 @router.get("/statistics", response_model=SalaryStatistics)
-@cache.cached(ttl=CacheTTL.LONG, key_builder=_salary_stats_cache_key)
 async def get_salary_statistics(
     month: int,
     year: int,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
-    """
-    Get salary statistics for a month.
-
-    OPTIMIZED: Fixed N+1 query problem using eager loading.
-    Performance improvement: ~400ms → ~40ms for statistics calculation.
-    """
-    # OPTIMIZATION: Eager load employee relationship to avoid N+1 queries
-    # BEFORE: 1 query for salaries + N queries for employees
-    # AFTER: 1 query with JOIN
-    salaries = (
-        db.query(SalaryCalculation)
-        .options(joinedload(SalaryCalculation.employee))
-        .filter(
-            SalaryCalculation.month == month,
-            SalaryCalculation.year == year
-        )
-        .all()
-    )
+    """Get salary statistics for a month"""
+    salaries = db.query(SalaryCalculation).filter(
+        SalaryCalculation.month == month,
+        SalaryCalculation.year == year
+    ).all()
 
     if not salaries:
         raise HTTPException(status_code=404, detail="No salary data found for this month")
@@ -428,11 +389,10 @@ async def get_salary_statistics(
     total_profit = sum(s.company_profit for s in salaries)
     avg_salary = total_net // total_employees if total_employees > 0 else 0
 
-    # Group by factory (no DB queries - employee already loaded)
+    # Group by factory
     factory_stats = {}
     for salary in salaries:
-        # No DB query - employee already loaded via JOIN
-        employee = salary.employee
+        employee = db.query(Employee).filter(Employee.id == salary.employee_id).first()
         if employee:
             factory_id = employee.factory_id
             if factory_id not in factory_stats:
@@ -640,13 +600,7 @@ async def mark_salary_paid(
     return salary
 
 
-def _salary_reports_cache_key(start_date: str, end_date: str, employee_ids=None, factory_ids=None, is_paid=None, **kwargs):
-    """Custom cache key for salary reports"""
-    return CacheKey.build("salary", "reports", start_date, end_date, str(employee_ids), str(factory_ids), str(is_paid))
-
-
 @router.get("/reports", response_model=SalaryReportResponse)
-@cache.cached(ttl=CacheTTL.LONG, key_builder=_salary_reports_cache_key)
 async def get_salary_reports(
     start_date: str = Query(..., description="Start date in YYYY-MM-DD format"),
     end_date: str = Query(..., description="End date in YYYY-MM-DD format"),
@@ -876,11 +830,8 @@ async def export_salary_pdf(
         start = datetime.strptime(filters.start_date, "%Y-%m-%d")
         end = datetime.strptime(filters.end_date, "%Y-%m-%d")
 
-        # OPTIMIZATION: Use eager loading to avoid N+1 queries in PDF generation
         # Build query with filters (same logic as Excel)
-        query = db.query(SalaryCalculation).join(Employee).options(
-            joinedload(SalaryCalculation.employee)
-        )
+        query = db.query(SalaryCalculation).join(Employee)
 
         query = query.filter(
             func.make_date(SalaryCalculation.year, SalaryCalculation.month, 1) >= start.date(),
@@ -968,9 +919,8 @@ async def export_salary_pdf(
             ["ID", "Nombre/Name", "Mes/Month", "Bruto/Gross", "Deducciones", "Neto/Net", "Pagado/Paid"]
         ]
 
-        # OPTIMIZED: No DB queries - employee already loaded via JOIN
         for salary in salaries:
-            employee = salary.employee  # No DB query - already loaded
+            employee = db.query(Employee).filter(Employee.id == salary.employee_id).first()
             detail_data.append([
                 str(salary.employee_id),
                 employee.full_name_roman[:15] if employee else "N/A",

@@ -5,24 +5,16 @@ Handles admin-controlled configuration toggles
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import SystemSettings, User, UserRole
 from app.api.deps import get_current_user
 from app.schemas.settings import VisibilityToggleResponse, VisibilityToggleUpdate
 from app.core.logging import app_logger
-from app.core.rate_limiter import limiter
 
 router = APIRouter()
 
 
 @router.get("/visibility", response_model=VisibilityToggleResponse)
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("60/minute")
-async def get_visibility_toggle(
-    request: Request,
-    db: Session = Depends(get_db)):
+async def get_visibility_toggle(db: Session = Depends(get_db)):
     """
     Get visibility toggle status
     Public endpoint - anyone can check if content is visible
@@ -46,12 +38,9 @@ async def get_visibility_toggle(
 
         enabled = setting.value.lower() == "true" if setting.value else True
 
-        return success_response(
-            data=VisibilityToggleResponse(
-                enabled=enabled,
-                updated_at=setting.updated_at
-            ),
-            request=request
+        return VisibilityToggleResponse(
+            enabled=enabled,
+            updated_at=setting.updated_at
         )
 
     except Exception as e:
@@ -63,7 +52,6 @@ async def get_visibility_toggle(
 
 
 @router.put("/visibility", response_model=VisibilityToggleResponse)
-@limiter.limit("60/minute")
 async def update_visibility_toggle(
     toggle_data: VisibilityToggleUpdate,
     current_user: User = Depends(get_current_user),
@@ -110,12 +98,9 @@ async def update_visibility_toggle(
             username=current_user.username
         )
 
-        return success_response(
-            data=VisibilityToggleResponse(
-                enabled=toggle_data.enabled,
-                updated_at=setting.updated_at
-            ),
-            request=request
+        return VisibilityToggleResponse(
+            enabled=toggle_data.enabled,
+            updated_at=setting.updated_at
         )
 
     except Exception as e:

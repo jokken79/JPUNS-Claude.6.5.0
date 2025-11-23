@@ -1,0 +1,120 @@
+RECOMENDACIONES DE PERFORMANCE - SISTEMA DE 社宅
+===============================================
+Fecha: 2025-11-10
+Database Architect: Claude Code
+
+1. INDICES CRITICOS
+===================
+
+Apartment Assignments:
+- idx_assignments_employee_active: employee_id, status (WHERE status='ACTIVE')
+- idx_assignments_apartment_active: apartment_id, status (WHERE status='ACTIVE')
+- idx_assignments_dates: start_date, end_date
+
+Rent Deductions:
+- idx_deductions_assignment_active: assignment_id, is_active (WHERE is_active=true)
+- idx_deductions_period: effective_date, end_date
+
+Apartments:
+- idx_apartments_available: is_available (WHERE is_available=true)
+- idx_apartments_location: prefecture, city, district
+
+2. CONSULTAS FRECUENTES OPTIMIZADAS
+====================================
+
+A) Buscar apartamentos disponibles:
+   - Usar LEFT JOIN con filtro WHERE status='ACTIVE'
+   - Index parcial en apartment_assignments.status
+   - Group by y having para filtrar por capacidad
+
+B) Calcular costo total por empleado:
+   - Un solo JOIN con agregación SUM
+   - Precalcular en vista materializada si es frecuente
+   - Usar COALESCE para manejar NULLs
+
+C) Dashboard de ocupación:
+   - Usar vista materializada
+   - Refrescar cada 30 minutos
+   - GROUP BY en campos indexados
+
+3. ESTRATEGIAS DE CACHING
+=========================
+
+Redis Cache:
+- apartment:available:{prefecture} (TTL: 1 hora)
+- employee:{id}:apartment (TTL: 30 minutos)
+- dashboard:stats (TTL: 15 minutos)
+
+4. PARTICIONADO
+===============
+
+Rent Deductions por año:
+- Mejor para tablas con >100k registros
+- Facilita mantenimiento y queries por fecha
+- CREATE TABLE rent_deductions_2025 PARTITION OF rent_deductions...
+
+5. VACUUM Y ANALYZE
+===================
+
+Ejecutar regularmente:
+- VACUUM ANALZE apartment_assignments;
+- VACUUM ANALZE rent_deductions;
+- Programar en pg_cron para mantenimiento automático
+
+6. MONITOREO
+============
+
+Consultas lentas a monitorear:
+- Búsquedas de apartamentos con filtros complejos
+- Cálculos de costo total con múltiples JOINs
+- Reportes de ocupación por región
+
+Configurar:
+- log_min_duration_statement = 1000ms
+- track_activities = on
+- pg_stat_statements para análisis
+
+7. TUNING DE POSTGRESQL
+========================
+
+Parametros importantes:
+- shared_buffers: 25% de RAM
+- effective_cache_size: 75% de RAM
+- random_page_cost: 1.1 (SSD)
+- work_mem: 256MB (para agregaciones)
+- maintenance_work_mem: 1GB
+
+8. BEST PRACTICES
+==================
+
+- Usar prepared statements para consultas repetitivas
+- Implementar paginación en listas grandes
+- Usar EXISTS en lugar de IN para subconsultas
+- Evitar SELECT * en consultas críticas
+- Usar datos tipo DATE para fechas
+- Normalizar IDs (INTEGER/SERIAL)
+
+9. ESCALABILIDAD
+=================
+
+Horizontal:
+- Read replicas para consultas SELECT
+- Particionado por fecha para rent_deductions
+- Caching distribuido con Redis Cluster
+
+Vertical:
+- Aumentar shared_buffers y work_mem
+- SSD storage para mejor random_page_cost
+- 32GB+ RAM para datasets grandes
+
+10. ALERTAS
+============
+
+Configurar alertas para:
+- Tiempo de respuesta > 2 segundos
+- Table bloat > 20%
+- Index miss ratio > 10%
+- Cache hit ratio < 95%
+
+===============================================
+© 2025 UNS-ClaudeJP - Sistema de 社宅 v5.4.1

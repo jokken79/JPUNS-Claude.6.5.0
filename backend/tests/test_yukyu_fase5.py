@@ -216,7 +216,7 @@ class TestYukyuTeiiCalculation:
         - yukyu aprobado: 1 día
         - reducción esperada: 1 × 8 = 8 horas
         """
-        from app.services.payroll.payroll_service import PayrollService
+        from app.services.payroll_service import PayrollService
 
         service = PayrollService(db_session=db)
 
@@ -266,7 +266,7 @@ class TestYukyuDeductionFormula:
         - Tarifa: ¥1,500/hora
         - Deducción esperada: 1 × 8 × 1,500 = ¥12,000
         """
-        from app.services.payroll.payroll_service import PayrollService
+        from app.services.payroll_service import PayrollService
 
         service = PayrollService(db_session=db)
 

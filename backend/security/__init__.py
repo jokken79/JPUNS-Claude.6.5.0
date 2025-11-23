@@ -1,6 +1,6 @@
 """
 Security Module
-UNS-CLAUDEJP 5.4 - Production Security Hardening
+UNS-CLAUDEJP 6.5.0 - Production Security Hardening
 
 This module provides comprehensive security components including:
 - Credential management with secure storage
@@ -78,4 +78,4 @@ __all__ = [
 # Version information
 __version__ = "1.0.0"
 __author__ = "UNS-CLAUDEJP Security Team"
-__description__ = "Enterprise-grade security components for UNS-CLAUDEJP 5.4"
+__description__ = "Enterprise-grade security components for UNS-CLAUDEJP 6.5.0"

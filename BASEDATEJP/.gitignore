@@ -1,0 +1,6 @@
+# Ignorar solo el archivo de base de datos Access
+# pero permitir que la carpeta BASEDATEJP esté en el repositorio
+
+*.accdb
+!README.md
+!.gitkeep

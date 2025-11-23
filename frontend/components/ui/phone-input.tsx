@@ -3,9 +3,8 @@
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { formAnimations } from '@/lib/animations';
+import { formAnimations } from '@/lib/form-animations';
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { InputLabel, ErrorShakeContainer, ErrorMessage, HintText } from './input-parts';
 
 export interface CountryCode {
   code: string;
@@ -138,10 +137,29 @@ const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
     return (
       <div className="w-full space-y-1.5">
         {/* Label */}
-        <InputLabel label={label} error={error} disabled={disabled} required={required} />
+        {label && (
+          <label
+            className={cn(
+              'block text-sm font-medium',
+              error ? 'text-red-600' : 'text-foreground',
+              disabled && 'opacity-50'
+            )}
+          >
+            {label}
+            {required && (
+              <span className="text-red-500 ml-1" aria-label="required">
+                *
+              </span>
+            )}
+          </label>
+        )}
 
         {/* Input Container */}
-        <ErrorShakeContainer error={error}>
+        <motion.div
+          className="relative"
+          animate={error ? 'animate' : 'initial'}
+          variants={error ? formAnimations.shake : undefined}
+        >
           <div className="relative flex items-center">
             {/* Country Code Selector */}
             <div ref={dropdownRef} className="relative">
@@ -250,11 +268,42 @@ const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
               {...props}
             />
           </div>
-        </ErrorShakeContainer>
+        </motion.div>
 
-        {/* Hint and Error Messages */}
-        <HintText hint={hint} error={error} />
-        <ErrorMessage error={error} />
+        {/* Hint Text */}
+        {hint && !error && (
+          <p className="text-xs text-muted-foreground">{hint}</p>
+        )}
+
+        {/* Error Message */}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              className="text-xs text-red-600 flex items-center gap-1"
+              variants={formAnimations.slideDown}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     );
   }

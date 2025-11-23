@@ -3,8 +3,6 @@ Script de inicialización automática de la base de datos
 Se ejecuta al arrancar el backend para asegurar que el usuario admin existe
 """
 import asyncio
-import os
-import sys
 from sqlalchemy import text
 from app.core.database import engine, SessionLocal
 from app.core.config import settings
@@ -15,15 +13,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# Security: Get admin password from environment variable
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
-
-if not ADMIN_PASSWORD:
-    logger.error("❌ SECURITY ERROR: ADMIN_PASSWORD environment variable not set!")
-    logger.error("Please set ADMIN_PASSWORD in your .env file or environment")
-    logger.error("Example: export ADMIN_PASSWORD='your-secure-password'")
-    sys.exit(1)
 
 async def init_database():
     """Inicializa la base de datos con el usuario admin por defecto"""
@@ -37,8 +26,8 @@ async def init_database():
         if count == 0:
             logger.info("Usuario admin no encontrado. Creando...")
 
-            # Hash the admin password from environment variable
-            password_hash = pwd_context.hash(ADMIN_PASSWORD)
+            # Hash de la password 'admin123'
+            password_hash = pwd_context.hash("admin123")
 
             # Insertar usuario admin
             db.execute(text("""
@@ -56,8 +45,8 @@ async def init_database():
         else:
             logger.info("Usuario admin ya existe. Actualizando password...")
 
-            # Update password from environment variable
-            password_hash = pwd_context.hash(ADMIN_PASSWORD)
+            # Actualizar password por si acaso
+            password_hash = pwd_context.hash("admin123")
 
             db.execute(text("""
                 UPDATE users

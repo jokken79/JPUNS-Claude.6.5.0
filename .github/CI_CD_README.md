@@ -1,7 +1,7 @@
 # CI/CD Pipeline Documentation
-# UNS-ClaudeJP 6.0.0
+# UNS-ClaudeJP 6.5.0
 
-![CI/CD Status](https://github.com/YOUR_USERNAME/UNS-ClaudeJP-6.0.0/workflows/CI%2FCD%20Pipeline/badge.svg)
+![CI/CD Status](https://github.com/YOUR_USERNAME/UNS-ClaudeJP-6.5.0/workflows/CI%2FCD%20Pipeline/badge.svg)
 ![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
@@ -235,7 +235,7 @@ Add these badges to your `README.md`:
 
 ### CI/CD Status
 ```markdown
-![CI/CD Pipeline](https://github.com/YOUR_USERNAME/UNS-ClaudeJP-6.0.0/workflows/CI%2FCD%20Pipeline/badge.svg)
+![CI/CD Pipeline](https://github.com/YOUR_USERNAME/UNS-ClaudeJP-6.5.0/workflows/CI%2FCD%20Pipeline/badge.svg)
 ```
 
 ### Coverage

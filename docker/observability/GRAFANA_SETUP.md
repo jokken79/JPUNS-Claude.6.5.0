@@ -1,4 +1,4 @@
-# Grafana Setup Guide for UNS-ClaudeJP 6.0.0
+# Grafana Setup Guide for UNS-ClaudeJP 6.5.0
 
 ## Overview
 
@@ -117,8 +117,8 @@ SELECT COUNT(*) as employee_count FROM employee;
 **To install Redis plugin (optional):**
 ```bash
 # Execute in Grafana container
-docker exec -it uns-claudejp-600-grafana grafana-cli plugins install redis-datasource
-docker restart uns-claudejp-600-grafana
+docker exec -it uns-claudejp-650-grafana grafana-cli plugins install redis-datasource
+docker restart uns-claudejp-650-grafana
 ```
 
 Then configure:
@@ -494,7 +494,7 @@ Source: {{ .GeneratorURL }}
     "memory_percent": 45.8
   },
   "application": {
-    "version": "6.0.0",
+    "version": "6.5.0",
     "environment": "development"
   }
 }
@@ -544,14 +544,14 @@ pg_stat_database_numbackends
 **Redis CLI**:
 ```bash
 # Check Redis is responding
-docker exec -it uns-claudejp-600-redis redis-cli ping
+docker exec -it uns-claudejp-650-redis redis-cli ping
 # Expected: PONG
 
 # Check memory usage
-docker exec -it uns-claudejp-600-redis redis-cli info memory
+docker exec -it uns-claudejp-650-redis redis-cli info memory
 
 # Check key count
-docker exec -it uns-claudejp-600-redis redis-cli dbsize
+docker exec -it uns-claudejp-650-redis redis-cli dbsize
 ```
 
 **Prometheus (via redis_exporter)**:
@@ -585,7 +585,7 @@ docker compose ps prometheus
 curl http://localhost:9090/-/healthy
 
 # Check Grafana can reach Prometheus (from Grafana container)
-docker exec -it uns-claudejp-600-grafana wget -qO- http://prometheus:9090/-/healthy
+docker exec -it uns-claudejp-650-grafana wget -qO- http://prometheus:9090/-/healthy
 
 # Restart services
 docker compose restart prometheus grafana
@@ -601,7 +601,7 @@ docker compose restart prometheus grafana
 docker compose ps db
 
 # Test connection from Grafana container
-docker exec -it uns-claudejp-600-grafana nc -zv db 5432
+docker exec -it uns-claudejp-650-grafana nc -zv db 5432
 
 # Check credentials in .env file
 cat .env | grep POSTGRES

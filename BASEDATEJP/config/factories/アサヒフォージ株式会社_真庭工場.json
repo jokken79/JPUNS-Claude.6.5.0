@@ -1,0 +1,72 @@
+{
+  "factory_id": "アサヒフォージ株式会社_真庭工場",
+  "client_company": {
+    "name": "アサヒフォージ株式会社",
+    "address": "岡山県真庭市上河内3828-9",
+    "phone": "0867-42-8786",
+    "responsible_person": {
+      "department": "真庭工場",
+      "name": "工場長　朝日　克次",
+      "phone": "0867-42-8786"
+    },
+    "complaint_handler": {
+      "department": "真庭工場",
+      "name": "副工場長　久岡　正和",
+      "phone": "0867-42-8786"
+    }
+  },
+  "plant": {
+    "name": "真庭工場",
+    "address": "岡山県真庭市上河内3828-9",
+    "phone": "0867-42-8786"
+  },
+  "assignment": {
+    "department": "真庭工場",
+    "line": "プレス",
+    "supervisor": {
+      "department": "鍛造課",
+      "name": "課長　古南　秀一",
+      "phone": "0867-42-8786"
+    }
+  },
+  "job": {
+    "description": "鍛造品のプレス成型及び付帯業務",
+    "description2": "鍛造品のプレス成型及び付帯業務",
+    "hourly_rate": 2200.0
+  },
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "営業部",
+      "name": "取締役 部長　中山　欣英",
+      "phone": "052-938-8840"
+    },
+    "complaint_handler": {
+      "department": "岡山事業所",
+      "name": "所長　浜本　和法",
+      "phone": "086-259-4117"
+    }
+  },
+  "schedule": {
+    "work_hours": "①6：00～15：00（定時）②15：00～00：00（定時）③16：00～2：00（残業１H）④17：00～4：00（残業2H）  　⑤18：00～6：00（残業3H）　⑥8：00～17：00（定時）",
+    "break_time": "①11：00～12：00（１H）　②20：00～21：00（１H）　③21：00～22：00（１H）　④22：00～23：00（１H）　　⑤23：00～00：00（１H）　⑥12：00～13：00（１H）",
+    "calendar": "月～金　(シフトに準ずる）休日は、土曜日・日曜日・年末年始（12月28日～1月5日)・GW(4月29日～5月6日)・夏季休暇（8月9日～8月17日)",
+    "start_date": "2024-02-19 00:00:00",
+    "end_date": "2024-05-31 00:00:00",
+    "conflict_date": "2024-07-01 00:00:00",
+    "non_work_day_labor": "１ヶ月に２日の範囲内で命ずることができる。",
+    "overtime_labor": "5時間/日、42時間/月、320時間/年迄とする。但し、特別条項の申請により、80時間/月、720時間/年迄延長できる。申請は6回/年迄とする。",
+    "time_unit": "30.0"
+  },
+  "payment": {
+    "closing_date": "月末日",
+    "payment_date": "翌月末日",
+    "bank_account": "碧海信用金庫　刈谷支店　普通　6072767　名義人　ユニバーサル企画(株)",
+    "worker_closing_date": "20日",
+    "worker_payment_date": "15日",
+    "worker_calendar": "土曜日・日曜日・年末年始（12月30日～1月7日)・GW(4月28日～5月5日)・夏季休暇（8月11日～8月18日)"
+  },
+  "agreement": {
+    "period": "2025-03-31 00:00:00",
+    "explainer": ""
+  }
+}

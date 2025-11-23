@@ -66,8 +66,8 @@ datasources:
     version: 1
 
   # Optional: Redis datasource (requires redis-datasource plugin)
-  # To enable: docker exec -it uns-claudejp-600-grafana grafana-cli plugins install redis-datasource
-  # Then restart: docker restart uns-claudejp-600-grafana
+  # To enable: docker exec -it uns-claudejp-650-grafana grafana-cli plugins install redis-datasource
+  # Then restart: docker restart uns-claudejp-650-grafana
   # - name: Redis-UNS
   #   type: redis-datasource
   #   access: proxy

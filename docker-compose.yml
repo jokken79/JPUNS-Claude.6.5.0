@@ -1,8 +1,8 @@
 # ========================================
-# Docker Compose Configuration for UNS-ClaudeJP 6.0.0
+# Docker Compose Configuration for UNS-ClaudeJP 6.5.0
 # ========================================
 
-name: uns-claudejp-600
+name: uns-claudejp-650
 
 # ========================================
 # Logging Configuration Templates
@@ -43,7 +43,7 @@ x-logging-minimal: &logging-minimal
 services:
   db:
     image: postgres:15-alpine
-    container_name: uns-claudejp-600-db
+    container_name: uns-claudejp-650-db
     restart: always
     env_file: .env
     environment:
@@ -51,7 +51,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - uns_claudejp_600_postgres_data:/var/lib/postgresql/data
+      - uns_claudejp_650_postgres_data:/var/lib/postgresql/data
       - ./base-datos/01_init_database.sql:/docker-entrypoint-initdb.d/01_init_database.sql:ro
       # NOTE: Database initialization handled by SQL script and Alembic migrations (importer service)
     # SECURITY FIX: Do NOT expose port publicly - only internal communication
@@ -59,7 +59,7 @@ services:
     expose:
       - "5432"
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
@@ -70,7 +70,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: uns-claudejp-600-redis
+    container_name: uns-claudejp-650-redis
     restart: always
     env_file: .env
     command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes --requirepass ${REDIS_PASSWORD}
@@ -79,9 +79,9 @@ services:
     expose:
       - "6379"
     volumes:
-      - uns_claudejp_600_redis_data:/data
+      - uns_claudejp_650_redis_data:/data
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -94,7 +94,7 @@ services:
     build:
       context: ./backend
       dockerfile: ../docker/Dockerfile.backend
-    container_name: uns-claudejp-600-importer
+    container_name: uns-claudejp-650-importer
     restart: 'no'
     env_file: .env
     environment:
@@ -105,8 +105,8 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       ALGORITHM: ${ALGORITHM:-HS256}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-480}
-      APP_NAME: ${APP_NAME:-UNS-ClaudeJP 6.0.0}
-      APP_VERSION: ${APP_VERSION:-6.0.0}
+      APP_NAME: ${APP_NAME:-UNS-ClaudeJP 6.5.0}
+      APP_VERSION: ${APP_VERSION:-6.5.0}
       ENVIRONMENT: ${ENVIRONMENT:-development}
       DEBUG: ${DEBUG:-false}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
@@ -118,7 +118,7 @@ services:
       db:
         condition: service_healthy
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
     command: >
       sh -c "
         echo '========================================' &&
@@ -161,7 +161,7 @@ services:
       context: ./backend
       dockerfile: ../docker/Dockerfile.backend
     # container_name removed to enable horizontal scaling with --scale backend=N
-    # Docker Compose will auto-generate unique names: uns-claudejp-600-backend-1, uns-claudejp-600-backend-2, etc.
+    # Docker Compose will auto-generate unique names: uns-claudejp-650-backend-1, uns-claudejp-650-backend-2, etc.
     restart: always
     env_file: .env
     environment:
@@ -173,8 +173,8 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       ALGORITHM: ${ALGORITHM:-HS256}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-480}
-      APP_NAME: ${APP_NAME:-UNS-ClaudeJP 6.0.0}
-      APP_VERSION: ${APP_VERSION:-6.0.0}
+      APP_NAME: ${APP_NAME:-UNS-ClaudeJP 6.5.0}
+      APP_VERSION: ${APP_VERSION:-6.5.0}
       ENVIRONMENT: ${ENVIRONMENT}
       DEBUG: ${DEBUG}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
@@ -223,7 +223,7 @@ services:
       importer:
         condition: service_completed_successfully
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
       interval: 30s
@@ -238,7 +238,7 @@ services:
       context: ./backend
       dockerfile: ../docker/Dockerfile.backend
     # container_name removed to enable horizontal scaling with --scale backend-prod=N
-    # Docker Compose will auto-generate unique names: uns-claudejp-600-backend-prod-1, uns-claudejp-600-backend-prod-2, etc.
+    # Docker Compose will auto-generate unique names: uns-claudejp-650-backend-prod-1, uns-claudejp-650-backend-prod-2, etc.
     restart: always
     env_file: .env
     environment:
@@ -250,8 +250,8 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       ALGORITHM: ${ALGORITHM:-HS256}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-480}
-      APP_NAME: ${APP_NAME:-UNS-ClaudeJP 6.0.0}
-      APP_VERSION: ${APP_VERSION:-6.0.0}
+      APP_NAME: ${APP_NAME:-UNS-ClaudeJP 6.5.0}
+      APP_VERSION: ${APP_VERSION:-6.5.0}
       ENVIRONMENT: ${ENVIRONMENT:-production}
       DEBUG: ${DEBUG:-false}
       FRONTEND_URL: ${FRONTEND_URL:-https://app.uns-kikaku.com}
@@ -297,7 +297,7 @@ services:
       importer:
         condition: service_completed_successfully
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
       interval: 30s
@@ -313,28 +313,28 @@ services:
       context: ./frontend
       dockerfile: ../docker/Dockerfile.frontend
       target: development
-    container_name: uns-claudejp-600-frontend
+    container_name: uns-claudejp-650-frontend
     restart: always
     env_file: .env
     environment:
       NEXT_PUBLIC_OTEL_ENABLED: 'false'
-      NEXT_PUBLIC_APP_VERSION: ${APP_VERSION:-6.0.0}
-      NEXT_PUBLIC_APP_NAME: ${APP_NAME:-UNS-ClaudeJP 6.0.0}
+      NEXT_PUBLIC_APP_VERSION: ${APP_VERSION:-6.5.0}
+      NEXT_PUBLIC_APP_NAME: ${APP_NAME:-UNS-ClaudeJP 6.5.0}
       NEXT_PUBLIC_OTEL_EXPORTER_URL: ${NEXT_PUBLIC_OTEL_EXPORTER_URL:-http://otel-collector:4318/v1/traces}
       NEXT_PUBLIC_GRAFANA_URL: ${NEXT_PUBLIC_GRAFANA_URL:-http://localhost:3001}
       NEXT_PUBLIC_TELEMETRY_SAMPLE_RATE: ${NEXT_PUBLIC_TELEMETRY_SAMPLE_RATE:-1}
       NODE_ENV: development
     volumes:
       - ./frontend:/app
-      - uns_claudejp_600_frontend_node_modules:/app/node_modules
-      - uns_claudejp_600_frontend_next:/app/.next
+      - uns_claudejp_650_frontend_node_modules:/app/node_modules
+      - uns_claudejp_650_frontend_next:/app/.next
     ports:
       - "3000:3000"
     depends_on:
       backend:
         condition: service_healthy
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
     stdin_open: true
     tty: true
     healthcheck:
@@ -351,13 +351,13 @@ services:
       context: ./frontend
       dockerfile: ../docker/Dockerfile.frontend
       target: runner
-    container_name: uns-claudejp-600-frontend-prod
+    container_name: uns-claudejp-650-frontend-prod
     restart: always
     env_file: .env
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.uns-kikaku.com/api}
-      NEXT_PUBLIC_APP_VERSION: ${APP_VERSION:-6.0.0}
-      NEXT_PUBLIC_APP_NAME: ${APP_NAME:-UNS-ClaudeJP 6.0.0}
+      NEXT_PUBLIC_APP_VERSION: ${APP_VERSION:-6.5.0}
+      NEXT_PUBLIC_APP_NAME: ${APP_NAME:-UNS-ClaudeJP 6.5.0}
       NEXT_PUBLIC_OTEL_EXPORTER_URL: ${NEXT_PUBLIC_OTEL_EXPORTER_URL:-http://otel-collector:4318/v1/traces}
       NEXT_PUBLIC_GRAFANA_URL: ${NEXT_PUBLIC_GRAFANA_URL:-http://localhost:3001}
       NEXT_PUBLIC_TELEMETRY_SAMPLE_RATE: ${NEXT_PUBLIC_TELEMETRY_SAMPLE_RATE:-1}
@@ -368,7 +368,7 @@ services:
       backend-prod:
         condition: service_healthy
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3000 || exit 1"]
       interval: 30s
@@ -380,7 +380,7 @@ services:
 
   adminer:
     image: adminer
-    container_name: uns-claudejp-600-adminer
+    container_name: uns-claudejp-650-adminer
     restart: always
     # SECURITY FIX: Only expose on localhost (development only)
     # Do NOT use in production - remove this service entirely
@@ -391,7 +391,7 @@ services:
       db:
         condition: service_healthy
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080 || exit 1"]
       interval: 30s
@@ -402,7 +402,7 @@ services:
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.103.0
-    container_name: uns-claudejp-600-otel
+    container_name: uns-claudejp-650-otel
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./docker/observability/otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
@@ -420,15 +420,15 @@ services:
     #   start_period: 30s
     logging: *logging-verbose
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
 
   tempo:
     image: grafana/tempo:2.5.0
-    container_name: uns-claudejp-600-tempo
+    container_name: uns-claudejp-650-tempo
     command: ["-config.file=/etc/tempo.yaml"]
     volumes:
       - ./docker/observability/tempo.yaml:/etc/tempo.yaml:ro
-      - uns_claudejp_600_tempo_data:/var/tempo
+      - uns_claudejp_650_tempo_data:/var/tempo
     ports:
       - "3200:3200"
     healthcheck:
@@ -438,16 +438,16 @@ services:
       retries: 5
     logging: *logging-default
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
 
   prometheus:
     image: prom/prometheus:v2.52.0
-    container_name: uns-claudejp-600-prometheus
+    container_name: uns-claudejp-650-prometheus
     command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus"]
     volumes:
       - ./docker/observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./docker/observability/prometheus-alerts.yml:/etc/prometheus/prometheus-alerts.yml:ro
-      - uns_claudejp_600_prometheus_data:/prometheus
+      - uns_claudejp_650_prometheus_data:/prometheus
     ports:
       - "9090:9090"
     healthcheck:
@@ -457,11 +457,11 @@ services:
       retries: 5
     logging: *logging-default
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
 
   grafana:
     image: grafana/grafana:11.2.0
-    container_name: uns-claudejp-600-grafana
+    container_name: uns-claudejp-650-grafana
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
@@ -473,7 +473,7 @@ services:
     ports:
       - "3001:3000"
     volumes:
-      - uns_claudejp_600_grafana_data:/var/lib/grafana
+      - uns_claudejp_650_grafana_data:/var/lib/grafana
       - ./docker/observability/grafana/provisioning:/etc/grafana/provisioning:ro
       - ./docker/observability/grafana/dashboards:/etc/grafana/dashboards:ro
     depends_on:
@@ -482,7 +482,7 @@ services:
       tempo:
         condition: service_healthy
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health || exit 1"]
       interval: 30s
@@ -495,7 +495,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.nginx
-    container_name: uns-claudejp-600-nginx
+    container_name: uns-claudejp-650-nginx
     restart: always
     ports:
       - "80:80"
@@ -512,7 +512,7 @@ services:
       # Note: adminer is dev-only, not included as dependency
       # Nginx will gracefully handle adminer being unavailable in prod
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/nginx-health"]
       interval: 30s
@@ -534,7 +534,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.backup
-    container_name: uns-claudejp-600-backup
+    container_name: uns-claudejp-650-backup
     restart: always
     env_file: .env
     environment:
@@ -555,7 +555,7 @@ services:
       db:
         condition: service_healthy
     networks:
-      - uns-claudejp-600-network
+      - uns-claudejp-650-network
     healthcheck:
       test: ["CMD-SHELL", "pgrep crond > /dev/null && find /backups -name 'backup_*.sql.gz' -type f -mtime -2 | grep -q . || exit 1"]
       interval: 1h
@@ -566,21 +566,21 @@ services:
     profiles: ["dev", "prod"]
 
 volumes:
-  uns_claudejp_600_postgres_data:
+  uns_claudejp_650_postgres_data:
     driver: local
-  uns_claudejp_600_redis_data:
+  uns_claudejp_650_redis_data:
     driver: local
-  uns_claudejp_600_grafana_data:
+  uns_claudejp_650_grafana_data:
     driver: local
-  uns_claudejp_600_prometheus_data:
+  uns_claudejp_650_prometheus_data:
     driver: local
-  uns_claudejp_600_tempo_data:
+  uns_claudejp_650_tempo_data:
     driver: local
-  uns_claudejp_600_frontend_node_modules:
+  uns_claudejp_650_frontend_node_modules:
     driver: local
-  uns_claudejp_600_frontend_next:
+  uns_claudejp_650_frontend_next:
     driver: local
 
 networks:
-  uns-claudejp-600-network:
+  uns-claudejp-650-network:
     driver: bridge

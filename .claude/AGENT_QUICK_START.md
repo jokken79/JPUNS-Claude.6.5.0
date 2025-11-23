@@ -1,370 +1,194 @@
-# 🚀 Agent Quick Start Guide
-
-**For Any AI System** — Start here before using agents.md
+# 🚀 QUICK START GUIDE: ACTIVAR AGENTES ESPECIALISTAS
+## UNS-ClaudeJP 6.5.0
 
 ---
 
-## 📋 Your First 5 Minutes
+## 📖 CÓMO USAR ESTE DOCUMENTO
 
-### 1. **STOP and READ** (2 min)
+Este guide te permite:
+1. **Activar rápidamente** cualquier agente especialista
+2. **Saber exactamente qué hacer** en cada paso
+3. **Monitorear el progreso** con claridad
+4. **Resolver problemas** rápidamente
 
-You have 5 files to understand:
+---
 
-```
-Reading Priority:
-1. ✅ THIS FILE (you are here) ← Start here
-2. ✅ .cursorrules (golden rules)
-3. ✅ .claude/CLAUDE.md (orchestrator guide)
-4. ✅ agents.md (development guide)
-5. ✅ CLAUDE.md in root (project guide)
-```
+## 🎯 PASO 1: DECIDIR QUÉ NECESITAS
 
-### 2. **IDENTIFY YOURSELF** (1 min)
-
-What are you?
-
-- **Claude Code**: You're the ORCHESTRATOR (200k context)
-  → Go to: `.claude/CLAUDE.md` (master orchestrator blueprint)
-
-- **ChatGPT / Claude.ai**: You're a CONSULTANT (can't execute code)
-  → Best use: Answer questions, suggest approaches, review code
-
-- **Gemini CLI**: You're a CODE GENERATOR (specialized codegen)
-  → Best use: Generate boilerplate, analyze code, find bugs
-
-- **Any Other AI**: Follow the GENERAL PATTERN
-  → See: agents.md → "Development Workflows by AI Type"
-
-### 3. **UNDERSTAND THE ARCHITECTURE** (1 min)
-
-This project has **13 specialized agents**:
+### Matriz Rápida de Decisión (Top 20)
 
 ```
-🎯 Your request gets routed to the RIGHT specialist:
+¿Qué necesitas?                          → Agent Especialista
 
-"I need to add an API endpoint" → api-developer
-"I need to create a UI component" → ui-designer
-"I need to optimize performance" → performance-optimizer
-"I need to fix a bug" → bug-hunter
-etc.
-```
-
-Each specialist has a **focused context window** for ONE task.
-
-### 4. **FOLLOW THE MANDATORY WORKFLOW** (1 min)
-
-```
-Step 1: CREATE TODO LIST (TodoWrite)
-    ↓
-Step 2: DELEGATE FIRST TODO (Task tool)
-    ↓
-Step 3: TEST IMPLEMENTATION (Playwright)
-    ↓
-Step 4: MARK COMPLETE & NEXT TODO
-    ↓
-Repeat until done ✅
+1. "Crear nuevo componente React"        → react19-component-architect
+2. "Diseñar API endpoint"                → fastapi-router-architect
+3. "Crear nueva tabla BD"                → sqlalchemy-orm-expert
+4. "Migrar BD changes"                   → alembic-migration-master
+5. "Validar datos (frontend)"            → react-hook-form-validator
+6. "Validar datos (backend)"             → pydantic-schema-validator
+7. "Manejar autenticación"               → jwt-auth-guardian
+8. "Calcular nómina"                     → payroll-processing-engine
+9. "Integrar IA (ChatGPT, etc)"          → ai-integration-specialist
+10. "Procesar OCR de documentos"         → ocr-document-processor
+11. "Enviar emails/notificaciones"       → notification-system-builder
+12. "Auditoría y logging"                → audit-security-logger
+13. "Optimizar queries BD"               → postgresql-query-optimizer
+14. "Configurar caching Redis"           → redis-caching-strategist
+15. "Escribir tests E2E"                 → playwright-e2e-engineer
+16. "Escribir unit tests"                → vitest-unit-tester / pytest-backend-tester
+17. "Hacer setup Docker"                 → docker-container-orchestrator
+18. "Crear CI/CD pipeline"               → github-actions-pipeline-builder
+19. "Arreglar vulnerabilidad XSS"        → security-vulnerability-hunter
+20. "Implementar rate limiting"          → rate-limiter-architect
 ```
 
 ---
 
-## 🎯 Quick Decision Tree
+## 🔧 PASO 2: PREPARAR LA SOLICITUD
+
+### Template Simple de Solicitud
 
 ```
-Are you Claude Code?
-├─ YES: You are the ORCHESTRATOR
-│   └─ Read: .claude/CLAUDE.md
-│   └─ Create todo lists with TodoWrite
-│   └─ Delegate to specialists with Task tool
-│   └─ Always test with Playwright
-│
-├─ NO: Are you a web-based AI (ChatGPT, Claude.ai)?
-│   └─ YES: You are a CONSULTANT
-│   └─ Best use: Answer questions, suggest code
-│   └─ Cannot: Run commands, commit code, test
-│   └─ Workflow: Answer → User copies to Claude Code → Claude Code executes
-│
-├─ NO: Are you a CLI tool (Gemini CLI, etc.)?
-│   └─ YES: You are a CODE GENERATOR
-│   └─ Best use: Generate code, find bugs, analyze patterns
-│   └─ Workflow: Generate → User verifies → Integrate
-│
-└─ NO: Unknown AI type?
-    └─ Follow GENERAL PATTERN in agents.md
-    └─ Read: .cursorrules (universal rules)
-    └─ Ask: "What tools do I have available?"
+AGENT: [nombre del agente]
+TASK: [descripción clara de 1-2 líneas]
+PRIORITY: [CRITICAL/HIGH/MEDIUM/LOW]
+FILES_AFFECTED: [lista de archivos]
+ACCEPTANCE_CRITERIA:
+  - [criterio 1]
+  - [criterio 2]
+  - [criterio 3]
 ```
 
 ---
 
-## ✅ Pre-Work Checklist
+## 📋 PASO 3: MONITOREAR PROGRESO
 
-Before you start ANY work on this project:
+### Estados de Tarea
 
-```bash
-# 1. Read the rules
-cat .cursorrules | head -50
-
-# 2. Understand your role
-# See ".claude/CLAUDE.md" (orchestrator guide)
-# OR agents.md → "Development Workflows by AI Type" (your AI type)
-
-# 3. Verify project setup
-docker compose ps  # All 12 services should be healthy
-
-# 4. Know the directory structure
-# Key paths in agents.md → "Project Structure"
-
-# 5. Know the forbidden files
-# See .cursorrules → "Protected Files & Directories"
-```
+- **NOT_STARTED**: Asignada, esperando inicio
+- **IN_PROGRESS**: Agente trabajando, sin blockers
+- **BLOCKED**: Esperando input externo
+- **COMPLETED**: Listo para siguiente fase
 
 ---
 
-## 🚨 CRITICAL RULES (Must Never Break)
+## 🎨 FRONTEND AGENTS
 
-### ✅ ALWAYS DO
+### react19-component-architect
+**Cuándo**: Necesitas nuevo componente React
+**Tiempo**: ~2 horas
+**Entrega**: Componente + tests + stories
 
-- ✅ Read this file first
-- ✅ Create todo lists when work is complex (use TodoWrite)
-- ✅ Mark todos as in_progress → completed
-- ✅ Delegate to specialists (don't do everything yourself)
-- ✅ Test every implementation before marking complete
-- ✅ Reference code as file:line_number (e.g., backend/app/api/candidates.py:45)
-- ✅ Ask user before modifying existing code
-- ✅ Escalate to humans when blocked
-- ✅ Follow semantic versioning (MAJOR.MINOR.PATCH)
+### tailwind-design-system-curator  
+**Cuándo**: Estilos, dark mode, design tokens
+**Tiempo**: ~1.5 horas
+**Entrega**: Tailwind config + components
 
-### ❌ NEVER DO
+### react-hook-form-validator
+**Cuándo**: Formularios con validación
+**Tiempo**: ~1 hora
+**Entrega**: Form component reutilizable
 
-- ❌ Modify `.claude/` or `docker-compose.yml` without permission
-- ❌ Change locked dependency versions
-- ❌ Skip testing (all code must pass tests)
-- ❌ Use raw SQL (always use SQLAlchemy ORM)
-- ❌ Hardcode secrets or credentials
-- ❌ Implement multiple features in one commit
-- ❌ Merge PRs without all checks passing
-- ❌ Create links in headers/footers without actual pages
-- ❌ Implement without understanding the spec
+### react-query-data-fetcher
+**Cuándo**: Data fetching desde API
+**Tiempo**: ~1.5 horas
+**Entrega**: useQuery/useMutation hooks
 
----
-
-## 🛠️ Essential Commands
-
-### Project Startup
-
-```bash
-# Start everything
-docker compose up -d
-
-# Check health
-docker compose ps
-
-# View logs
-docker compose logs -f backend
-```
-
-### Backend (FastAPI + Python)
-
-```bash
-# Enter backend
-docker exec -it uns-claudejp-backend bash
-
-# Run tests
-pytest backend/tests/ -v
-
-# Apply migrations
-alembic upgrade head
-
-# Create migration
-alembic revision --autogenerate -m "add_field"
-```
-
-### Frontend (Next.js + React)
-
-```bash
-# Enter frontend
-docker exec -it uns-claudejp-frontend bash
-
-# Type check (REQUIRED before commit)
-npm run type-check
-
-# Tests
-npm test
-
-# E2E tests (REQUIRED before PR)
-npm run test:e2e
-
-# Build check
-npm run build
-```
-
-### Database (PostgreSQL)
-
-```bash
-# Enter database
-docker exec -it uns-claudejp-db psql -U uns_admin -d uns_claudejp
-
-# List tables
-\dt
-
-# Count records
-SELECT COUNT(*) FROM candidates;
-```
+### playwright-e2e-engineer
+**Cuándo**: Tests end-to-end
+**Tiempo**: ~2 horas
+**Entrega**: .spec.ts files + reports
 
 ---
 
-## 📚 Where to Find Things
+## 🔌 BACKEND AGENTS
 
-| What | Where |
-|------|-------|
-| **Orchestrator guide** | `.claude/CLAUDE.md` |
-| **Development guide** | `agents.md` |
-| **Golden rules** | `.cursorrules` |
-| **Project specification** | `CLAUDE.md` (root) + `PROMPT_RECONSTRUCCION_COMPLETO.md` |
-| **Architecture** | `docs/architecture/` |
-| **API endpoints** | `backend/app/api/` |
-| **Pages** | `frontend/app/(dashboard)/` |
-| **Components** | `frontend/components/` |
-| **Database models** | `backend/app/models/models.py` |
-| **Schemas** | `backend/app/schemas/` |
-| **Services** | `backend/app/services/` |
+### fastapi-router-architect
+**Cuándo**: API endpoint nuevo
+**Tiempo**: ~2 horas
+**Entrega**: Router implementado + documentado
 
----
+### sqlalchemy-orm-expert
+**Cuándo**: Modelo BD nuevo
+**Tiempo**: ~1.5 horas
+**Entrega**: Model class + relationships
 
-## 🎓 Learning Path
+### alembic-migration-master
+**Cuándo**: Migración BD
+**Tiempo**: ~30 min
+**Entrega**: Migration file + tested
 
-### For Claude Code (Orchestrator)
+### pydantic-schema-validator
+**Cuándo**: Request/response validation
+**Tiempo**: ~1 hora
+**Entrega**: Pydantic schemas
 
-1. Read this file (5 min) ← You are here
-2. Read `.claude/CLAUDE.md` (10 min) ← Orchestration patterns
-3. Create first todo list (TodoWrite) (5 min)
-4. Delegate first task (Task tool) (5 min)
-5. Test result (Playwright) (5 min)
-6. Repeat steps 3-5 until done ✅
-
-### For ChatGPT / Claude.ai (Consultant)
-
-1. Read this file (5 min)
-2. Read agents.md → "Development Workflows by AI Type" (5 min)
-3. Answer user's question with code suggestions
-4. User copies to Claude Code
-5. Claude Code executes while you wait
-
-### For Gemini CLI / Code Generators
-
-1. Read this file (5 min)
-2. Read agents.md → "For Gemini CLI / Google AI Studio" (5 min)
-3. Generate boilerplate code
-4. User integrates into project
-5. Claude Code tests and verifies
+### payroll-processing-engine
+**Cuándo**: Lógica de nómina
+**Tiempo**: ~4 horas
+**Entrega**: Funciones + 100% accuracy tests
 
 ---
 
-## 🚀 Your First Task
+## 🗄️ DATABASE AGENTS
 
-### If You're Claude Code:
+### postgresql-query-optimizer
+**Cuándo**: Queries lentas
+**Tiempo**: ~2 horas
+**Entrega**: Optimized queries + indexes
 
-```
-1. User says: "Add a candidate import feature"
-
-2. YOU:
-   - Read this file ✅ (you did!)
-   - Create todo list (TodoWrite)
-     [ ] Design API endpoint
-     [ ] Create validation schema
-     [ ] Implement CSV parsing
-     [ ] Build frontend form
-     [ ] Write tests
-     [ ] Test E2E
-
-   - Delegate first todo (Task)
-     → "Design POST /api/candidates/import endpoint..."
-
-   - Delegate to specialist (api-developer)
-   - Specialist completes in own context
-
-   - Test result (Playwright)
-   - Mark todo complete ✅
-
-   - Continue with next todo
-
-3. When all todos complete:
-   - Report to user
-   - Ready for PR review
-```
-
-### If You're ChatGPT / Claude.ai:
-
-```
-1. User says: "How should I structure the candidate import feature?"
-
-2. YOU:
-   - Explain the architecture
-   - Show code examples
-   - Suggest patterns
-
-3. User:
-   - Copies your response
-   - Pastes into Claude Code
-
-4. Claude Code:
-   - Reads your suggestions
-   - Implements using specialists
-   - Tests everything
-   - Creates PR
-```
+### redis-caching-strategist
+**Cuándo**: Implementar caching
+**Tiempo**: ~2 horas
+**Entrega**: Cache implementation + monitoring
 
 ---
 
-## 🔗 Next Steps
+## 🚀 DEVOPS AGENTS
 
-After reading this:
+### docker-container-orchestrator
+**Cuándo**: Containerizar servicios
+**Tiempo**: ~1.5 horas
+**Entrega**: Dockerfile + docker-compose.yml
 
-### **If you're Claude Code:**
-→ Go read: `.claude/CLAUDE.md`
-
-### **If you're ChatGPT/Claude.ai:**
-→ Go read: `agents.md` → "Development Workflows by AI Type"
-
-### **If you're Gemini CLI:**
-→ Go read: `agents.md` → "For Gemini CLI / Google AI Studio"
-
-### **If you're something else:**
-→ Go read: `agents.md` → "For Any New AI (General Pattern)"
+### github-actions-pipeline-builder
+**Cuándo**: CI/CD pipeline
+**Tiempo**: ~3 horas
+**Entrega**: Workflows + automation
 
 ---
 
-## ❓ Quick Q&A
+## 🔒 SECURITY AGENTS
 
-**Q: What if I don't know what to do?**
-A: Create a todo list first (TodoWrite). Breaking down work helps.
+### security-vulnerability-hunter
+**Cuándo**: Arreglar vulnerabilidad
+**Tiempo**: ~2 horas
+**Entrega**: Fixed code + verification
 
-**Q: What if I get stuck?**
-A: Use `Task(subagent_type="stuck", prompt="...")` to ask for human help.
-
-**Q: Can I implement code myself?**
-A: Only if you're the main orchestrator (Claude Code). Otherwise delegate.
-
-**Q: What if tests fail?**
-A: Don't mark complete. Investigate and fix before moving on.
-
-**Q: Can I modify `.claude/` or `docker-compose.yml`?**
-A: NO. Always ask the user first.
-
-**Q: Can I use raw SQL instead of ORM?**
-A: NO. Always use SQLAlchemy.
-
-**Q: Can I hardcode secrets?**
-A: NO. Use environment variables (.env).
+### rate-limiter-architect
+**Cuándo**: Rate limiting
+**Tiempo**: ~1.5 horas
+**Entrega**: Middleware + configuration
 
 ---
 
-## 📞 Get Help
+## 📊 QUICK REFERENCE TABLE
 
-- **Claude Code Help:** `/help` in CLI
-- **Issues:** https://github.com/anthropics/claude-code/issues
-- **Stuck:** Ask user via AskUserQuestion tool
+| Agent | Especialidad | Tiempo | Criticidad |
+|-------|-------------|--------|-----------|
+| react19-component-architect | React components | 2h | ALTA |
+| fastapi-router-architect | API endpoints | 2h | CRÍTICA |
+| sqlalchemy-orm-expert | DB models | 1.5h | CRÍTICA |
+| playwright-e2e-engineer | E2E tests | 2h | ALTA |
+| payroll-processing-engine | Payroll logic | 4h | CRÍTICA |
+| security-vulnerability-hunter | Security fixes | 2h | CRÍTICA |
+| postgresql-query-optimizer | Query optimization | 2h | MEDIA |
+| github-actions-pipeline-builder | CI/CD | 3h | MEDIA |
 
 ---
 
-**That's it! Now go to the next file based on your AI type.** 🚀
+**Versión**: 1.0  
+**Última actualización**: 2025-11-23
+
+Para detalles completos: ver SPECIALIST_AGENTS_ARCHITECTURE.md
+Para protocolos: ver AGENT_COORDINATION_PROTOCOL.md

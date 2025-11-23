@@ -45,7 +45,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import { useAllPagesVisibility } from '@/lib/hooks/use-page-visibility';
+import { useAllPagesVisibility } from '@/hooks/use-page-visibility';
 import api, { adminControlPanelService, type AuditLogEntry, type RoleStatsResponse, type AdminStatistics } from '@/lib/api';
 import {
   clearPermissionCache,
@@ -59,7 +59,7 @@ import {
   groupRolesByCategory,
   isLegacyRole,
   type RoleCategory,
-} from '@/lib/roles';
+} from '@/lib/role-categories';
 
 // Enhanced components
 import { LegacyRoleBadge } from '@/components/admin/legacy-role-badge';

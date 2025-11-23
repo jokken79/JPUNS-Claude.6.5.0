@@ -1,0 +1,176 @@
+BACKEND CLEANUP ROADMAP - UNS-ClaudeJP 6.0.0
+=============================================
+
+FILES TO DELETE IMMEDIATELY (NO DEPENDENCIES):
+==============================================
+
+LEGACY DIRECTORIES (Safe to delete - no API dependencies):
+- /backend/cache/              (1 file: photo_cache.py)
+- /backend/config/             (1 file: photo config only)
+- /backend/extractors/         (1 file: photo extraction)
+- /backend/processors/         (1 file: chunk processor)
+- /backend/validation/         (1 file: photo validator)
+- /backend/performance/        (1 file: unused optimization.py)
+- /backend/utils/              (1 file: logging utils)
+
+ROOT-LEVEL LEGACY DIRECTORIES:
+- /BASEDATEJP/                 (~2.8 MB - legacy Excel data, OBSOLETE)
+- /base-datos/                 (superseded by alembic migrations)
+
+SCRIPTS TO DELETE (96 total - DELETE ~50-60):
+==============================================
+
+Duplicate Photo Extraction (Keep NONE or consolidate):
+- auto_extract_photos_from_databasejp.py
+- auto_extract_photos_from_databasejp_v2.py (also legacy)
+- extract_photos_from_access_db_v52.py (versioned, old)
+- extract_all_photos_urgente.py (emergency/temporary)
+- extract_photos_fixed.py
+- extract_ole_photos_to_base64.py
+- check_photos.py
+- check_photo_order.py
+- analyze_old_photos.py
+- extract_access_attachments.py
+- extract_access_with_photos.py
+- extract_access_candidates_with_photos.py
+- Plus 17 more similar scripts
+
+Duplicate Import Operations (Keep: import_candidates_improved.py ONLY):
+- import_candidates_simple.py (DELETE - replaced by improved)
+- import_candidates_robust.py (DELETE - replaced by improved)
+- import_candidates_from_json.py (DELETE - likely superseded)
+- import_demo_candidates.py (DELETE - demo/test)
+- import_access_candidates.py (DELETE - legacy from Access DB)
+- import_staff_only.py (DELETE - partial import)
+- final_import_candidates.py (DELETE - old version?)
+- Plus 12 more import variants
+
+Duplicate Admin Operations (Keep ONE consolidated script):
+- reset_admin_simple.py
+- reset_admin_password.py
+- reset_admin_now.py
+- fix_admin_password.py
+- fix_employee_photos.py (DELETE - not used)
+- Plus 5 more
+
+Other Non-Essential Scripts:
+- clear_candidates.py (data cleanup - not for production)
+- test_photo_compression.py (test utility)
+- check_pmi_otsuka.py (specific to one factory)
+- diagnostico_ocr.py (diagnostic, temporary)
+- compare_excel.py (one-off comparison)
+- generate_hash.py (utility)
+- And 8+ more analysis/diagnostic scripts
+
+SERVICES TO CONSOLIDATE (Requires Testing):
+===========================================
+
+Payroll Services (Currently 7 overlapping):
+- DELETE: /app/services/payroll_service.py (root level)
+- KEEP: /app/services/payroll/payroll_service.py (subdirectory version)
+- MERGE: payroll_integration_service.py into payroll service
+- CONSIDER: Merge payslip_service.py into payroll service
+- CONSOLIDATE: salary_service.py + salary_export_service.py
+
+OCR Services (Currently 7 overlapping):
+- CONSOLIDATE: easyocr_service.py + tesseract_ocr_service.py into hybrid_ocr_service.py
+- DELETE: /app/services/ocr_weighting.py (merge into hybrid_ocr_service.py)
+- REVIEW: Consolidate cache logic (cache_service.py + ocr_cache_service.py)
+
+Caching Services:
+- KEEP: cache_service.py (main Redis caching)
+- KEEP: ocr_cache_service.py (OCR-specific)
+- DELETE: /backend/cache/photo_cache.py (unused, duplicates above)
+
+SCHEMAS TO CONSOLIDATE (Requires Testing):
+===========================================
+
+Apartment Schemas (Currently 4 versions):
+- apartment.py
+- apartment_factory.py
+- apartment_v2.py
+- apartment_v2_complete.py
+ACTION: Keep ONE unified schema, deprecate others
+
+Salary Schemas (Currently 2 versions):
+- salary.py
+- salary_unified.py
+ACTION: Consolidate into single schema
+
+UNUSED/ORPHANED SERVICES (Investigation needed):
+==================================================
+
+- employee_matching_service.py - Only in tests, NOT used in API
+- analytics_service.py - Limited API usage
+- additional_providers.py - May not be active
+
+COMMANDS TO EXECUTE:
+====================
+
+# Step 1: Delete legacy root directories
+rm -rf /home/user/UNS-ClaudeJP-6.0.0/BASEDATEJP
+rm -rf /home/user/UNS-ClaudeJP-6.0.0/base-datos
+
+# Step 2: Delete backend orphaned directories
+rm -rf /home/user/UNS-ClaudeJP-6.0.0/backend/cache
+rm -rf /home/user/UNS-ClaudeJP-6.0.0/backend/config
+rm -rf /home/user/UNS-ClaudeJP-6.0.0/backend/extractors
+rm -rf /home/user/UNS-ClaudeJP-6.0.0/backend/processors
+rm -rf /home/user/UNS-ClaudeJP-6.0.0/backend/validation
+rm -rf /home/user/UNS-ClaudeJP-6.0.0/backend/performance
+rm -rf /home/user/UNS-ClaudeJP-6.0.0/backend/utils
+
+# Step 3: Delete legacy scripts (delete 50+ files)
+cd /home/user/UNS-ClaudeJP-6.0.0/backend/scripts
+rm -f auto_extract_photos_from_databasejp.py
+rm -f auto_extract_photos_from_databasejp_v2.py
+rm -f extract_photos_from_access_db_v52.py
+rm -f extract_all_photos_urgente.py
+rm -f import_candidates_simple.py
+rm -f import_candidates_robust.py
+rm -f reset_admin_simple.py
+# ... (see full list above)
+
+IMPACT ANALYSIS:
+================
+
+LOW RISK (Safe to delete immediately):
+- ✅ BASEDATEJP/ - No code references
+- ✅ base-datos/ - Superseded by alembic
+- ✅ backend/cache/, extractors/, processors/, validation/ - Only in old v2 script
+- ✅ Most scripts - Temporary/one-off utilities
+
+MEDIUM RISK (Requires testing):
+- ⚠️ Consolidating payroll services - Affects payroll API
+- ⚠️ Consolidating schemas - Affects data model APIs
+- ⚠️ Consolidating OCR services - Affects OCR pipeline
+
+EXPECTED RESULTS:
+=================
+
+BEFORE:
+- 305 Python files
+- 98,854 lines of code
+- 96 scripts (45% duplicate/obsolete)
+- 7 standalone modules (all orphaned)
+- 43 schema files (15% duplicate versions)
+
+AFTER:
+- ~200-220 Python files (27-28% reduction)
+- ~70,000 lines of code (29% reduction)
+- ~30-35 essential scripts only
+- 0 orphaned modules
+- ~35-40 unified schemas
+
+MAINTAINABILITY IMPROVEMENT: 40-50%
+
+NEXT STEPS:
+===========
+
+1. Review this report with the team
+2. Create a git branch: cleanup/backend-consolidation-v6.0
+3. Execute low-risk deletions first
+4. Run full test suite after each major change
+5. Execute medium-risk consolidations with testing
+6. Update documentation
+7. Create commit describing each cleanup phase

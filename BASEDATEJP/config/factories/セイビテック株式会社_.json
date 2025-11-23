@@ -1,0 +1,72 @@
+{
+  "factory_id": "セイビテック株式会社_",
+  "client_company": {
+    "name": "セイビテック株式会社",
+    "address": "岡山県井原市高屋町266-1",
+    "phone": "0866-67-3130",
+    "responsible_person": {
+      "department": "製造部",
+      "name": "次長　河上　慶充　",
+      "phone": ""
+    },
+    "complaint_handler": {
+      "department": "",
+      "name": "",
+      "phone": ""
+    }
+  },
+  "plant": {
+    "name": "",
+    "address": "",
+    "phone": ""
+  },
+  "assignment": {
+    "department": "",
+    "line": "",
+    "supervisor": {
+      "department": "",
+      "name": "",
+      "phone": ""
+    }
+  },
+  "job": {
+    "description": "",
+    "description2": "",
+    "hourly_rate": 0.0
+  },
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "",
+      "name": "",
+      "phone": ""
+    },
+    "complaint_handler": {
+      "department": "",
+      "name": "",
+      "phone": ""
+    }
+  },
+  "schedule": {
+    "work_hours": "",
+    "break_time": "",
+    "calendar": "",
+    "start_date": "",
+    "end_date": "",
+    "conflict_date": "",
+    "non_work_day_labor": "",
+    "overtime_labor": "",
+    "time_unit": "15.0"
+  },
+  "payment": {
+    "closing_date": "",
+    "payment_date": "",
+    "bank_account": "",
+    "worker_closing_date": "20日",
+    "worker_payment_date": "15日",
+    "worker_calendar": "土曜日・日曜日・年末年始（12月30日～1月7日)・GW(4月28日～5月5日)・夏季休暇（8月11日～8月18日)"
+  },
+  "agreement": {
+    "period": "2025-03-31 00:00:00",
+    "explainer": ""
+  }
+}

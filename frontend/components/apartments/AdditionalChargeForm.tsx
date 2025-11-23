@@ -46,7 +46,6 @@ const chargeFormSchema = z.object({
   charge_date: z.date({
     required_error: 'Por favor selecciona una fecha',
   }),
-  is_recurring: z.boolean().default(false),
   notes: z.string().optional(),
 });
 
@@ -85,7 +84,6 @@ export function AdditionalChargeForm({
       description: '',
       amount: 0,
       charge_date: new Date(),
-      is_recurring: false,
       notes: '',
     },
   });
@@ -102,7 +100,6 @@ export function AdditionalChargeForm({
         description: values.description,
         amount: values.amount,
         charge_date: format(values.charge_date, 'yyyy-MM-dd'),
-        is_recurring: values.is_recurring,
         status: ChargeStatus.PENDING,
         notes: values.notes || null,
       };
@@ -252,31 +249,6 @@ export function AdditionalChargeForm({
                 Fecha en que se aplica el cargo
               </FormDescription>
               <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Recurring */}
-        <FormField
-          control={form.control}
-          name="is_recurring"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel>Cargo Recurrente</FormLabel>
-                <FormDescription>
-                  Marca esta opción si este cargo se repite mensualmente
-                </FormDescription>
-              </div>
-              <FormControl>
-                <input
-                  type="checkbox"
-                  checked={field.value}
-                  onChange={field.onChange}
-                  disabled={submitting}
-                  className="h-4 w-4"
-                />
-              </FormControl>
             </FormItem>
           )}
         />

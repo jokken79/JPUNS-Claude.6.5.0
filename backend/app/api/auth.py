@@ -17,16 +17,12 @@ from app.schemas.auth import (
     UserAdminUpdate, PasswordReset
 )
 from app.services.auth_service import AuthService, auth_service
-from app.core.response import (
-    success_response, paginated_response,
-    created_response, no_content_response
-)
 
 router = APIRouter()
 limiter = Limiter(key_func=get_remote_address)
 
 
-@router.post("/register")
+@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("3/hour")
 async def register(
     request: Request,
@@ -45,7 +41,7 @@ async def register(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Username already registered"
         )
-
+    
     # Check if email exists
     existing_email = db.query(User).filter(User.email == user_data.email).first()
     if existing_email:
@@ -53,7 +49,7 @@ async def register(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered"
         )
-
+    
     # Create user
     hashed_password = auth_service.get_password_hash(user_data.password)
     new_user = User(
@@ -63,21 +59,17 @@ async def register(
         full_name=user_data.full_name,
         role=user_data.role
     )
-
+    
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-
-    return created_response(
-        data={"id": new_user.id, "username": new_user.username, "email": new_user.email},
-        request=request,
-        location=f"/api/auth/users/{new_user.id}"
-    )
+    
+    return new_user
 
 
 @router.post("")
-@router.post("/login")
-@router.post("/login/")
+@router.post("/login", response_model=Token)
+@router.post("/login/", response_model=Token)
 @limiter.limit("5/minute")  # Limit to 5 login attempts per minute (brute force protection)
 async def login(
     request: Request,
@@ -147,18 +139,14 @@ async def login(
     )
 
     # Also return tokens in response body for API clients (like Postman, mobile apps)
-    return success_response(
-        data={
-            "access_token": access_token,
-            "refresh_token": refresh_token,
-            "token_type": "bearer"
-        },
-        request=request,
-        status_code=200
-    )
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer"
+    }
 
 
-@router.post("/refresh")
+@router.post("/refresh", response_model=Token)
 @limiter.limit("10/minute")  # Allow 10 refresh attempts per minute
 async def refresh_token(
     request: Request,
@@ -229,15 +217,11 @@ async def refresh_token(
     )
 
     # Also return tokens in response body for API clients
-    return success_response(
-        data={
-            "access_token": access_token,
-            "refresh_token": new_refresh_token,
-            "token_type": "bearer"
-        },
-        request=request,
-        status_code=200
-    )
+    return {
+        "access_token": access_token,
+        "refresh_token": new_refresh_token,
+        "token_type": "bearer"
+    }
 
 
 @router.post("/logout")
@@ -285,23 +269,21 @@ async def logout(
         domain=settings.COOKIE_DOMAIN
     )
 
-    return success_response(data={"message": message}, request=request, status_code=200)
+    return {"message": message}
 
 
-@router.get("/me")
+@router.get("/me", response_model=UserResponse)
 async def get_current_user(
-    request: Request,
     current_user: User = Depends(auth_service.get_current_active_user)
 ):
     """
     Get current logged in user
     """
-    return success_response(data=current_user, request=request, status_code=200)
+    return current_user
 
 
-@router.put("/me")
+@router.put("/me", response_model=UserResponse)
 async def update_current_user(
-    request: Request,
     user_update: UserUpdate,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -321,22 +303,21 @@ async def update_current_user(
                 detail="Email already in use"
             )
         current_user.email = user_update.email
-
+    
     if user_update.full_name is not None:
         current_user.full_name = user_update.full_name
-
+    
     if user_update.password:
         current_user.password_hash = auth_service.get_password_hash(user_update.password)
-
+    
     db.commit()
     db.refresh(current_user)
-
-    return success_response(data=current_user, request=request, status_code=200)
+    
+    return current_user
 
 
 @router.post("/change-password")
 async def change_password(
-    request: Request,
     password_data: PasswordChange,
     current_user: User = Depends(auth_service.get_current_active_user),
     db: Session = Depends(get_db)
@@ -350,17 +331,16 @@ async def change_password(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Incorrect old password"
         )
-
+    
     # Update password
     current_user.password_hash = auth_service.get_password_hash(password_data.new_password)
     db.commit()
+    
+    return {"message": "Password changed successfully"}
 
-    return success_response(data={"message": "Password changed successfully"}, request=request, status_code=200)
 
-
-@router.get("/users")
+@router.get("/users", response_model=list[UserResponse])
 async def list_users(
-    request: Request,
     skip: int = 0,
     limit: int = 100,
     current_user: User = Depends(auth_service.require_role("admin")),
@@ -369,22 +349,13 @@ async def list_users(
     """
     List all users (Admin only)
     """
-    total = db.query(User).count()
     users = db.query(User).offset(skip).limit(limit).all()
-    page = (skip // limit) + 1 if limit > 0 else 1
-    return paginated_response(
-        items=users,
-        total=total,
-        page=page,
-        per_page=limit,
-        request=request
-    )
+    return users
 
 
-@router.get("/users/{user_id}")
+@router.get("/users/{user_id}", response_model=UserResponse)
 async def get_user(
     user_id: int,
-    request: Request,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
 ):
@@ -398,13 +369,12 @@ async def get_user(
             detail="User not found"
         )
 
-    return success_response(data=user, request=request, status_code=200)
+    return user
 
 
-@router.put("/users/{user_id}")
+@router.put("/users/{user_id}", response_model=UserResponse)
 async def update_user(
     user_id: int,
-    request: Request,
     user_update: UserAdminUpdate,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -474,13 +444,12 @@ async def update_user(
     db.commit()
     db.refresh(user)
 
-    return success_response(data=user, request=request, status_code=200)
+    return user
 
 
 @router.post("/users/{user_id}/reset-password")
 async def reset_user_password(
     user_id: int,
-    request: Request,
     password_data: PasswordReset,
     current_user: User = Depends(auth_service.require_role("admin")),
     db: Session = Depends(get_db)
@@ -501,17 +470,12 @@ async def reset_user_password(
     user.password_hash = auth_service.get_password_hash(password_data.new_password)
     db.commit()
 
-    return success_response(
-        data={"message": f"Password reset successfully for user {user.username}"},
-        request=request,
-        status_code=200
-    )
+    return {"message": f"Password reset successfully for user {user.username}"}
 
 
 @router.delete("/users/{user_id}")
 async def delete_user(
     user_id: int,
-    request: Request,
     current_user: User = Depends(auth_service.require_role("super_admin")),
     db: Session = Depends(get_db)
 ):
@@ -534,4 +498,4 @@ async def delete_user(
     db.delete(user)
     db.commit()
 
-    return success_response(data={"message": "User deleted successfully"}, request=request, status_code=200)
+    return {"message": "User deleted successfully"}

@@ -1,0 +1,324 @@
+# ========================================
+# Pre-commit Hooks Configuration
+# UNS-ClaudeJP 6.0.0 Monorepo
+# ========================================
+# Installation:
+#   pip install pre-commit
+#   pre-commit install
+#
+# Manual run:
+#   pre-commit run --all-files
+#
+# Update hooks:
+#   pre-commit autoupdate
+# ========================================
+
+default_language_version:
+  python: python3.11
+  node: '20'
+
+repos:
+  # ========================================
+  # General File Checks
+  # ========================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      # File integrity
+      - id: check-added-large-files
+        args: ['--maxkb=5000']
+        exclude: '^backend/access_candidates_data\.json$'
+      - id: check-merge-conflict
+      - id: check-yaml
+        exclude: '^\.github/workflows/'  # GitHub Actions YAML uses special syntax
+      - id: check-json
+      - id: check-toml
+      
+      # File formatting
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+      
+      # Security
+      - id: detect-private-key
+      - id: check-case-conflict
+      
+      # Python-specific
+      - id: check-ast
+      - id: check-builtin-literals
+      - id: check-docstring-first
+      - id: debug-statements
+      - id: name-tests-test
+        args: ['--pytest-test-first']
+        files: ^backend/tests/
+
+  # ========================================
+  # Python: Black (Code Formatter)
+  # ========================================
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        name: Black Python Formatter
+        language_version: python3.11
+        files: ^backend/
+        args:
+          - --line-length=100
+          - --target-version=py311
+        exclude: ^backend/alembic/versions/
+
+  # ========================================
+  # Python: isort (Import Sorter)
+  # ========================================
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: isort Import Sorter
+        files: ^backend/
+        args:
+          - --profile=black
+          - --line-length=100
+          - --multi-line=3
+          - --trailing-comma
+        exclude: ^backend/alembic/versions/
+
+  # ========================================
+  # Python: Flake8 (Linter)
+  # ========================================
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        name: Flake8 Python Linter
+        files: ^backend/
+        args:
+          - --max-line-length=100
+          - --extend-ignore=E203,W503,E501
+          - --max-complexity=15
+        exclude: ^backend/alembic/versions/
+        additional_dependencies:
+          - flake8-bugbear
+          - flake8-comprehensions
+          - flake8-simplify
+
+  # ========================================
+  # Python: MyPy (Type Checker)
+  # ========================================
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.7.1
+    hooks:
+      - id: mypy
+        name: MyPy Type Checker
+        files: ^backend/app/
+        args:
+          - --config-file=backend/mypy.ini
+          - --python-version=3.11
+        additional_dependencies:
+          - types-requests
+          - types-redis
+          - types-python-dateutil
+          - types-pytz
+        exclude: ^backend/(tests|alembic|scripts)/
+
+  # ========================================
+  # Python: Bandit (Security Linter)
+  # ========================================
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.6
+    hooks:
+      - id: bandit
+        name: Bandit Security Linter
+        files: ^backend/
+        args:
+          - -c
+          - backend/pyproject.toml
+          - -r
+          - backend/app/
+        exclude: ^backend/(tests|alembic)/
+
+  # ========================================
+  # JavaScript/TypeScript: ESLint
+  # ========================================
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.56.0
+    hooks:
+      - id: eslint
+        name: ESLint JavaScript/TypeScript Linter
+        files: \.(js|jsx|ts|tsx)$
+        types: [file]
+        args:
+          - --max-warnings=0
+          - --fix
+        additional_dependencies:
+          - eslint@8.56.0
+          - eslint-config-next@14.0.4
+          - typescript@5.3.3
+          - '@typescript-eslint/parser@6.15.0'
+          - '@typescript-eslint/eslint-plugin@6.15.0'
+
+  # ========================================
+  # JavaScript/TypeScript: Prettier
+  # ========================================
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        name: Prettier Code Formatter
+        files: \.(js|jsx|ts|tsx|json|css|scss|md|yaml|yml)$
+        exclude: ^(package-lock\.json|\.next/|node_modules/)
+        args:
+          - --write
+          - --ignore-unknown
+        additional_dependencies:
+          - prettier@3.1.1
+          - prettier-plugin-tailwindcss@0.5.9
+
+  # ========================================
+  # Markdown: markdownlint
+  # ========================================
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.38.0
+    hooks:
+      - id: markdownlint
+        name: Markdown Linter
+        args:
+          - --fix
+          - --disable=MD013  # Line length
+          - --disable=MD033  # Inline HTML
+          - --disable=MD041  # First line heading
+
+  # ========================================
+  # Docker: hadolint
+  # ========================================
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint-docker
+        name: Hadolint Dockerfile Linter
+        args:
+          - --ignore=DL3008  # Pin versions in apt-get
+          - --ignore=DL3018  # Pin versions in apk add
+
+  # ========================================
+  # Secrets Detection: detect-secrets
+  # ========================================
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        name: Detect Secrets
+        args:
+          - --baseline
+          - .secrets.baseline
+        exclude: |
+          (?x)^(
+            package-lock\.json|
+            poetry\.lock|
+            \.secrets\.baseline
+          )$
+
+  # ========================================
+  # Shell Scripts: shellcheck
+  # ========================================
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.6
+    hooks:
+      - id: shellcheck
+        name: ShellCheck Script Linter
+        args: ['--severity=warning']
+
+  # ========================================
+  # YAML: yamllint
+  # ========================================
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.33.0
+    hooks:
+      - id: yamllint
+        name: YAML Linter
+        args:
+          - --strict
+          - --config-data
+          - '{extends: default, rules: {line-length: {max: 120}, document-start: disable}}'
+        exclude: ^\.github/workflows/
+
+  # ========================================
+  # Custom Hooks: Project-Specific
+  # ========================================
+  - repo: local
+    hooks:
+      # Check commit message attribution
+      - id: check-commit-attribution
+        name: Check Commit Attribution
+        entry: bash -c 'git log -1 --pretty=%B | grep -qE "@[a-z-]+" || (echo "❌ Commit message must include agent attribution (e.g., @cicd-pipeline-engineer)" && exit 1)'
+        language: system
+        stages: [commit-msg]
+      
+      # Prevent commits to main/develop directly
+      - id: prevent-direct-commits
+        name: Prevent Direct Commits to Protected Branches
+        entry: bash -c 'BRANCH=$(git rev-parse --abbrev-ref HEAD); if [[ "$BRANCH" == "main" || "$BRANCH" == "develop" ]]; then echo "❌ Direct commits to $BRANCH are not allowed. Use a feature branch and PR." && exit 1; fi'
+        language: system
+        stages: [commit]
+        pass_filenames: false
+      
+      # Run backend tests before commit
+      - id: backend-tests
+        name: Run Backend Unit Tests
+        entry: bash -c 'cd backend && pytest tests/ -m unit -v --tb=short'
+        language: system
+        files: ^backend/
+        pass_filenames: false
+        stages: [push]
+      
+      # Run frontend tests before commit
+      - id: frontend-tests
+        name: Run Frontend Unit Tests
+        entry: bash -c 'cd frontend && npm test -- --run'
+        language: system
+        files: ^frontend/
+        pass_filenames: false
+        stages: [push]
+      
+      # Check Docker Compose validity
+      - id: docker-compose-check
+        name: Validate Docker Compose Configuration
+        entry: bash -c 'docker compose config > /dev/null'
+        language: system
+        files: ^docker-compose\.yml$
+        pass_filenames: false
+
+# ========================================
+# CI Configuration
+# ========================================
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit hooks
+    
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: monthly
+  skip:
+    # Skip heavy hooks in CI
+    - backend-tests
+    - frontend-tests
+    - mypy
+  submodules: false
+
+# ========================================
+# Hook Execution Stages
+# ========================================
+# Available stages:
+#   - commit: Before git commit
+#   - merge-commit: Before git merge commit
+#   - push: Before git push
+#   - prepare-commit-msg: Before commit message editor
+#   - commit-msg: After commit message written
+#   - post-checkout: After git checkout
+#   - post-commit: After git commit
+#   - post-merge: After git merge
+#   - manual: Only when explicitly called
+# ========================================

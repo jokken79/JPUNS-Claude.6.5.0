@@ -12,13 +12,9 @@ from sqlalchemy.orm import Session, joinedload
 
 from app.core.config import settings
 from app.core.database import get_db
-from fastapi import Request
-from app.core.cache import cache, CacheKey, CacheTTL
-from app.core.response import success_response, created_response, paginated_response, no_content_response
 from app.models.models import Employee, Factory, SalaryCalculation
 from app.services.auth_service import AuthService
 from app.services.report_service import report_service
-from app.core.rate_limiter import limiter
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -158,7 +154,6 @@ def _build_sample_annual_data():
 
 
 @router.post("/monthly-factory")
-@limiter.limit("30/minute")
 async def generate_monthly_factory_report(
     factory_id: str = Query(...),
     year: int = Query(...),
@@ -309,7 +304,6 @@ async def generate_monthly_factory_report(
 
 
 @router.post("/payslip")
-@limiter.limit("30/minute")
 async def generate_payslip_pdf(
     employee_id: int = Query(...),
     year: int = Query(...),
@@ -403,8 +397,6 @@ async def generate_payslip_pdf(
 
 
 @router.get("/download/{filename}")
-@cache.cached(ttl=CacheTTL.MEDIUM)
-@limiter.limit("30/minute")
 async def download_report(
     filename: str,
     current_user=Depends(_reports_guard_dependency),
@@ -431,7 +423,6 @@ async def download_report(
 
 
 @router.post("/annual-summary")
-@limiter.limit("30/minute")
 async def generate_annual_summary(
     factory_id: str = Query(...),
     year: int = Query(...),

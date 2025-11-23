@@ -1,0 +1,583 @@
+ID,Ruta Completa,Nombre Archivo,Directorio,Descripción/Contenido
+1,/home/user/UNS-ClaudeJP-6.0.0/.claude/AGENT_QUICK_START.md,AGENT_QUICK_START.md,.claude,🚀 Agent Quick Start Guide
+2,/home/user/UNS-ClaudeJP-6.0.0/.claude/AI_EVALUATION_CHECKLIST.md,AI_EVALUATION_CHECKLIST.md,.claude,✅ AI Evaluation Checklist
+3,/home/user/UNS-ClaudeJP-6.0.0/.claude/AI_GATEWAY_GUIDE.md,AI_GATEWAY_GUIDE.md,.claude,🚀 AI Gateway Guide - Multi-AI Direct Integration
+4,/home/user/UNS-ClaudeJP-6.0.0/.claude/AI_INTEGRATION_PATTERNS.md,AI_INTEGRATION_PATTERNS.md,.claude,🤖 AI Integration Patterns
+5,/home/user/UNS-ClaudeJP-6.0.0/.claude/AI_TROUBLESHOOTING.md,AI_TROUBLESHOOTING.md,.claude,🔧 AI Troubleshooting Guide
+6,/home/user/UNS-ClaudeJP-6.0.0/.claude/CLAUDE.md,CLAUDE.md,.claude,YOU ARE THE ORCHESTRATOR
+7,/home/user/UNS-ClaudeJP-6.0.0/.claude/CRITICAL_FLOWS.md,CRITICAL_FLOWS.md,.claude,CRITICAL FLOWS - How The App Actually Works
+8,/home/user/UNS-ClaudeJP-6.0.0/.claude/DEBUG_QUICK_REFERENCE.md,DEBUG_QUICK_REFERENCE.md,.claude,QUICK DEBUG REFERENCE - For AI Agents
+9,/home/user/UNS-ClaudeJP-6.0.0/.claude/DIAGNOSTICO_COMPLETO_2025-11-13.md,DIAGNOSTICO_COMPLETO_2025-11-13.md,.claude,🚨 DIAGNÓSTICO COMPLETO DEL SISTEMA - 2025-11-13
+10,/home/user/UNS-ClaudeJP-6.0.0/.claude/ESTADO_PROYECTO_ACTUALIZADO.md,ESTADO_PROYECTO_ACTUALIZADO.md,.claude,📊 ESTADO DEL PROYECTO - ACTUALIZADO A FASE 4
+11,/home/user/UNS-ClaudeJP-6.0.0/.claude/FASE3_PLAN.md,FASE3_PLAN.md,.claude,FASE 3: VALIDACIÓN MEJORADA EN BACKEND
+12,/home/user/UNS-ClaudeJP-6.0.0/.claude/FASE4_IMPLEMENTACION_COMPLETADA.md,FASE4_IMPLEMENTACION_COMPLETADA.md,.claude,✅ FASE 4: INTEGRACIÓN PAYROLL-YUKYUS - COMPLETADA
+13,/home/user/UNS-ClaudeJP-6.0.0/.claude/FASE4_INTEGRACION_PAYROLL.md,FASE4_INTEGRACION_PAYROLL.md,.claude,FASE 4: INTEGRACIÓN PAYROLL-YUKYUS
+14,/home/user/UNS-ClaudeJP-6.0.0/.claude/FASE5_PLAN_MAESTRO.md,FASE5_PLAN_MAESTRO.md,.claude,📊 FASE 5: DASHBOARD KEIRI ESPECIALIZADO - PLAN MAESTRO
+15,/home/user/UNS-ClaudeJP-6.0.0/.claude/FASE6_PLAN_MAESTRO.md,FASE6_PLAN_MAESTRO.md,.claude,📚 FASE 6: DOCUMENTACIÓN & TRAINING - PLAN MAESTRO
+16,/home/user/UNS-ClaudeJP-6.0.0/.claude/FASES_7_8_9_PLAN_MAESTRO.md,FASES_7_8_9_PLAN_MAESTRO.md,.claude,"🧪 FASES 7, 8 Y 9 - TESTING, VALIDACIÓN Y REPORTE FINAL"
+17,/home/user/UNS-ClaudeJP-6.0.0/.claude/GUIA_ARRANQUE_RAPIDO_2025-11-13.md,GUIA_ARRANQUE_RAPIDO_2025-11-13.md,.claude,🚀 GUÍA DE ARRANQUE RÁPIDO - Sistema UNS-ClaudeJP 5.4.1
+18,/home/user/UNS-ClaudeJP-6.0.0/.claude/INFRASTRUCTURE_MAP.md,INFRASTRUCTURE_MAP.md,.claude,UNS-ClaudeJP 5.4.1 - COMPLETE INFRASTRUCTURE MAP
+19,/home/user/UNS-ClaudeJP-6.0.0/.claude/PROMPT_TEMPLATES.md,PROMPT_TEMPLATES.md,.claude,📝 Prompt Templates - Ready to Use
+20,/home/user/UNS-ClaudeJP-6.0.0/.claude/README.md,README.md,.claude,Agentes Personalizados de Claude Code
+21,/home/user/UNS-ClaudeJP-6.0.0/.claude/REAL_WORLD_EXAMPLES/01-adding-api-endpoint.md,01-adding-api-endpoint.md,.claude,📚 Real World Example #1: Adding an API Endpoint
+22,/home/user/UNS-ClaudeJP-6.0.0/.claude/REAL_WORLD_EXAMPLES/02-fixing-a-bug.md,02-fixing-a-bug.md,.claude,📚 Real World Example #2: Fixing a Bug
+23,/home/user/UNS-ClaudeJP-6.0.0/.claude/REAL_WORLD_EXAMPLES/03-adding-database-table.md,03-adding-database-table.md,.claude,📚 Real World Example #3: Adding a Database Table
+24,/home/user/UNS-ClaudeJP-6.0.0/.claude/REAL_WORLD_EXAMPLES/04-optimizing-performance.md,04-optimizing-performance.md,.claude,📚 Real World Example #4: Optimizing Performance
+25,/home/user/UNS-ClaudeJP-6.0.0/.claude/REAL_WORLD_EXAMPLES/05-deployment-and-monitoring.md,05-deployment-and-monitoring.md,.claude,📚 Real World Example #5: Deployment & Monitoring
+26,/home/user/UNS-ClaudeJP-6.0.0/.claude/RESUMEN_EJECUTIVO_FINAL.md,RESUMEN_EJECUTIVO_FINAL.md,.claude,🎯 RESUMEN EJECUTIVO FINAL - PROYECTO COMPLETO DE YUKYUS
+27,/home/user/UNS-ClaudeJP-6.0.0/.claude/RESUMEN_FINAL_SISTEMA_YUKYU.md,RESUMEN_FINAL_SISTEMA_YUKYU.md,.claude,🎯 RESUMEN FINAL DEL SISTEMA YUKYU - FASES 4-9 COMPLETADAS
+28,/home/user/UNS-ClaudeJP-6.0.0/.claude/ROADMAP_COMPLETO.md,ROADMAP_COMPLETO.md,.claude,📋 Roadmap UNS-ClaudeJP - Multi-AI & Features
+29,/home/user/UNS-ClaudeJP-6.0.0/.claude/SPECIALIST_MATRIX.md,SPECIALIST_MATRIX.md,.claude,🎭 Specialist Matrix - 13 Agents Reference
+30,/home/user/UNS-ClaudeJP-6.0.0/.claude/TodasLasMpcIA.md,TodasLasMpcIA.md,.claude,🤖 Todas las Múltiples IAs - Master Reference
+31,/home/user/UNS-ClaudeJP-6.0.0/.claude/YUKYU_ANALYSIS_20251112.md,YUKYU_ANALYSIS_20251112.md,.claude,📊 ANÁLISIS INTEGRAL DEL SISTEMA DE YUKYUS (給与)
+32,/home/user/UNS-ClaudeJP-6.0.0/.claude/YUKYU_IMPLEMENTATION_SUMMARY_20251112.md,YUKYU_IMPLEMENTATION_SUMMARY_20251112.md,.claude,📊 RESUMEN EJECUTIVO: ANÁLISIS E IMPLEMENTACIÓN DE YUKYUS
+33,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/ai/computer-vision-specialist.md,computer-vision-specialist.md,.claude,name: computer-vision-specialist
+34,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/ai/machine-learning-engineer.md,machine-learning-engineer.md,.claude,name: machine-learning-engineer
+35,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/ai/nlp-llm-integration-expert.md,nlp-llm-integration-expert.md,.claude,name: nlp-llm-integration-expert
+36,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/ai-analysis/error-detective.md,error-detective.md,.claude,name: error-detective
+37,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/ai-analysis/graphql-architect.md,graphql-architect.md,.claude,name: graphql-architect
+38,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/ai-analysis/prompt-engineer.md,prompt-engineer.md,.claude,name: prompt-engineer
+39,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/automation/cicd-pipeline-engineer.md,cicd-pipeline-engineer.md,.claude,name: cicd-pipeline-engineer
+40,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/automation/qa-automation-engineer.md,qa-automation-engineer.md,.claude,name: qa-automation-engineer
+41,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/automation/release-manager.md,release-manager.md,.claude,name: release-manager
+42,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/django-expert.md,django-expert.md,.claude,name: django-expert
+43,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/fastapi-expert.md,fastapi-expert.md,.claude,name: fastapi-expert
+44,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/fastify-expert.md,fastify-expert.md,.claude,name: fastify-expert
+45,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/fiber-expert.md,fiber-expert.md,.claude,name: fiber-expert
+46,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/gin-expert.md,gin-expert.md,.claude,name: gin-expert
+47,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/go-resilience-engineer.md,go-resilience-engineer.md,.claude,name: go-resilience-engineer
+48,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/go-zap-logging.md,go-zap-logging.md,.claude,name: go-zap-logging
+49,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/laravel-expert.md,laravel-expert.md,.claude,name: laravel-expert
+50,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/nodejs-expert.md,nodejs-expert.md,.claude,name: nodejs-expert
+51,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/prisma-expert.md,prisma-expert.md,.claude,name: prisma-expert
+52,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/python-hyx-resilience.md,python-hyx-resilience.md,.claude,name: python-hyx-resilience
+53,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/rails-expert.md,rails-expert.md,.claude,name: rails-expert
+54,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/resilience-engineer.md,resilience-engineer.md,.claude,name: resilience-engineer
+55,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/typescript-cockatiel-resilience.md,typescript-cockatiel-resilience.md,.claude,name: typescript-cockatiel-resilience
+56,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/backend/typescript-pino-logging.md,typescript-pino-logging.md,.claude,name: typescript-pino-logging
+57,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/business/business-analyst.md,business-analyst.md,.claude,name: business-analyst
+58,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/business/financial-modeling-agent.md,financial-modeling-agent.md,.claude,name: financial-modeling-agent
+59,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/business/healthcare-compliance-agent.md,healthcare-compliance-agent.md,.claude,name: healthcare-compliance-agent
+60,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/business/payment-integration-agent.md,payment-integration-agent.md,.claude,name: payment-integration-agent
+61,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/business/product-manager.md,product-manager.md,.claude,name: product-manager
+62,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/choreography/bug-hunting-tango.md,bug-hunting-tango.md,.claude,name: bug-hunting-tango
+63,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/choreography/code-review-waltz.md,code-review-waltz.md,.claude,name: code-review-waltz
+64,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/choreography/feature-development-dance.md,feature-development-dance.md,.claude,name: feature-development-dance
+65,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/context-orchestrators/exponential-planner.md,exponential-planner.md,.claude,name: exponential-planner
+66,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/context-orchestrators/session-manager.md,session-manager.md,.claude,name: session-manager
+67,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/context-orchestrators/vibe-coding-coordinator.md,vibe-coding-coordinator.md,.claude,name: vibe-coding-coordinator
+68,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/creative/code-archaeologist-time-traveler.md,code-archaeologist-time-traveler.md,.claude,name: code-archaeologist-time-traveler
+69,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/creative/rubber-duck-debugger.md,rubber-duck-debugger.md,.claude,name: rubber-duck-debugger
+70,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/creative/technical-debt-collector.md,technical-debt-collector.md,.claude,name: technical-debt-collector
+71,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/data/analytics-implementation-specialist.md,analytics-implementation-specialist.md,.claude,name: analytics-implementation-specialist
+72,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/data/business-intelligence-developer.md,business-intelligence-developer.md,.claude,name: business-intelligence-developer
+73,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/data/data-engineer.md,data-engineer.md,.claude,name: data-engineer
+74,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/data/search-specialist.md,search-specialist.md,.claude,name: search-specialist
+75,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/database/database-architect.md,database-architect.md,.claude,name: database-architect
+76,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/deprecated/context-management-enhancement.md,context-management-enhancement.md,.claude,name: context-management-enhancement
+77,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/deprecated/enhanced-agent-organizer.md,enhanced-agent-organizer.md,.claude,name: enhanced-agent-organizer
+78,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/design/ux-designer.md,ux-designer.md,.claude,name: ux-designer
+79,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/devops/deployment-specialist.md,deployment-specialist.md,.claude,name: deployment-specialist
+80,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/frontend/angular-expert.md,angular-expert.md,.claude,name: angular-expert
+81,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/frontend/design-system-architect.md,design-system-architect.md,.claude,name: design-system-architect
+82,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/frontend/micro-frontend-architect.md,micro-frontend-architect.md,.claude,name: micro-frontend-architect
+83,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/frontend/mobile-developer.md,mobile-developer.md,.claude,name: mobile-developer
+84,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/frontend/nextjs-expert.md,nextjs-expert.md,.claude,name: nextjs-expert
+85,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/frontend/pwa-specialist.md,pwa-specialist.md,.claude,name: pwa-specialist
+86,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/frontend/react-expert.md,react-expert.md,.claude,name: react-expert
+87,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/frontend/vue-expert.md,vue-expert.md,.claude,name: vue-expert
+88,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/frontend/webassembly-specialist.md,webassembly-specialist.md,.claude,name: webassembly-specialist
+89,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/infrastructure/cloud-architect.md,cloud-architect.md,.claude,name: cloud-architect
+90,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/infrastructure/database-admin.md,database-admin.md,.claude,name: database-admin
+91,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/infrastructure/devops-troubleshooter.md,devops-troubleshooter.md,.claude,name: devops-troubleshooter
+92,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/infrastructure/incident-responder.md,incident-responder.md,.claude,name: incident-responder
+93,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/infrastructure/network-engineer.md,network-engineer.md,.claude,name: network-engineer
+94,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/infrastructure/observability-engineer.md,observability-engineer.md,.claude,name: observability-engineer
+95,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/infrastructure/pulumi-typescript-specialist.md,pulumi-typescript-specialist.md,.claude,name: pulumi-typescript-specialist
+96,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/infrastructure/serverless-architect.md,serverless-architect.md,.claude,name: serverless-architect
+97,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/infrastructure/site-reliability-engineer.md,site-reliability-engineer.md,.claude,name: site-reliability-engineer
+98,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/infrastructure/terraform-specialist.md,terraform-specialist.md,.claude,name: terraform-specialist
+99,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/activation-system.md,activation-system.md,.claude,name: activation-system
+100,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/agent-communication-protocol.md,agent-communication-protocol.md,.claude,name: agent-communication-protocol
+101,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/auto-detection-engine.md,auto-detection-engine.md,.claude,name: auto-detection-engine
+102,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/choreography-engine.md,choreography-engine.md,.claude,name: choreography-engine
+103,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/context-aware-activator.md,context-aware-activator.md,.claude,name: context-aware-activator
+104,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/enhanced-agent-template.md,enhanced-agent-template.md,.claude,name: enhanced-agent-template
+105,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/intelligent-agent-selector.md,intelligent-agent-selector.md,.claude,name: intelligent-agent-selector
+106,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/knowledge-graph-manager.md,knowledge-graph-manager.md,.claude,name: knowledge-graph-manager
+107,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/learning-system.md,learning-system.md,.claude,name: learning-system
+108,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/personality-engine.md,personality-engine.md,.claude,name: personality-engine
+109,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/predictive-orchestrator.md,predictive-orchestrator.md,.claude,name: predictive-orchestrator
+110,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/smart-agent-router.md,smart-agent-router.md,.claude,name: smart-agent-router
+111,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/success-pattern-learner.md,success-pattern-learner.md,.claude,name: success-pattern-learner
+112,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestration/workflow-coordinator.md,workflow-coordinator.md,.claude,name: workflow-coordinator
+113,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestrator.md,orchestrator.md,.claude,name: orchestrator
+114,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestrators/project-analyst.md,project-analyst.md,.claude,name: project-analyst
+115,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestrators/task-master-initialization-specialist.md,task-master-initialization-specialist.md,.claude,name: task-master-initialization-specialist
+116,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestrators/task-master-template-manager.md,task-master-template-manager.md,.claude,name: task-master-template-manager
+117,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestrators/team-configurator.md,team-configurator.md,.claude,name: team-configurator
+118,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/orchestrators/tech-lead-orchestrator.md,tech-lead-orchestrator.md,.claude,name: tech-lead-orchestrator
+119,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/performance-optimizers/parallel-coordinator.md,parallel-coordinator.md,.claude,name: parallel-coordinator
+120,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/performance-optimizers/session-optimizer.md,session-optimizer.md,.claude,name: session-optimizer
+121,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/performance-optimizers/tool-batch-optimizer.md,tool-batch-optimizer.md,.claude,name: tool-batch-optimizer
+122,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/personalities/agent-evolution-system.md,agent-evolution-system.md,.claude,name: agent-evolution-system
+123,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/product/rapid-prototyper.md,rapid-prototyper.md,.claude,name: rapid-prototyper
+124,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/safety-specialists/agent-environment-simulator.md,agent-environment-simulator.md,.claude,name: agent-environment-simulator
+125,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/safety-specialists/leaf-node-detector.md,leaf-node-detector.md,.claude,name: leaf-node-detector
+126,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/safety-specialists/permission-escalator.md,permission-escalator.md,.claude,name: permission-escalator
+127,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/safety-specialists/verification-specialist.md,verification-specialist.md,.claude,name: verification-specialist
+128,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/security/devsecops-engineer.md,devsecops-engineer.md,.claude,name: devsecops-engineer
+129,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/security/privacy-engineer.md,privacy-engineer.md,.claude,name: privacy-engineer
+130,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/security/security-specialist.md,security-specialist.md,.claude,name: security-specialist
+131,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/system-architect.md,system-architect.md,.claude,name: system-architect
+132,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/task-checker.md,task-checker.md,.claude,name: task-checker
+133,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/task-executor.md,task-executor.md,.claude,name: task-executor
+134,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/task-orchestrator.md,task-orchestrator.md,.claude,name: task-orchestrator
+135,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/templates/agent-template.md,agent-template.md,.claude,name: template-agent
+136,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/templates/anti-duplication-protocol.md,anti-duplication-protocol.md,.claude,name: anti-duplication-protocol
+137,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/testing/test-automation-expert.md,test-automation-expert.md,.claude,name: test-automation-expert
+138,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/universal/bootstrap-orchestrator.md,bootstrap-orchestrator.md,.claude,name: bootstrap-orchestrator
+139,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/universal/code-reviewer.md,code-reviewer.md,.claude,name: code-reviewer
+140,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/universal/developer-experience-optimizer.md,developer-experience-optimizer.md,.claude,name: developer-experience-optimizer
+141,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/universal/documentation-specialist.md,documentation-specialist.md,.claude,name: documentation-specialist
+142,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/universal/git-expert.md,git-expert.md,.claude,name: git-expert
+143,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/universal/legacy-modernization-specialist.md,legacy-modernization-specialist.md,.claude,name: legacy-modernization-specialist
+144,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/universal/logging-concepts-engineer.md,logging-concepts-engineer.md,.claude,name: logging-concepts-engineer
+145,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/universal/performance-optimizer.md,performance-optimizer.md,.claude,name: performance-optimizer
+146,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/universal/pr-description-composer.md,pr-description-composer.md,.claude,name: pr-description-composer
+147,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/universal/pr-reviewer-specialist.md,pr-reviewer-specialist.md,.claude,name: pr-reviewer-specialist
+148,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/universal/quality-system-engineer.md,quality-system-engineer.md,.claude,name: quality-system-engineer
+149,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/universal/resilience-engineer.md,resilience-engineer.md,.claude,name: resilience-engineer
+150,/home/user/UNS-ClaudeJP-6.0.0/.claude/agents/universal/software-engineering-expert.md,software-engineering-expert.md,.claude,name: software-engineering-expert
+151,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/ai/computer-vision-specialist.md,computer-vision-specialist.md,.claude,name: computer-vision-specialist
+152,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/ai/machine-learning-engineer.md,machine-learning-engineer.md,.claude,name: machine-learning-engineer
+153,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/ai/nlp-llm-integration-expert.md,nlp-llm-integration-expert.md,.claude,name: nlp-llm-integration-expert
+154,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/ai-analysis/error-detective.md,error-detective.md,.claude,name: error-detective
+155,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/ai-analysis/graphql-architect.md,graphql-architect.md,.claude,name: graphql-architect
+156,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/ai-analysis/prompt-engineer.md,prompt-engineer.md,.claude,name: prompt-engineer
+157,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/archived/AGENTES_DOMINIO_README.md,AGENTES_DOMINIO_README.md,.claude,🎯 Agentes Especializados de Dominio - UNS-ClaudeJP
+158,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/archived/AGENTES_ELITE_README.md,AGENTES_ELITE_README.md,.claude,✅ AGENTES ELITE LISTOS PARA INSTALAR
+159,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/archived/GUIA_USO_AGENTES_ELITE.md,GUIA_USO_AGENTES_ELITE.md,.claude,📚 GUÍA COMPLETA: Cómo Usar los Agentes Elite
+160,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/archived/RESUMEN_AGENTES_COMPLETO.md,RESUMEN_AGENTES_COMPLETO.md,.claude,✅ RESUMEN: Agentes Creados para UNS-ClaudeJP
+161,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/automation/cicd-pipeline-engineer.md,cicd-pipeline-engineer.md,.claude,name: cicd-pipeline-engineer
+162,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/automation/qa-automation-engineer.md,qa-automation-engineer.md,.claude,name: qa-automation-engineer
+163,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/automation/release-manager.md,release-manager.md,.claude,name: release-manager
+164,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/django-expert.md,django-expert.md,.claude,name: django-expert
+165,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/fastapi-expert.md,fastapi-expert.md,.claude,name: fastapi-expert
+166,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/fastify-expert.md,fastify-expert.md,.claude,name: fastify-expert
+167,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/fiber-expert.md,fiber-expert.md,.claude,name: fiber-expert
+168,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/gin-expert.md,gin-expert.md,.claude,name: gin-expert
+169,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/go-resilience-engineer.md,go-resilience-engineer.md,.claude,name: go-resilience-engineer
+170,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/go-zap-logging.md,go-zap-logging.md,.claude,name: go-zap-logging
+171,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/laravel-expert.md,laravel-expert.md,.claude,name: laravel-expert
+172,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/nodejs-expert.md,nodejs-expert.md,.claude,name: nodejs-expert
+173,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/prisma-expert.md,prisma-expert.md,.claude,name: prisma-expert
+174,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/python-hyx-resilience.md,python-hyx-resilience.md,.claude,name: python-hyx-resilience
+175,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/rails-expert.md,rails-expert.md,.claude,name: rails-expert
+176,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/resilience-engineer.md,resilience-engineer.md,.claude,name: resilience-engineer
+177,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/typescript-cockatiel-resilience.md,typescript-cockatiel-resilience.md,.claude,name: typescript-cockatiel-resilience
+178,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/backend/typescript-pino-logging.md,typescript-pino-logging.md,.claude,name: typescript-pino-logging
+179,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/business/business-analyst.md,business-analyst.md,.claude,name: business-analyst
+180,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/business/financial-modeling-agent.md,financial-modeling-agent.md,.claude,name: financial-modeling-agent
+181,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/business/healthcare-compliance-agent.md,healthcare-compliance-agent.md,.claude,name: healthcare-compliance-agent
+182,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/business/payment-integration-agent.md,payment-integration-agent.md,.claude,name: payment-integration-agent
+183,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/business/product-manager.md,product-manager.md,.claude,name: product-manager
+184,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/choreography/bug-hunting-tango.md,bug-hunting-tango.md,.claude,name: bug-hunting-tango
+185,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/choreography/code-review-waltz.md,code-review-waltz.md,.claude,name: code-review-waltz
+186,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/choreography/feature-development-dance.md,feature-development-dance.md,.claude,name: feature-development-dance
+187,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/context-orchestrators/exponential-planner.md,exponential-planner.md,.claude,name: exponential-planner
+188,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/context-orchestrators/session-manager.md,session-manager.md,.claude,name: session-manager
+189,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/context-orchestrators/vibe-coding-coordinator.md,vibe-coding-coordinator.md,.claude,name: vibe-coding-coordinator
+190,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/creative/code-archaeologist-time-traveler.md,code-archaeologist-time-traveler.md,.claude,name: code-archaeologist-time-traveler
+191,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/creative/rubber-duck-debugger.md,rubber-duck-debugger.md,.claude,name: rubber-duck-debugger
+192,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/creative/technical-debt-collector.md,technical-debt-collector.md,.claude,name: technical-debt-collector
+193,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/data/analytics-implementation-specialist.md,analytics-implementation-specialist.md,.claude,name: analytics-implementation-specialist
+194,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/data/business-intelligence-developer.md,business-intelligence-developer.md,.claude,name: business-intelligence-developer
+195,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/data/data-engineer.md,data-engineer.md,.claude,name: data-engineer
+196,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/data/search-specialist.md,search-specialist.md,.claude,name: search-specialist
+197,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/database/database-architect.md,database-architect.md,.claude,name: database-architect
+198,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/deprecated/context-management-enhancement.md,context-management-enhancement.md,.claude,name: context-management-enhancement
+199,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/deprecated/enhanced-agent-organizer.md,enhanced-agent-organizer.md,.claude,name: enhanced-agent-organizer
+200,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/design/ux-designer.md,ux-designer.md,.claude,name: ux-designer
+201,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/devops/deployment-specialist.md,deployment-specialist.md,.claude,name: deployment-specialist
+202,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/domain-specialists/apartment-specialist.md,apartment-specialist.md,.claude,name: apartment-specialist
+203,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/domain-specialists/candidate-specialist.md,candidate-specialist.md,.claude,name: candidate-specialist
+204,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/domain-specialists/employee-lifecycle-specialist.md,employee-lifecycle-specialist.md,.claude,name: employee-lifecycle-specialist
+205,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/domain-specialists/factory-assignment-specialist.md,factory-assignment-specialist.md,.claude,name: factory-assignment-specialist
+206,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/domain-specialists/payroll-specialist.md,payroll-specialist.md,.claude,name: payroll-specialist
+207,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/domain-specialists/yukyu-specialist.md,yukyu-specialist.md,.claude,name: yukyu-specialist
+208,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/elite/code-quality-guardian.md,code-quality-guardian.md,.claude,name: code-quality-guardian
+209,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/elite/full-stack-architect.md,full-stack-architect.md,.claude,name: full-stack-architect
+210,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/elite/master-problem-solver.md,master-problem-solver.md,.claude,name: master-problem-solver
+211,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/elite/theme-wizard.md,theme-wizard.md,.claude,name: theme-wizard
+212,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/elite/ui-clone-master.md,ui-clone-master.md,.claude,name: ui-clone-master
+213,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/es/_MAPA_AGENTES.md,_MAPA_AGENTES.md,.claude,🗺️ Mapa de Agentes en Español
+214,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/es/admin-base-datos.md,admin-base-datos.md,.claude,name: admin-base-datos
+215,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/es/experto-ingenieria.md,experto-ingenieria.md,.claude,name: experto-ingenieria
+216,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/es/experto-nextjs.md,experto-nextjs.md,.claude,name: experto-nextjs
+217,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/es/experto-python.md,experto-python.md,.claude,name: experto-python
+218,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/es/orquestador.md,orquestador.md,.claude,name: orquestador
+219,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/es/revisor-codigo.md,revisor-codigo.md,.claude,name: revisor-codigo
+220,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/frontend/angular-expert.md,angular-expert.md,.claude,name: angular-expert
+221,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/frontend/design-system-architect.md,design-system-architect.md,.claude,name: design-system-architect
+222,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/frontend/micro-frontend-architect.md,micro-frontend-architect.md,.claude,name: micro-frontend-architect
+223,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/frontend/mobile-developer.md,mobile-developer.md,.claude,name: mobile-developer
+224,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/frontend/nextjs-expert.md,nextjs-expert.md,.claude,name: nextjs-expert
+225,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/frontend/pwa-specialist.md,pwa-specialist.md,.claude,name: pwa-specialist
+226,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/frontend/react-expert.md,react-expert.md,.claude,name: react-expert
+227,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/frontend/vue-expert.md,vue-expert.md,.claude,name: vue-expert
+228,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/frontend/webassembly-specialist.md,webassembly-specialist.md,.claude,name: webassembly-specialist
+229,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/infrastructure/cloud-architect.md,cloud-architect.md,.claude,name: cloud-architect
+230,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/infrastructure/database-admin.md,database-admin.md,.claude,name: database-admin
+231,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/infrastructure/devops-troubleshooter.md,devops-troubleshooter.md,.claude,name: devops-troubleshooter
+232,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/infrastructure/incident-responder.md,incident-responder.md,.claude,name: incident-responder
+233,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/infrastructure/network-engineer.md,network-engineer.md,.claude,name: network-engineer
+234,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/infrastructure/observability-engineer.md,observability-engineer.md,.claude,name: observability-engineer
+235,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/infrastructure/pulumi-typescript-specialist.md,pulumi-typescript-specialist.md,.claude,name: pulumi-typescript-specialist
+236,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/infrastructure/serverless-architect.md,serverless-architect.md,.claude,name: serverless-architect
+237,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/infrastructure/site-reliability-engineer.md,site-reliability-engineer.md,.claude,name: site-reliability-engineer
+238,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/infrastructure/terraform-specialist.md,terraform-specialist.md,.claude,name: terraform-specialist
+239,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/activation-system.md,activation-system.md,.claude,name: activation-system
+240,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/agent-communication-protocol.md,agent-communication-protocol.md,.claude,name: agent-communication-protocol
+241,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/auto-detection-engine.md,auto-detection-engine.md,.claude,name: auto-detection-engine
+242,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/choreography-engine.md,choreography-engine.md,.claude,name: choreography-engine
+243,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/context-aware-activator.md,context-aware-activator.md,.claude,name: context-aware-activator
+244,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/enhanced-agent-template.md,enhanced-agent-template.md,.claude,name: enhanced-agent-template
+245,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/intelligent-agent-selector.md,intelligent-agent-selector.md,.claude,name: intelligent-agent-selector
+246,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/knowledge-graph-manager.md,knowledge-graph-manager.md,.claude,name: knowledge-graph-manager
+247,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/learning-system.md,learning-system.md,.claude,name: learning-system
+248,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/personality-engine.md,personality-engine.md,.claude,name: personality-engine
+249,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/predictive-orchestrator.md,predictive-orchestrator.md,.claude,name: predictive-orchestrator
+250,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/smart-agent-router.md,smart-agent-router.md,.claude,name: smart-agent-router
+251,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/success-pattern-learner.md,success-pattern-learner.md,.claude,name: success-pattern-learner
+252,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestration/workflow-coordinator.md,workflow-coordinator.md,.claude,name: workflow-coordinator
+253,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestrators/project-analyst.md,project-analyst.md,.claude,name: project-analyst
+254,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestrators/task-master-initialization-specialist.md,task-master-initialization-specialist.md,.claude,name: task-master-initialization-specialist
+255,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestrators/task-master-template-manager.md,task-master-template-manager.md,.claude,name: task-master-template-manager
+256,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestrators/team-configurator.md,team-configurator.md,.claude,name: team-configurator
+257,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/orchestrators/tech-lead-orchestrator.md,tech-lead-orchestrator.md,.claude,name: tech-lead-orchestrator
+258,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/performance-optimizers/parallel-coordinator.md,parallel-coordinator.md,.claude,name: parallel-coordinator
+259,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/performance-optimizers/session-optimizer.md,session-optimizer.md,.claude,name: session-optimizer
+260,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/performance-optimizers/tool-batch-optimizer.md,tool-batch-optimizer.md,.claude,name: tool-batch-optimizer
+261,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/personalities/agent-evolution-system.md,agent-evolution-system.md,.claude,name: agent-evolution-system
+262,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/product/rapid-prototyper.md,rapid-prototyper.md,.claude,name: rapid-prototyper
+263,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/safety-specialists/agent-environment-simulator.md,agent-environment-simulator.md,.claude,name: agent-environment-simulator
+264,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/safety-specialists/leaf-node-detector.md,leaf-node-detector.md,.claude,name: leaf-node-detector
+265,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/safety-specialists/permission-escalator.md,permission-escalator.md,.claude,name: permission-escalator
+266,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/safety-specialists/verification-specialist.md,verification-specialist.md,.claude,name: verification-specialist
+267,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/security/devsecops-engineer.md,devsecops-engineer.md,.claude,name: devsecops-engineer
+268,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/security/privacy-engineer.md,privacy-engineer.md,.claude,name: privacy-engineer
+269,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/security/security-specialist.md,security-specialist.md,.claude,name: security-specialist
+270,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/templates/agent-template.md,agent-template.md,.claude,name: template-agent
+271,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/templates/anti-duplication-protocol.md,anti-duplication-protocol.md,.claude,name: anti-duplication-protocol
+272,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/testing/test-automation-expert.md,test-automation-expert.md,.claude,name: test-automation-expert
+273,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/universal/bootstrap-orchestrator.md,bootstrap-orchestrator.md,.claude,name: bootstrap-orchestrator
+274,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/universal/code-reviewer.md,code-reviewer.md,.claude,name: code-reviewer
+275,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/universal/developer-experience-optimizer.md,developer-experience-optimizer.md,.claude,name: developer-experience-optimizer
+276,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/universal/documentation-specialist.md,documentation-specialist.md,.claude,name: documentation-specialist
+277,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/universal/git-expert.md,git-expert.md,.claude,name: git-expert
+278,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/universal/legacy-modernization-specialist.md,legacy-modernization-specialist.md,.claude,name: legacy-modernization-specialist
+279,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/universal/logging-concepts-engineer.md,logging-concepts-engineer.md,.claude,name: logging-concepts-engineer
+280,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/universal/performance-optimizer.md,performance-optimizer.md,.claude,name: performance-optimizer
+281,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/universal/pr-description-composer.md,pr-description-composer.md,.claude,name: pr-description-composer
+282,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/universal/pr-reviewer-specialist.md,pr-reviewer-specialist.md,.claude,name: pr-reviewer-specialist
+283,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/universal/quality-system-engineer.md,quality-system-engineer.md,.claude,name: quality-system-engineer
+284,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/universal/resilience-engineer.md,resilience-engineer.md,.claude,name: resilience-engineer
+285,/home/user/UNS-ClaudeJP-6.0.0/.claude/archive/universal/software-engineering-expert.md,software-engineering-expert.md,.claude,name: software-engineering-expert
+286,/home/user/UNS-ClaudeJP-6.0.0/.claude/coder.md,coder.md,.claude,name: coder
+287,/home/user/UNS-ClaudeJP-6.0.0/.claude/orchestrator.md,orchestrator.md,.claude,name: orchestrator
+288,/home/user/UNS-ClaudeJP-6.0.0/.claude/research.md,research.md,.claude,name: research
+289,/home/user/UNS-ClaudeJP-6.0.0/.claude/specialized-agents/api-developer.md,api-developer.md,.claude,🔌 API-Developer - Especialista en Desarrollo de APIs REST
+290,/home/user/UNS-ClaudeJP-6.0.0/.claude/specialized-agents/backend-architect.md,backend-architect.md,.claude,🏗️ Backend-Architect - Especialista FastAPI/Python
+291,/home/user/UNS-ClaudeJP-6.0.0/.claude/specialized-agents/bug-hunter.md,bug-hunter.md,.claude,🐛 Bug-Hunter - Especialista en Debugging y Resolución de Bugs
+292,/home/user/UNS-ClaudeJP-6.0.0/.claude/specialized-agents/database-specialist.md,database-specialist.md,.claude,💾 Database-Specialist - Experto PostgreSQL/SQLAlchemy
+293,/home/user/UNS-ClaudeJP-6.0.0/.claude/specialized-agents/devops-engineer.md,devops-engineer.md,.claude,🚀 DevOps-Engineer - Especialista en Orchestración e Infraestructura
+294,/home/user/UNS-ClaudeJP-6.0.0/.claude/specialized-agents/frontend-architect.md,frontend-architect.md,.claude,🎨 Frontend-Architect - Especialista Next.js/React
+295,/home/user/UNS-ClaudeJP-6.0.0/.claude/specialized-agents/ocr-specialist.md,ocr-specialist.md,.claude,🔍 OCR-Specialist - Experto en OCR Híbrido Japonés
+296,/home/user/UNS-ClaudeJP-6.0.0/.claude/specialized-agents/orchestrator-master.md,orchestrator-master.md,.claude,🎭 Orchestrator-Master - Sistema de Orquestación Universal
+297,/home/user/UNS-ClaudeJP-6.0.0/.claude/specialized-agents/payroll-calculator.md,payroll-calculator.md,.claude,💰 Payroll-Calculator - Experto Sistema Nómina Japonés
+298,/home/user/UNS-ClaudeJP-6.0.0/.claude/specialized-agents/performance-optimizer.md,performance-optimizer.md,.claude,⚡ Performance-Optimizer - Especialista en Optimización y Performance
+299,/home/user/UNS-ClaudeJP-6.0.0/.claude/specialized-agents/security-auditor.md,security-auditor.md,.claude,🔐 Security-Auditor - Especialista en Seguridad y Auditoría
+300,/home/user/UNS-ClaudeJP-6.0.0/.claude/specialized-agents/testing-qa.md,testing-qa.md,.claude,✅ Testing-QA - Especialista en Testing y Aseguramiento de Calidad
+301,/home/user/UNS-ClaudeJP-6.0.0/.claude/specialized-agents/ui-designer.md,ui-designer.md,.claude,🎨 UI-Designer - Especialista en Diseño UI/UX y Temas
+302,/home/user/UNS-ClaudeJP-6.0.0/.claude/stuck.md,stuck.md,.claude,name: stuck
+303,/home/user/UNS-ClaudeJP-6.0.0/.claude/system-architect.md,system-architect.md,.claude,name: system-architect
+304,/home/user/UNS-ClaudeJP-6.0.0/.claude/task-auth-401-still-failing.md,task-auth-401-still-failing.md,.claude,STUCK: Login Still Failing with 401 Error
+305,/home/user/UNS-ClaudeJP-6.0.0/.claude/task-checker.md,task-checker.md,.claude,name: task-checker
+306,/home/user/UNS-ClaudeJP-6.0.0/.claude/task-executor.md,task-executor.md,.claude,name: task-executor
+307,/home/user/UNS-ClaudeJP-6.0.0/.claude/task-orchestrator.md,task-orchestrator.md,.claude,name: task-orchestrator
+308,/home/user/UNS-ClaudeJP-6.0.0/.claude/tester.md,tester.md,.claude,name: tester
+309,/home/user/UNS-ClaudeJP-6.0.0/.claude/ui-clone-master.md,ui-clone-master.md,.claude,🎨 UI Clone Master Agent
+310,/home/user/UNS-ClaudeJP-6.0.0/AUDIT_BUGS_REPORT_2025_11_16.md,AUDIT_BUGS_REPORT_2025_11_16.md,ROOT,🔍 AUDIT REPORT - UNS-ClaudeJP 5.4.1
+311,/home/user/UNS-ClaudeJP-6.0.0/AUDIT_SUMMARY_QUICK_REFERENCE.md,AUDIT_SUMMARY_QUICK_REFERENCE.md,ROOT,⚡ QUICK REFERENCE - AUDIT SUMMARY
+312,/home/user/UNS-ClaudeJP-6.0.0/BASEDATEJP/README.md,README.md,BASEDATEJP,BASEDATEJP - Base de Datos de Importación (LEGACY)
+313,/home/user/UNS-ClaudeJP-6.0.0/CLAUDE.md,CLAUDE.md,ROOT,CLAUDE.md
+314,/home/user/UNS-ClaudeJP-6.0.0/CLEANUP_SUMMARY_2025-11-16.md,CLEANUP_SUMMARY_2025-11-16.md,ROOT,UNS-ClaudeJP 5.4.1 - Codebase Cleanup Summary
+315,/home/user/UNS-ClaudeJP-6.0.0/COMO_CAMBIAR_TEMAS_Y_COLORES.md,COMO_CAMBIAR_TEMAS_Y_COLORES.md,ROOT,🎨 Cómo Cambiar Temas y Colores en UNS-ClaudeJP
+316,/home/user/UNS-ClaudeJP-6.0.0/COMPREHENSIVE_TEST_REPORT_2025-11-17.md,COMPREHENSIVE_TEST_REPORT_2025-11-17.md,ROOT,🧪 COMPREHENSIVE SYSTEM TEST REPORT
+317,/home/user/UNS-ClaudeJP-6.0.0/CONFIG_FIXES_v6.0.0.md,CONFIG_FIXES_v6.0.0.md,ROOT,🔧 CONFIGURACIÓN DEFINITIVA - UNS-ClaudeJP v6.0.0
+318,/home/user/UNS-ClaudeJP-6.0.0/DASHBOARD_TEST_REPORT_2025-11-17.md,DASHBOARD_TEST_REPORT_2025-11-17.md,ROOT,📊 DASHBOARD TESTING REPORT - 2025-11-17
+319,/home/user/UNS-ClaudeJP-6.0.0/ESTRUCTURA_COMPLETA.md,ESTRUCTURA_COMPLETA.md,ROOT,ANÁLISIS COMPLETO DE ESTRUCTURA - UNS-ClaudeJP 5.4.1
+320,/home/user/UNS-ClaudeJP-6.0.0/HYDRATION_FIX_SUMMARY.md,HYDRATION_FIX_SUMMARY.md,ROOT,Auth Hydration Race Condition Fix - Complete Implementation
+321,/home/user/UNS-ClaudeJP-6.0.0/IMPORT_CANDIDATOS_COMPLETA_2025-11-17.md,IMPORT_CANDIDATOS_COMPLETA_2025-11-17.md,ROOT,🎉 IMPORTACIÓN COMPLETA DE CANDIDATOS - 2025-11-17
+322,/home/user/UNS-ClaudeJP-6.0.0/INSTALACION_NUEVA_PC.md,INSTALACION_NUEVA_PC.md,ROOT,🚀 Instalación en Nueva PC - UNS-ClaudeJP 6.0.0
+323,/home/user/UNS-ClaudeJP-6.0.0/MAPEO_RUTAS.md,MAPEO_RUTAS.md,ROOT,MAPEO VISUAL DE RUTAS - UNS-ClaudeJP
+324,/home/user/UNS-ClaudeJP-6.0.0/OPTIONAL_ERROR_BOUNDARY_GUIDE.md,OPTIONAL_ERROR_BOUNDARY_GUIDE.md,ROOT,🛡️ Optional: Error Boundary for Theme Components
+325,/home/user/UNS-ClaudeJP-6.0.0/PROXIMOS_PASOS_COMPLETADOS.md,PROXIMOS_PASOS_COMPLETADOS.md,ROOT,✅ Próximos Pasos: Todos Completados
+326,/home/user/UNS-ClaudeJP-6.0.0/README.md,README.md,ROOT,UNS-ClaudeJP 5.6.0 - Sistema de Gestión de RRHH
+327,/home/user/UNS-ClaudeJP-6.0.0/RESUMEN_EJECUTIVO.md,RESUMEN_EJECUTIVO.md,ROOT,RESUMEN EJECUTIVO - UNS-ClaudeJP 5.4.1
+328,/home/user/UNS-ClaudeJP-6.0.0/THEME_SWITCHER_INTEGRATION.md,THEME_SWITCHER_INTEGRATION.md,ROOT,Theme Switcher Improved - Integration Guide
+329,/home/user/UNS-ClaudeJP-6.0.0/THEME_SWITCHER_QUICK_START.md,THEME_SWITCHER_QUICK_START.md,ROOT,Theme Switcher Improved - Quick Start
+330,/home/user/UNS-ClaudeJP-6.0.0/THEME_SWITCHER_SUMMARY.md,THEME_SWITCHER_SUMMARY.md,ROOT,Theme Switcher Improved - Component Summary
+331,/home/user/UNS-ClaudeJP-6.0.0/THEME_SYSTEM_TESTING_GUIDE.md,THEME_SYSTEM_TESTING_GUIDE.md,ROOT,🧪 Theme System Testing & Final Adjustments Guide
+332,/home/user/UNS-ClaudeJP-6.0.0/ZHIPU_GLM_INTEGRATION_SUMMARY.md,ZHIPU_GLM_INTEGRATION_SUMMARY.md,ROOT,✅ Zhipu GLM-4.6 Integration - Complete Summary
+333,/home/user/UNS-ClaudeJP-6.0.0/agents.md,agents.md,ROOT,🤖 agents.md - Multi-AI Orchestration Guide
+334,/home/user/UNS-ClaudeJP-6.0.0/backend/alembic/versions/README-apartment-factory.md,README-apartment-factory.md,backend,Apartment-Factory Relationship Model
+335,/home/user/UNS-ClaudeJP-6.0.0/backend/scripts/IMPORTACION_COMPLETA.md,IMPORTACION_COMPLETA.md,backend,📦 GUÍA COMPLETA DE IMPORTACIÓN DE DATOS
+336,/home/user/UNS-ClaudeJP-6.0.0/backend/scripts/SEED_SALARY_README.md,SEED_SALARY_README.md,backend,Salary System Seed Data Script
+337,/home/user/UNS-ClaudeJP-6.0.0/backend/tests/TEST_SALARY_SYSTEM_README.md,TEST_SALARY_SYSTEM_README.md,backend,Test Suite for Unified Salary System
+338,/home/user/UNS-ClaudeJP-6.0.0/docs/02-guides/OBSERVABILITY_README.md,OBSERVABILITY_README.md,docs,Análisis del Stack de Observabilidad - UNS-ClaudeJP 5.4.1
+339,/home/user/UNS-ClaudeJP-6.0.0/docs/02-guides/operations-guide.md,operations-guide.md,docs,📋 Operations Runbook - UNS-ClaudeJP 5.4.1
+340,/home/user/UNS-ClaudeJP-6.0.0/docs/04-troubleshooting/NETWORK_ERRORS_DIAGNOSTICO_2025-11-17.md,NETWORK_ERRORS_DIAGNOSTICO_2025-11-17.md,docs,🔍 Diagnóstico Completo de Errores de Red y CSP - 2025-11-17
+341,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/cleanup-reports/CODEBASE_CLEANUP_ANALYSIS_2025-11-16.md,CODEBASE_CLEANUP_ANALYSIS_2025-11-16.md,docs,UNS-ClaudeJP 5.4.1 - COMPREHENSIVE CODEBASE CLEANUP ANALYSIS
+342,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/00_FRONTEND_RESUMEN_EJECUTIVO.md,00_FRONTEND_RESUMEN_EJECUTIVO.md,docs,RESUMEN EJECUTIVO - ANÁLISIS FRONTEND UNS-ClaudeJP 5.4.1
+343,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/01_FRONTEND_ESTRUCTURA.md,01_FRONTEND_ESTRUCTURA.md,docs,1. ESTRUCTURA DE CARPETAS - FRONTEND
+344,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/02_FRONTEND_PAGINAS_RUTAS.md,02_FRONTEND_PAGINAS_RUTAS.md,docs,2. PÁGINAS Y RUTAS - FRONTEND (75 PÁGINAS TOTALES)
+345,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/03_FRONTEND_ESTADO_TEMAS.md,03_FRONTEND_ESTADO_TEMAS.md,docs,3. GESTIÓN DE ESTADO Y SISTEMA DE TEMAS
+346,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/04-compatibility-matrix.md,04-compatibility-matrix.md,docs,Matriz de Compatibilidad - UNS-ClaudeJP 5.4.1
+347,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/04-dependency-analysis.md,04-dependency-analysis.md,docs,ANÁLISIS COMPLETO DE DEPENDENCIAS Y CONFLICTOS - UNS-ClaudeJP 5.4.1
+348,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/04-dependency-quick-reference.md,04-dependency-quick-reference.md,docs,Referencia Rápida de Dependencias - UNS-ClaudeJP 5.4.1
+349,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/ADMIN_PASSWORD_FIX.md,ADMIN_PASSWORD_FIX.md,docs,🔑 Solución al problema de contraseña admin
+350,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/ADVANCED_TROUBLESHOOTING.md,ADVANCED_TROUBLESHOOTING.md,docs,🔧 ADVANCED TROUBLESHOOTING GUIDE
+351,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/ANALISIS_BUGS_NYUUSHA_2025-11-13.md,ANALISIS_BUGS_NYUUSHA_2025-11-13.md,docs,🔍 ANÁLISIS EXHAUSTIVO - NYUUSHA Workflow
+352,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/ANALISIS_DOCUMENTACION_MIGRACION_V5.4.md,ANALISIS_DOCUMENTACION_MIGRACION_V5.4.md,docs,📋 ANÁLISIS COMPLETO DE DOCUMENTACIÓN - MIGRACIÓN V5.4
+353,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/APARTAMENTOS_SISTEMA_COMPLETO_V2.md,APARTAMENTOS_SISTEMA_COMPLETO_V2.md,docs,🏢 SISTEMA COMPLETO DE GESTIÓN DE APARTAMENTOS V2.0
+354,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/APARTAMENTOS_V2_FRONTEND_INTEGRATION.md,APARTAMENTOS_V2_FRONTEND_INTEGRATION.md,docs,🏢 Apartamentos V2 - Frontend Integration Complete
+355,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/APARTMENT_FACTORY_INTEGRATION_COMPLETE.md,APARTMENT_FACTORY_INTEGRATION_COMPLETE.md,docs,🏢 Integración Completa Apartamento-Fábrica - UNS-ClaudeJP 5.4.1
+356,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/ARQUITECTURA_COMPLETA_CANDIDATOS_2025.md,ARQUITECTURA_COMPLETA_CANDIDATOS_2025.md,docs,🏗️ ARQUITECTURA COMPLETA - SISTEMA DE CANDIDATOS Y 入社連絡票 (NYŪSHA RENRAKUHYŌ)
+357,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/BUG_FIXES_2025-11-13.md,BUG_FIXES_2025-11-13.md,docs,🐛 Bug Fixes - 13 de Noviembre 2025
+358,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/CAMBIOS_PERMISOS_YUKYU.md,CAMBIOS_PERMISOS_YUKYU.md,docs,🔐 CAMBIOS DE PERMISOS - Sistema de Yukyus
+359,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/CHECKLIST_VALIDACION_INSTALACION.md,CHECKLIST_VALIDACION_INSTALACION.md,docs,✅ CHECKLIST DE VALIDACIÓN DE INSTALACIÓN
+360,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/COMPREHENSIVE_YUKYU_ANALYSIS_2025-11-13.md,COMPREHENSIVE_YUKYU_ANALYSIS_2025-11-13.md,docs,📊 COMPREHENSIVE YUKYU SYSTEM ANALYSIS
+361,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/DASHBOARD_ERRORS_FIX.md,DASHBOARD_ERRORS_FIX.md,docs,🔧 Solución a errores del dashboard y página yukyu faltante
+362,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/DEPLOYMENT_PLAN_TIMER_CARDS.md,DEPLOYMENT_PLAN_TIMER_CARDS.md,docs,🚀 Timer Card Module Deployment Plan
+363,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/DESIGN_NYUUSHA_RENRAKUHYO.md,DESIGN_NYUUSHA_RENRAKUHYO.md,docs,📋 DISEÑO: 入社連絡票 (NYŪSHA RENRAKUHYŌ)
+364,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/DISASTER_RECOVERY_PLAN.md,DISASTER_RECOVERY_PLAN.md,docs,🆘 Disaster Recovery Plan - Timer Card Module
+365,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/FALLAS_ARREGLADAS_2025-11-11.md,FALLAS_ARREGLADAS_2025-11-11.md,docs,Fallas Arregladas - 11 de Noviembre 2025
+366,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/FAQ_YUKYU.md,FAQ_YUKYU.md,docs,📋 Preguntas Frecuentes (FAQ) - Sistema Yukyu
+367,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/FASE_3_OCR_TIMEOUTS_IMPLEMENTATION.md,FASE_3_OCR_TIMEOUTS_IMPLEMENTATION.md,docs,FASE 3: OCR TIMEOUTS IMPLEMENTATION - Quick Wins
+368,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/FIX_EMPLOYEE_PHOTOS_2025-11-12.md,FIX_EMPLOYEE_PHOTOS_2025-11-12.md,docs,Fix: Empleados Sin Fotos (Employee Photos Missing)
+369,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/FIX_IMPORTER_FAILURE_2025-11-12.md,FIX_IMPORTER_FAILURE_2025-11-12.md,docs,Fix: Importer Failure Blocking Backend/Frontend Startup
+370,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/FIX_REQUEST_EMPLOYEE_ID_2025-11-12.md,FIX_REQUEST_EMPLOYEE_ID_2025-11-12.md,docs,Fix: Request Model hybrid_property Missing Expression
+371,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/FIX_YUKYU_BALANCES_ENDPOINT_2025-11-12.md,FIX_YUKYU_BALANCES_ENDPOINT_2025-11-12.md,docs,Fix: Yukyu Balances Endpoint Error
+372,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/FIX_YUKYU_LOGIN_DEBUG_2025-11-12.md,FIX_YUKYU_LOGIN_DEBUG_2025-11-12.md,docs,Yukyu Login Debug Session - 2025-11-12
+373,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/FRONTEND_ANALYSIS.md,FRONTEND_ANALYSIS.md,docs,ANÁLISIS EXHAUSTIVO DEL FRONTEND - UNS-ClaudeJP 5.4.1
+374,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/GUIA_INICIO_IA.md,GUIA_INICIO_IA.md,docs,🤖 GUÍA DE INICIO PARA IAs - UNS-ClaudeJP v5.4
+375,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/GUIA_KEITOSAN.md,GUIA_KEITOSAN.md,docs,GUÍA KEITOSAN (経理管理) - Sistema de Yukyus
+376,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/GUIA_TANTOSHA.md,GUIA_TANTOSHA.md,docs,GUÍA TANTOSHA (担当者) - Sistema de Yukyus
+377,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/IMPLEMENTATION_SUMMARY_NYUUSHA_RENRAKUHYO.md,IMPLEMENTATION_SUMMARY_NYUUSHA_RENRAKUHYO.md,docs,📊 RESUMEN DE IMPLEMENTACIÓN: 入社連絡票 (NYŪSHA RENRAKUHYŌ)
+378,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/INCIDENT_RESPONSE_PLAYBOOK.md,INCIDENT_RESPONSE_PLAYBOOK.md,docs,🚨 INCIDENT RESPONSE PLAYBOOK
+379,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/INDEX_DOCUMENTACION.md,INDEX_DOCUMENTACION.md,docs,📚 ÍNDICE MAESTRO DE DOCUMENTACIÓN - UNS-ClaudeJP v5.4
+380,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/INSTRUCCIONES_USO.md,INSTRUCCIONES_USO.md,docs,🚀 INSTRUCCIONES DE USO - Sistema de Documentación para IAs
+381,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/LO_QUE_FALTA_IMPLEMENTAR.md,LO_QUE_FALTA_IMPLEMENTAR.md,docs,⚠️ ANÁLISIS DE LO QUE FALTA - 入社連絡票 WORKFLOW
+382,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/MATRIZ_CONSOLIDADA_RIESGOS.md,MATRIZ_CONSOLIDADA_RIESGOS.md,docs,MATRIZ CONSOLIDADA DE RIESGOS - UNS-ClaudeJP 5.4.1
+383,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/MIGRATION_API_V1_TO_V2.md,MIGRATION_API_V1_TO_V2.md,docs,Migration Guide: Apartments API V1 to V2
+384,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/NEXT_STEPS_NYUUSHA_WORKFLOW.md,NEXT_STEPS_NYUUSHA_WORKFLOW.md,docs,🚀 PRÓXIMOS PASOS: 入社連絡票 (NYŪSHA RENRAKUHYŌ) WORKFLOW
+385,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/OBSERVABILITY_DATAFLOW.md,OBSERVABILITY_DATAFLOW.md,docs,FLUJOS DE DATOS: Stack de Observabilidad
+386,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/OBSERVABILITY_FILE_INDEX.md,OBSERVABILITY_FILE_INDEX.md,docs,Índice de Archivos Analizados del Stack de Observabilidad
+387,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/OBSERVABILITY_SUMMARY.md,OBSERVABILITY_SUMMARY.md,docs,RESUMEN EJECUTIVO: Stack de Observabilidad UNS-ClaudeJP
+388,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/OPERATIONAL_RUNBOOK.md,OPERATIONAL_RUNBOOK.md,docs,🔧 OPERATIONAL RUNBOOK
+389,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/OPERATIONS_MANUAL.md,OPERATIONS_MANUAL.md,docs,📖 Timer Card Module - Operations Manual
+390,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/PLAN_ACCION_MAESTRO.md,PLAN_ACCION_MAESTRO.md,docs,🎯 PLAN DE ACCIÓN MAESTRO - UNS-ClaudeJP 5.4.1
+391,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/PLAN_B_COMPLETE_FINAL_SUMMARY.md,PLAN_B_COMPLETE_FINAL_SUMMARY.md,docs,🎉 PLAN B - COMPLETE FINAL SUMMARY
+392,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/PLAN_B_IMPLEMENTATION_COMPLETE.md,PLAN_B_IMPLEMENTATION_COMPLETE.md,docs,✅ PLAN B IMPLEMENTATION - COMPLETE SUMMARY
+393,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/PLAN_IMPLEMENTACION_COMPLETO.md,PLAN_IMPLEMENTACION_COMPLETO.md,docs,📋 PLAN DE IMPLEMENTACIÓN COMPLETO
+394,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/PRE_GO_LIVE_CHECKLIST.md,PRE_GO_LIVE_CHECKLIST.md,docs,✅ Pre-Go-Live Checklist - Timer Card Module Remediation
+395,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/PRE_INSTALACION_CHECKLIST.md,PRE_INSTALACION_CHECKLIST.md,docs,📋 Checklist de Pre-Instalación - UNS-ClaudeJP 5.4.1
+396,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/PROCESO_COMPLETO_EMAIL_USUARIOS.md,PROCESO_COMPLETO_EMAIL_USUARIOS.md,docs,📋 PROCESO COMPLETO DE REGISTRACIÓN DE USUARIOS Y EMAIL
+397,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/PRODUCTION_DEPLOYMENT.md,PRODUCTION_DEPLOYMENT.md,docs,🚀 PRODUCTION DEPLOYMENT GUIDE
+398,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/README.md,README.md,docs,📖 README - Sistema de Documentación para IAs
+399,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/REGULACIONES_LABORALES.md,REGULACIONES_LABORALES.md,docs,REGULACIONES LABORALES: Yukyu en Japón
+400,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/REINSTALACION_FIXES_2025-11-12.md,REINSTALACION_FIXES_2025-11-12.md,docs,Registro de Fallas Arregladas Durante Reinstalación
+401,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/REPORTE_COMPLETO_SISTEMA.md,REPORTE_COMPLETO_SISTEMA.md,docs,📊 Reporte Completo del Sistema UNS-ClaudeJP 5.4.1
+402,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/REPORTE_FINAL_EJECUTIVO_2025-11-12.md,REPORTE_FINAL_EJECUTIVO_2025-11-12.md,docs,📊 REPORTE FINAL EJECUTIVO
+403,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/REQUESTS_SYSTEM_EXPLORATION.md,REQUESTS_SYSTEM_EXPLORATION.md,docs,REQUESTS (申請) SYSTEM - COMPREHENSIVE EXPLORATION
+404,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/RESUMEN_EJECUTIVO_RIESGOS.md,RESUMEN_EJECUTIVO_RIESGOS.md,docs,RESUMEN EJECUTIVO - RIESGOS CRÍTICOS
+405,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/RESUMEN_EJECUTIVO_YUKYU_2025-11-12.md,RESUMEN_EJECUTIVO_YUKYU_2025-11-12.md,docs,Resumen Ejecutivo - Análisis y Corrección Sistema Yukyu
+406,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/RESUMEN_MIGRACION_DOCUMENTACION.md,RESUMEN_MIGRACION_DOCUMENTACION.md,docs,📋 RESUMEN DE MIGRACIÓN DE DOCUMENTACIÓN - V5.4
+407,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/RESUMEN_VISUAL.md,RESUMEN_VISUAL.md,docs,✅ MIGRACIÓN COMPLETADA - Resumen Visual
+408,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/SYNC_APARTMENT_ASSIGNMENT.md,SYNC_APARTMENT_ASSIGNMENT.md,docs,Sincronización Bidireccional: Employee.apartment_id ↔ ApartmentAssignment
+409,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/TANTOSHA_KEITOSAN_ROLE_ANALYSIS.md,TANTOSHA_KEITOSAN_ROLE_ANALYSIS.md,docs,TANTOSHA と KEITOSAN ロール分析 - UNS-ClaudeJP 5.4.1
+410,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/TESTING_MANUAL_NYUUSHA_WORKFLOW.md,TESTING_MANUAL_NYUUSHA_WORKFLOW.md,docs,🧪 TESTING MANUAL - 入社連絡票 (NYŪSHA RENRAKUHYŌ) WORKFLOW
+411,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/TODO_INVENTORY_2025-11-12.md,TODO_INVENTORY_2025-11-12.md,docs,TODO Inventory - UNS-ClaudeJP 5.4.1
+412,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/VERIFICACION_APARTAMENTOS_2025-11-12.md,VERIFICACION_APARTAMENTOS_2025-11-12.md,docs,Verificación Completa del Sistema de Apartamentos
+413,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/VERIFICACION_APARTAMENTOS_V2.md,VERIFICACION_APARTAMENTOS_V2.md,docs,✅ Verificación de Apartamentos V2 - Checklist Completo
+414,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/VERIFICACION_COMPLETA_SISTEMA_2025-11-12.md,VERIFICACION_COMPLETA_SISTEMA_2025-11-12.md,docs,
+415,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/YUKYU_CALCULATE_BALANCES_ISSUE_2025-11-12.md,YUKYU_CALCULATE_BALANCES_ISSUE_2025-11-12.md,docs,Yukyu Calculate Balances Endpoint Issue
+416,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/YUKYU_SYSTEM_COMPLETE_DOCUMENTATION_2025-11-12.md,YUKYU_SYSTEM_COMPLETE_DOCUMENTATION_2025-11-12.md,docs,﻿# Yukyu (有給休暇) System - Complete Documentation
+417,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/auth_security_analysis.md,auth_security_analysis.md,docs,ANÁLISIS COMPLETO: AUTENTICACIÓN Y CONTROL DE ROLES (RBAC)
+418,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/observability_analysis.md,observability_analysis.md,docs,ANÁLISIS COMPLETO DEL STACK DE OBSERVABILIDAD - UNS-ClaudeJP 5.4.1
+419,/home/user/UNS-ClaudeJP-6.0.0/docs/06-archive/legacy/observability_fixes.md,observability_fixes.md,docs,PLAN DE CORRECCIÓN DEL STACK DE OBSERVABILIDAD
+420,/home/user/UNS-ClaudeJP-6.0.0/docs/ai/COMANDOS_FRECUENTES.md,COMANDOS_FRECUENTES.md,docs,💻 COMANDOS FRECUENTES - Referencia Rápida para IAs
+421,/home/user/UNS-ClaudeJP-6.0.0/docs/ai/CONTEXTO_COMPLETO.md,CONTEXTO_COMPLETO.md,docs,🤖 CONTEXTO COMPLETO DEL PROYECTO - UNS-ClaudeJP v5.4
+422,/home/user/UNS-ClaudeJP-6.0.0/docs/analysis/ANALISIS_CODIGO_NO_USADO_v5.4.md,ANALISIS_CODIGO_NO_USADO_v5.4.md,docs,🔍 Análisis Completo de Código No Usado - UNS-ClaudeJP 5.2 → 5.4
+423,/home/user/UNS-ClaudeJP-6.0.0/docs/analysis/ANALISIS_INTEGRIDAD_BD_RESUMEN_EJECUTIVO.md,ANALISIS_INTEGRIDAD_BD_RESUMEN_EJECUTIVO.md,docs,📊 Análisis de Integridad de Base de Datos - Resumen Ejecutivo
+424,/home/user/UNS-ClaudeJP-6.0.0/docs/analysis/DATABASE_INTEGRITY_ANALYSIS_2025-11-12.md,DATABASE_INTEGRITY_ANALYSIS_2025-11-12.md,docs,📊 UNS-ClaudeJP 5.4.1 - Database Integrity Analysis Report
+425,/home/user/UNS-ClaudeJP-6.0.0/docs/analysis/SALARY_SYSTEM_ANALYSIS.md,SALARY_SYSTEM_ANALYSIS.md,docs,📊 Análisis Completo del Sistema de Salarios/Nómina
+426,/home/user/UNS-ClaudeJP-6.0.0/docs/architecture/COMPLETE_ARCHITECTURE_ANALYSIS.md,COMPLETE_ARCHITECTURE_ANALYSIS.md,docs,ANÁLISIS ARQUITECTURA ACTUAL - UNS-ClaudeJP 5.4.1
+427,/home/user/UNS-ClaudeJP-6.0.0/docs/architecture/EXECUTIVE_AUDIT_REPORT.md,EXECUTIVE_AUDIT_REPORT.md,docs,🏢 AUDITORÍA EJECUTIVA EMPRESARIAL
+428,/home/user/UNS-ClaudeJP-6.0.0/docs/architecture/FACTORY_SYSTEM_DESIGN.md,FACTORY_SYSTEM_DESIGN.md,docs,SISTEMA DE FACTORIES - DISEÑO MEJORADO
+429,/home/user/UNS-ClaudeJP-6.0.0/docs/architecture/FRONTEND_BACKEND_DEPENDENCY_ANALYSIS.md,FRONTEND_BACKEND_DEPENDENCY_ANALYSIS.md,docs,Frontend Backend Dependency Analysis Report
+430,/home/user/UNS-ClaudeJP-6.0.0/docs/architecture/FRONTEND_FRAGILITY_SUMMARY.md,FRONTEND_FRAGILITY_SUMMARY.md,docs,Frontend Fragility - Executive Summary
+431,/home/user/UNS-ClaudeJP-6.0.0/docs/architecture/TIMER_CARDS_OCR_COMPLETE_DESIGN.md,TIMER_CARDS_OCR_COMPLETE_DESIGN.md,docs,TIMER CARDS OCR - DISEÑO COMPLETO
+432,/home/user/UNS-ClaudeJP-6.0.0/docs/architecture/apartment-factory-model-summary.md,apartment-factory-model-summary.md,docs,Apartment-Factory Relationship Model - Analysis & Recommendation
+433,/home/user/UNS-ClaudeJP-6.0.0/docs/architecture/salary-unified-architecture.md,salary-unified-architecture.md,docs,Unified Salary Schema - Architecture
+434,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/analysis/ANALISIS_EXHAUSTIVO_ARCHIVOS_MD.md,ANALISIS_EXHAUSTIVO_ARCHIVOS_MD.md,docs,ANALISIS EXHAUSTIVO DE ARCHIVOS .MD
+435,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/analysis/AUDIT_CANDIDATOS_SISTEMA_2025-11-11.md,AUDIT_CANDIDATOS_SISTEMA_2025-11-11.md,docs,📊 AUDITORÍA COMPLETA DEL SISTEMA DE CANDIDATOS
+436,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/audits/AUDIT_BAT_FILES_2025-11-10.md,AUDIT_BAT_FILES_2025-11-10.md,docs,🔍 Auditoría y Corrección Masiva de Archivos .BAT
+437,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/audits/AUDIT_EXHAUSTIVO_COMPLETO.md,AUDIT_EXHAUSTIVO_COMPLETO.md,docs,AUDITORÍA EXHAUSTIVA COMPLETA - UNS-ClaudeJP-5.4.1
+438,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/audits/AUDIT_QUICK_REFERENCE.md,AUDIT_QUICK_REFERENCE.md,docs,AUDITORÍA RÁPIDA - Quick Reference
+439,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/changelogs/CHANGELOG_OPTIMIZACIONES.md,CHANGELOG_OPTIMIZACIONES.md,docs,CHANGELOG - Sistema de Extracción de Fotos Optimizado v2.0
+440,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/dashboard/DASHBOARD_COMPLETO_TODOS_LOS_ARCHIVOS.md,DASHBOARD_COMPLETO_TODOS_LOS_ARCHIVOS.md,docs,🎨 DASHBOARD COMPLETO - TODOS LOS ARCHIVOS (Dark/Light Mode)
+441,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/dashboard/DASHBOARD_IMPLEMENTACION_GUIA.md,DASHBOARD_IMPLEMENTACION_GUIA.md,docs,🎨 GUÍA DE IMPLEMENTACIÓN: Dashboard con Dark/Light Mode
+442,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/dashboard/DASHBOARD_TEMPLATE_ANALISIS_VISUAL.md,DASHBOARD_TEMPLATE_ANALISIS_VISUAL.md,docs,📸 ANÁLISIS VISUAL: Dashboard Template Vercel
+443,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/dashboard/SNEAT_PRO_GUIA_IMPLEMENTACION.md,SNEAT_PRO_GUIA_IMPLEMENTACION.md,docs,🎨 SNEAT PRO - GUÍA DE IMPLEMENTACIÓN COMPLETA
+444,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/dashboard/SNEAT_PRO_IMPLEMENTACION_RESUMEN.md,SNEAT_PRO_IMPLEMENTACION_RESUMEN.md,docs,🎨 SNEAT PRO - RESUMEN COMPLETO DE IMPLEMENTACIÓN
+445,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/dashboard/SNEAT_PRO_PARTE_1_CORE_ECOMMERCE.md,SNEAT_PRO_PARTE_1_CORE_ECOMMERCE.md,docs,🎨 SNEAT PRO - PARTE 1: Core + eCommerce Dashboard
+446,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/dashboard/SNEAT_PRO_PARTE_2_ANALYTICS.md,SNEAT_PRO_PARTE_2_ANALYTICS.md,docs,🎨 SNEAT PRO - PARTE 2: Analytics Dashboard
+447,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/dashboard/SNEAT_PRO_PARTE_3_CRM.md,SNEAT_PRO_PARTE_3_CRM.md,docs,🎨 SNEAT PRO - PARTE 3: CRM Dashboard
+448,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/dashboard/SNEAT_PRO_PARTE_4_5_6_FINAL.md,SNEAT_PRO_PARTE_4_5_6_FINAL.md,docs,"🎨 SNEAT PRO - PARTES 4, 5 Y 6: Academy + Logistics + Social"
+449,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/dashboard/SNEAT_PRO_PLAN_IMPLEMENTACION.md,SNEAT_PRO_PLAN_IMPLEMENTACION.md,docs,🎨 SNEAT PRO - Implementación Completa
+450,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/design-system/DESIGN_SYSTEM_AUDIT_REPORT_2025-11-12.md,DESIGN_SYSTEM_AUDIT_REPORT_2025-11-12.md,docs,🎨 Design System & Theme Audit Report
+451,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/design-system/SISTEMA_THEMES_GUIA_COMPLETA.md,SISTEMA_THEMES_GUIA_COMPLETA.md,docs,🎨 SISTEMA MODULAR DE THEMES - Guía Completa
+452,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/design-system/THEME_ANALYSIS_MASTER_INDEX.md,THEME_ANALYSIS_MASTER_INDEX.md,docs,🎨 Theme & CSS Analysis - Master Index
+453,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/design-system/THEME_ANALYSIS_REQUEST.md,THEME_ANALYSIS_REQUEST.md,docs,Design System & Theme Analysis Request
+454,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/design-system/THEME_ANALYSIS_RESULTS.md,THEME_ANALYSIS_RESULTS.md,docs,🎨 Theme Analysis Results - UNS-ClaudeJP 5.4
+455,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/design-system/THEME_ANALYSIS_VISUAL_GUIDE.md,THEME_ANALYSIS_VISUAL_GUIDE.md,docs,🎨 Visual Theme Analysis - UNS-ClaudeJP 5.4
+456,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/design-system/THEME_AUDIT_EXECUTIVE_SUMMARY.md,THEME_AUDIT_EXECUTIVE_SUMMARY.md,docs,🎨 Theme & CSS Audit - Executive Summary
+457,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/design-system/THEME_AUDIT_REPORT.md,THEME_AUDIT_REPORT.md,docs,🎨 ANÁLISIS DE THEME ACTUAL - UNS-ClaudeJP 5.4.1
+458,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/design-system/THEME_INCONSISTENCIES_ANALYSIS.md,THEME_INCONSISTENCIES_ANALYSIS.md,docs,🔍 ANÁLISIS DE INCONSISTENCIAS - Theme y CSS
+459,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/design-system/THEME_WIZARD_README.md,THEME_WIZARD_README.md,docs,🎨 THEME WIZARD - AGENTE ESPECIALIZADO EN CSS/THEMES
+460,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/design-system/TOP_5_THEMES_PREMIUM_ANALISIS.md,TOP_5_THEMES_PREMIUM_ANALISIS.md,docs,🏆 TOP 5 THEMES PREMIUM - Listos para Clonar
+461,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/diagnostics/DIAGNOSTICO_POST_INSTALACION.md,DIAGNOSTICO_POST_INSTALACION.md,docs,🔍 Diagnóstico Post-Instalación: UNS-ClaudeJP 5.4.1
+462,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/ACTUALIZACION_SCRIPTS_SYNC.md,ACTUALIZACION_SCRIPTS_SYNC.md,docs,📋 ACTUALIZACIÓN DE SCRIPTS - SINCRONIZACIÓN EMPLEADOS/STAFF/CONTRACT_WORKERS
+463,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/AGENTS.md,AGENTS.md,docs,Repository Guidelines
+464,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/APARTAMENTOS_V2_STATUS.md,APARTAMENTOS_V2_STATUS.md,docs,Apartment System V2 - Implementation Status Report
+465,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/API_REFERENCE.md,API_REFERENCE.md,docs,API Reference - UNS-ClaudeJP 5.4.1
+466,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/BUTTON_BADGES_OPTIONS.md,BUTTON_BADGES_OPTIONS.md,docs,📊 COMPARACIÓN: Cómo Quedarían los Cambios
+467,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/CHECKLIST_REINSTALACION.md,CHECKLIST_REINSTALACION.md,docs,✅ CHECKLIST REINSTALACIÓN / CAMBIO DE PC
+468,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/COMPONENTS_ANALYSIS_IMPROVEMENT_OPPORTUNITIES.md,COMPONENTS_ANALYSIS_IMPROVEMENT_OPPORTUNITIES.md,docs,🎯 ANÁLISIS DE COMPONENTES - Oportunidades de Mejora
+469,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/COPILOT_CLI_MODELOS.md,COPILOT_CLI_MODELOS.md,docs,🤖 Guía de GitHub Copilot CLI - Configuración de Modelos
+470,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/CSS_FIXES_APPLIED.md,CSS_FIXES_APPLIED.md,docs,✅ CORRECCIONES REALIZADAS - Theme & CSS
+471,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/EMPLOYEE_STAFF_SYNC_FIX_COMPLETE.md,EMPLOYEE_STAFF_SYNC_FIX_COMPLETE.md,docs,🎯 REPORTE COMPLETO: Corrección Sistema Empleados/Staff/ContractWorkers
+472,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/EXTRACCION_FOTOS_GUIA_COMPLETA.md,EXTRACCION_FOTOS_GUIA_COMPLETA.md,docs,📸 GUÍA COMPLETA: EXTRACCIÓN DE FOTOS DE ACCESS
+473,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/FINAL_SUMMARY_ALL_FIXES.md,FINAL_SUMMARY_ALL_FIXES.md,docs,✅ TODO COMPLETADO - CORRECCIONES FINALES
+474,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/FIXES_SUMMARY.md,FIXES_SUMMARY.md,docs,✅ CORRECCIONES COMPLETADAS
+475,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/GUIA_IMPLEMENTACION_DISENOS_Y_ROLLBACK.md,GUIA_IMPLEMENTACION_DISENOS_Y_ROLLBACK.md,docs,🎨 GUÍA COMPLETA: Implementación de Diseños y Rollback
+476,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/GUIA_TESTING_POST_AUDITORIA.md,GUIA_TESTING_POST_AUDITORIA.md,docs,🧪 GUÍA DE TESTING POST-AUDITORÍA
+477,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/IMPLEMENTATION_REPORT_2025-11-11.md,IMPLEMENTATION_REPORT_2025-11-11.md,docs,🎯 REPORTE DE IMPLEMENTACIÓN COMPLETA
+478,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/IMPLEMENTATION_SUMMARY_B1_B2_B3.md,IMPLEMENTATION_SUMMARY_B1_B2_B3.md,docs,Backend Auxiliary Services Implementation Summary
+479,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/INSTRUCCIONES_MERGE_A_MAIN.md,INSTRUCCIONES_MERGE_A_MAIN.md,docs,🔀 INSTRUCCIONES PARA MERGE A MAIN
+480,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/ORDEN_CORRECTO_AUTOMATIZADO.md,ORDEN_CORRECTO_AUTOMATIZADO.md,docs,🤖 ORDEN CORRECTO - 100% AUTOMATIZADO
+481,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/PAQUETES_DETALLADOS_EXPLICACION.md,PAQUETES_DETALLADOS_EXPLICACION.md,docs,📦 Análisis Detallado de Paquetes - UNS-ClaudeJP 5.4.1
+482,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/PAQUETES_DETALLE_COMPLETO.md,PAQUETES_DETALLE_COMPLETO.md,docs,📦 PAQUETES INSTALADOS - UNS-ClaudeJP 5.4.1
+483,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/PAQUETES_INSTALADOS_COMPLETO.md,PAQUETES_INSTALADOS_COMPLETO.md,docs,📦 PAQUETES INSTALADOS COMPLETOS - UNS-ClaudeJP 5.4.1
+484,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/PASOS_FINALES_USUARIO.md,PASOS_FINALES_USUARIO.md,docs,🚀 PASOS FINALES PARA EL USUARIO
+485,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/PHOTO_COMPRESSION_SUMMARY.md,PHOTO_COMPRESSION_SUMMARY.md,docs,📸 Photo Compression Implementation Summary
+486,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/REPORTE_REORGANIZACION.md,REPORTE_REORGANIZACION.md,docs,✅ REPORTE DE REORGANIZACIÓN COMPLETA
+487,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/RESUMEN_FINAL_IMPLEMENTACION.md,RESUMEN_FINAL_IMPLEMENTACION.md,docs,🎉 IMPLEMENTACIÓN COMPLETADA: 入社連絡票 (NYŪSHA RENRAKUHYŌ)
+488,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/ROLE_PERMISSIONS_ANALYSIS.md,ROLE_PERMISSIONS_ANALYSIS.md,docs,ANÁLISIS EXHAUSTIVO: SISTEMA DE ROLES Y PERMISOS DE UNS-ClaudeJP-5.4.1
+489,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/SEMANTIC_VARIABLES_APPLIED.md,SEMANTIC_VARIABLES_APPLIED.md,docs,✅ APLICADOS: Semantic CSS Variables (OPTION 2)
+490,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/SOLUCION_FOTOS_RESUMEN_2025-11-11.md,SOLUCION_FOTOS_RESUMEN_2025-11-11.md,docs,📸 RESUMEN EJECUTIVO: SOLUCIÓN FOTOS 2025-11-11
+491,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/YUKYU_E2E_TESTS_SUMMARY.md,YUKYU_E2E_TESTS_SUMMARY.md,docs,Yukyu E2E Tests - Implementation Summary
+492,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/YUKYU_TESTING_GUIDE.md,YUKYU_TESTING_GUIDE.md,docs,🧪 Yukyu System Testing Guide
+493,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/general/YUKYU_TEST_REPORT_2025-11-12.md,YUKYU_TEST_REPORT_2025-11-12.md,docs,Yukyu Dashboard End-to-End Test Report
+494,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/installations/ANALISIS_REINSTALACION_COMPLETO.md,ANALISIS_REINSTALACION_COMPLETO.md,docs,🔍 ANÁLISIS COMPLETO: Reinstalación y Extracción de Fotos
+495,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/installations/MEJORAS_BATCH_VERBOSE.md,MEJORAS_BATCH_VERBOSE.md,docs,🎨 Mejoras en Archivos Batch - Modo Verbose para Windows 11
+496,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/installations/RESUMEN_REINSTALACION.md,RESUMEN_REINSTALACION.md,docs,📋 RESUMEN EJECUTIVO: Análisis de Reinstalación
+497,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/optimizations/OPTIMIZATION_V2_IMPLEMENTATION_SUMMARY.md,OPTIMIZATION_V2_IMPLEMENTATION_SUMMARY.md,docs,UNS-CLAUDEJP 5.4 - Sistema de Extracción de Fotos V2.0
+498,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/plans/CRONOGRAMA_Y_RIESGOS.md,CRONOGRAMA_Y_RIESGOS.md,docs,CRONOGRAMA Y MATRIZ DE RIESGOS - SISTEMA 社宅
+499,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/plans/PLAN_IMPLEMENTACION_HOUSING_FINAL.md,PLAN_IMPLEMENTACION_HOUSING_FINAL.md,docs,PLAN DE IMPLEMENTACIÓN COMPLETO - SISTEMA DE 社宅
+500,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/plans/PLAN_PERFECTO_IMPLEMENTACION.md,PLAN_PERFECTO_IMPLEMENTACION.md,docs,PLAN PERFECTO DE IMPLEMENTACIÓN - is_corporate_housing Field
+501,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/reports/FILES_ANALYZED.md,FILES_ANALYZED.md,docs,📋 ARCHIVOS ANALIZADOS EN LA AUDITORÍA DE SEGURIDAD
+502,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/reports/PRODUCTION_SECURITY_IMPLEMENTATION_SUMMARY.md,PRODUCTION_SECURITY_IMPLEMENTATION_SUMMARY.md,docs,UNS-CLAUDEJP 5.4 - Production Security Implementation Summary
+503,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/reports/REPORTE_ANALISIS_BD_REINSTALAR.md,REPORTE_ANALISIS_BD_REINSTALAR.md,docs,REPORTE DE ANALISIS: Base de Datos y Migraciones para REINSTALAR.bat
+504,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/reports/REPORTE_COMPARACION_V5.2_V5.4.1.md,REPORTE_COMPARACION_V5.2_V5.4.1.md,docs,REPORTE DE COMPARACIÓN: v5.2 vs v5.4.1
+505,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/reports/REPORTE_CORRECCIONES_DASHBOARD.md,REPORTE_CORRECCIONES_DASHBOARD.md,docs,📋 Reporte de Correcciones - Dashboard y Páginas del Sistema
+506,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/reports/REPORTE_FINAL_ANALISIS_REINSTALAR_BAT.md,REPORTE_FINAL_ANALISIS_REINSTALAR_BAT.md,docs,📊 REPORTE FINAL: ANÁLISIS COMPLETO DE REINSTALAR.BAT
+507,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/reports/RESUMEN_EJECUTIVO_COMPARACION.md,RESUMEN_EJECUTIVO_COMPARACION.md,docs,📋 RESUMEN EJECUTIVO - Comparación v5.2 vs v5.4.1
+508,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/reports/RESUMEN_EJECUTIVO_SEGURIDAD.md,RESUMEN_EJECUTIVO_SEGURIDAD.md,docs,📊 RESUMEN EJECUTIVO - AUDITORÍA DE SEGURIDAD
+509,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/reports/SECURITY_CHECKLIST.md,SECURITY_CHECKLIST.md,docs,🔒 CHECKLIST DE SEGURIDAD - UNS-ClaudeJP 5.4
+510,/home/user/UNS-ClaudeJP-6.0.0/docs/archive/sessions/SESION_COMPLETA_2025-11-10.md,SESION_COMPLETA_2025-11-10.md,docs,SESIÓN COMPLETA - Auditoría y Limpieza Exhaustiva
+511,/home/user/UNS-ClaudeJP-6.0.0/docs/changelogs/CHANGELOG_REINSTALAR.md,CHANGELOG_REINSTALAR.md,docs,📝 CHANGELOG: REINSTALAR.bat
+512,/home/user/UNS-ClaudeJP-6.0.0/docs/changelogs/CHANGELOG_V5.2_TO_V5.4.md,CHANGELOG_V5.2_TO_V5.4.md,docs,📝 Changelog: v5.2 → v5.4
+513,/home/user/UNS-ClaudeJP-6.0.0/docs/core/MIGRATION_V5.4_README.md,MIGRATION_V5.4_README.md,docs,🎉 UNS-ClaudeJP 5.4 - Versión Limpia
+514,/home/user/UNS-ClaudeJP-6.0.0/docs/core/README.md,README.md,docs,UNS-ClaudeJP 5.2 - Sistema de Gestión de RRHH
+515,/home/user/UNS-ClaudeJP-6.0.0/docs/database/BASEDATEJP_README.md,BASEDATEJP_README.md,docs,BASEDATEJP - Base de Datos de Importación (LEGACY)
+516,/home/user/UNS-ClaudeJP-6.0.0/docs/database/basedatejp/README.md,README.md,docs,BASEDATEJP - Base de Datos de Importación (LEGACY)
+517,/home/user/UNS-ClaudeJP-6.0.0/docs/features/housing/ANALISIS_BD_SHATAKU.md,ANALISIS_BD_SHATAKU.md,docs,ANÁLISIS DE BASE DE DATOS - SISTEMA DE 社宅 (Shataku/Apartamentos)
+518,/home/user/UNS-ClaudeJP-6.0.0/docs/features/housing/APARTAMENTOS_API_V2_DISEÑO_COMPLETO.md,APARTAMENTOS_API_V2_DISEÑO_COMPLETO.md,docs,DISEÑO COMPLETO DE APIs REST - SISTEMA DE APARTAMENTOS V2.0 (社宅)
+519,/home/user/UNS-ClaudeJP-6.0.0/docs/features/housing/APARTAMENTOS_EJEMPLOS_USO.md,APARTAMENTOS_EJEMPLOS_USO.md,docs,EJEMPLOS PRÁCTICOS DE USO - API APARTAMENTOS V2.0
+520,/home/user/UNS-ClaudeJP-6.0.0/docs/features/housing/APARTAMENTOS_SISTEMA_COMPLETO_V2.md,APARTAMENTOS_SISTEMA_COMPLETO_V2.md,docs,🏢 SISTEMA COMPLETO DE GESTIÓN DE APARTAMENTOS V2.0
+521,/home/user/UNS-ClaudeJP-6.0.0/docs/features/housing/APARTAMENTOS_V2_FLUJO_COMPLETO.md,APARTAMENTOS_V2_FLUJO_COMPLETO.md,docs,🏢 Apartamentos V2 - Flujo Completo de Implementación
+522,/home/user/UNS-ClaudeJP-6.0.0/docs/features/housing/CHECKLIST_HOUSING.md,CHECKLIST_HOUSING.md,docs,CHECKLIST DE IMPLEMENTACIÓN - SISTEMA 社宅
+523,/home/user/UNS-ClaudeJP-6.0.0/docs/features/housing/DOCUMENTACION_IMPLEMENTACION_SISTEMA_SHATAKU_V2.md,DOCUMENTACION_IMPLEMENTACION_SISTEMA_SHATAKU_V2.md,docs,📋 DOCUMENTACIÓN COMPLETA - SISTEMA DE 社宅 V2.0
+524,/home/user/UNS-ClaudeJP-6.0.0/docs/features/housing/IMPLEMENTACION_COMPLETA_IS_CORPORATE_HOUSING.md,IMPLEMENTACION_COMPLETA_IS_CORPORATE_HOUSING.md,docs,IMPLEMENTACIÓN COMPLETA - Campo is_corporate_housing
+525,/home/user/UNS-ClaudeJP-6.0.0/docs/features/housing/INDICE_ENTREGABLES_APARTAMENTOS.md,INDICE_ENTREGABLES_APARTAMENTOS.md,docs,ÍNDICE DE ENTREGABLES - DISEÑO DE APIs APARTAMENTOS V2.0
+526,/home/user/UNS-ClaudeJP-6.0.0/docs/features/housing/README_SISTEMA_SHATAKU.md,README_SISTEMA_SHATAKU.md,docs,🏠 SISTEMA DE 社宅 (CORPORATE HOUSING) V2.0
+527,/home/user/UNS-ClaudeJP-6.0.0/docs/features/housing/RESUMEN_EJECUTIVO_APIS_APARTAMENTOS.md,RESUMEN_EJECUTIVO_APIS_APARTAMENTOS.md,docs,RESUMEN EJECUTIVO - DISEÑO DE APIs SISTEMA APARTAMENTOS V2.0
+528,/home/user/UNS-ClaudeJP-6.0.0/docs/features/photos/ANALISIS_ARQUITECTONICO_SISTEMA_FOTOS.md,ANALISIS_ARQUITECTONICO_SISTEMA_FOTOS.md,docs,ANÁLISIS ARQUITECTÓNICO DEL SISTEMA DE EXTRACCIÓN DE FOTOS
+529,/home/user/UNS-ClaudeJP-6.0.0/docs/features/photos/DOCUMENTACION_FOTOS_INDICE.md,DOCUMENTACION_FOTOS_INDICE.md,docs,📚 Índice Completo: Documentación de Fotos de Candidatos
+530,/home/user/UNS-ClaudeJP-6.0.0/docs/features/photos/GUIA_IMPORTAR_FOTOS.md,GUIA_IMPORTAR_FOTOS.md,docs,📸 Guía: Importar Fotos de Candidatos desde Access
+531,/home/user/UNS-ClaudeJP-6.0.0/docs/features/photos/README_OLE_SOLUTION.md,README_OLE_SOLUTION.md,docs,README: OLE Photo Solution (2025-11-11)
+532,/home/user/UNS-ClaudeJP-6.0.0/docs/features/photos/SOLUCION_COMPLETA_FOTOS.md,SOLUCION_COMPLETA_FOTOS.md,docs,🔧 SOLUCIÓN COMPLETA - Scripts .bat Corregidos (Windows 11)
+533,/home/user/UNS-ClaudeJP-6.0.0/docs/features/photos/SOLUCION_FOTOS_OLE_2025-11-11.md,SOLUCION_FOTOS_OLE_2025-11-11.md,docs,🔧 SOLUCIÓN COMPLETA: FOTOS NO VISIBLES (OLE Garbage Bytes)
+534,/home/user/UNS-ClaudeJP-6.0.0/docs/github/copilot-instructions.md,copilot-instructions.md,docs,UNS-ClaudeJP 4.0 - Guía de Desarrollo para IA
+535,/home/user/UNS-ClaudeJP-6.0.0/docs/github/prompts/openspec-apply.prompt.md,openspec-apply.prompt.md,docs,description: Implement an approved OpenSpec change and keep tasks in sync.
+536,/home/user/UNS-ClaudeJP-6.0.0/docs/github/prompts/openspec-archive.prompt.md,openspec-archive.prompt.md,docs,description: Archive a deployed OpenSpec change and update specs.
+537,/home/user/UNS-ClaudeJP-6.0.0/docs/github/prompts/openspec-proposal.prompt.md,openspec-proposal.prompt.md,docs,description: Scaffold a new OpenSpec change and validate strictly.
+538,/home/user/UNS-ClaudeJP-6.0.0/docs/github/prompts/speckit.analyze.prompt.md,speckit.analyze.prompt.md,docs,description: Perform a non-destructive cross-artifact consistency and quality analysis across spe...
+539,/home/user/UNS-ClaudeJP-6.0.0/docs/github/prompts/speckit.checklist.prompt.md,speckit.checklist.prompt.md,docs,description: Generate a custom checklist for the current feature based on user requirements.
+540,/home/user/UNS-ClaudeJP-6.0.0/docs/github/prompts/speckit.clarify.prompt.md,speckit.clarify.prompt.md,docs,description: Identify underspecified areas in the current feature spec by asking up to 5 highly t...
+541,/home/user/UNS-ClaudeJP-6.0.0/docs/github/prompts/speckit.constitution.prompt.md,speckit.constitution.prompt.md,docs,description: Create or update the project constitution from interactive or provided principle inp...
+542,/home/user/UNS-ClaudeJP-6.0.0/docs/github/prompts/speckit.implement.prompt.md,speckit.implement.prompt.md,docs,description: Execute the implementation plan by processing and executing all tasks defined in tas...
+543,/home/user/UNS-ClaudeJP-6.0.0/docs/github/prompts/speckit.plan.prompt.md,speckit.plan.prompt.md,docs,description: Execute the implementation planning workflow using the plan template to generate des...
+544,/home/user/UNS-ClaudeJP-6.0.0/docs/github/prompts/speckit.specify.prompt.md,speckit.specify.prompt.md,docs,description: Create or update the feature specification from a natural language feature description.
+545,/home/user/UNS-ClaudeJP-6.0.0/docs/github/prompts/speckit.tasks.prompt.md,speckit.tasks.prompt.md,docs,"description: Generate an actionable, dependency-ordered tasks.md for the feature based on availab..."
+546,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/AI_GATEWAY_USER_GUIDE.md,AI_GATEWAY_USER_GUIDE.md,docs,🚀 AI Gateway User Guide - Multi-Phase Optimization System
+547,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/API_ENDPOINTS_REFERENCE.md,API_ENDPOINTS_REFERENCE.md,docs,📡 AI Gateway - API Endpoints Reference
+548,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/CLAUDE_BACKEND.md,CLAUDE_BACKEND.md,docs,CLAUDE_BACKEND.md - Guía Backend
+549,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/CLAUDE_FRONTEND.md,CLAUDE_FRONTEND.md,docs,CLAUDE_FRONTEND.md - Guía Frontend
+550,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/CLAUDE_INDEX.md,CLAUDE_INDEX.md,docs,CLAUDE - Índice de Documentación
+551,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/CLAUDE_QUICK.md,CLAUDE_QUICK.md,docs,CLAUDE_QUICK.md - Referencia Rápida
+552,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/PIP_TIMEOUT_TROUBLESHOOTING.md,PIP_TIMEOUT_TROUBLESHOOTING.md,docs,Solución de Problemas: pip ReadTimeoutError en Docker Build
+553,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/QUICK_START.md,QUICK_START.md,docs,⚡ Quick Start - 5 Minutos para Usar el AI Gateway
+554,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/README.md,README.md,docs,📚 AI Gateway Documentation
+555,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/REDIS_HEALTHCHECK_FIX.md,REDIS_HEALTHCHECK_FIX.md,docs,Fix: Redis Healthcheck Error
+556,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/ZHIPU_GLM_SETUP.md,ZHIPU_GLM_SETUP.md,docs,🤖 Zhipu GLM-4.6 Setup Guide
+557,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/payroll-config-guide.md,payroll-config-guide.md,docs,Payroll Configuration Guide
+558,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/photo-compression-implementation.md,photo-compression-implementation.md,docs,Photo Compression Implementation Guide
+559,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/salary-unified-cheatsheet.md,salary-unified-cheatsheet.md,docs,Unified Salary Schema - Quick Reference (Cheat Sheet)
+560,/home/user/UNS-ClaudeJP-6.0.0/docs/guides/salary-unified-schema-guide.md,salary-unified-schema-guide.md,docs,Unified Salary Schema - Guía de Uso y Migración
+561,/home/user/UNS-ClaudeJP-6.0.0/docs/integration/TIMER_CARD_PAYROLL_INTEGRATION.md,TIMER_CARD_PAYROLL_INTEGRATION.md,docs,Timer Card OCR to Payroll Integration - Implementation Summary
+562,/home/user/UNS-ClaudeJP-6.0.0/docs/research/2025-corporate-housing/FINAL_SUMMARY.md,FINAL_SUMMARY.md,docs,✅ INVESTIGACIÓN COMPLETADA: Corporate Housing Management 2025
+563,/home/user/UNS-ClaudeJP-6.0.0/docs/research/2025-corporate-housing/IMPLEMENTATION_SUMMARY.md,IMPLEMENTATION_SUMMARY.md,docs,Implementation Summary: Corporate Housing Enhancement
+564,/home/user/UNS-ClaudeJP-6.0.0/docs/research/2025-corporate-housing/RESEARCH_SUMMARY.md,RESEARCH_SUMMARY.md,docs,Mejores Prácticas de Corporate Housing Management 2025
+565,/home/user/UNS-ClaudeJP-6.0.0/docs/research/UX_APARTMENT_MANAGEMENT_472_UNITS_2025-11-12.md,UX_APARTMENT_MANAGEMENT_472_UNITS_2025-11-12.md,docs,UX Research: Apartment Management for 472 Corporate Housing Units
+566,/home/user/UNS-ClaudeJP-6.0.0/docs/scripts/SCRIPTS_REFERENCE.md,SCRIPTS_REFERENCE.md,docs,📜 Scripts Reference - UNS-ClaudeJP 5.4.1
+567,/home/user/UNS-ClaudeJP-6.0.0/docs/scripts/SOLUCION_PROBLEMAS_LIMPIAR_CACHE.md,SOLUCION_PROBLEMAS_LIMPIAR_CACHE.md,docs,Solución de Problemas - LIMPIAR_CACHE.bat
+568,/home/user/UNS-ClaudeJP-6.0.0/docs/security/SECURITY_HARDENING_GUIDE.md,SECURITY_HARDENING_GUIDE.md,docs,UNS-CLAUDEJP 5.4 - Security Hardening Guide
+569,/home/user/UNS-ClaudeJP-6.0.0/docs/troubleshooting/nginx-502-fix.md,nginx-502-fix.md,docs,Nginx 502 Bad Gateway Fix - DNS Cache Issue
+570,/home/user/UNS-ClaudeJP-6.0.0/frontend/PERMISSION_CACHE_GUIDE.md,PERMISSION_CACHE_GUIDE.md,frontend,Permission Cache System - Integration Guide
+571,/home/user/UNS-ClaudeJP-6.0.0/frontend/components/FONT_SELECTOR_README.md,FONT_SELECTOR_README.md,frontend,FontSelector Component
+572,/home/user/UNS-ClaudeJP-6.0.0/frontend/components/README.md,README.md,frontend,Catálogo de Componentes - Frontend
+573,/home/user/UNS-ClaudeJP-6.0.0/frontend/components/salary/README.md,README.md,frontend,Salary Module Components
+574,/home/user/UNS-ClaudeJP-6.0.0/frontend/e2e/QUICK_START.md,QUICK_START.md,frontend,Quick Start - Yukyu E2E Tests
+575,/home/user/UNS-ClaudeJP-6.0.0/frontend/e2e/README.md,README.md,frontend,E2E Tests - UNS-ClaudeJP 5.4.1
+576,/home/user/UNS-ClaudeJP-6.0.0/frontend/e2e/RUN_TESTS_WINDOWS.md,RUN_TESTS_WINDOWS.md,frontend,Running Yukyu E2E Tests on Windows
+577,/home/user/UNS-ClaudeJP-6.0.0/scripts/DOBLE_CLICK_GUIA.md,DOBLE_CLICK_GUIA.md,scripts,🖱️ DOBLE CLICK - Ejecución Fácil
+578,/home/user/UNS-ClaudeJP-6.0.0/scripts/GUIA_EJECUCION_POWERSHELL.md,GUIA_EJECUCION_POWERSHELL.md,scripts,🚀 GUÍA DE EJECUCIÓN - PowerShell Ultra Edition
+579,/home/user/UNS-ClaudeJP-6.0.0/scripts/INICIAR.md,INICIAR.md,scripts,Como Iniciar UNS-ClaudeJP 5.4
+580,/home/user/UNS-ClaudeJP-6.0.0/scripts/PHOTO_IMPORT_GUIDE.md,PHOTO_IMPORT_GUIDE.md,scripts,Guía: Importar Fotos desde Access a PostgreSQL
+581,/home/user/UNS-ClaudeJP-6.0.0/scripts/README.md,README.md,scripts,🛠️ Scripts de Administración - UNS-ClaudeJP 4.2
+582,/home/user/UNS-ClaudeJP-6.0.0/scripts/REINSTALAR_README.md,REINSTALAR_README.md,scripts,🔄 REINSTALAR - Opciones (cmd vs PowerShell)

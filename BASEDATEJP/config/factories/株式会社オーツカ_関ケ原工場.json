@@ -1,0 +1,111 @@
+{
+  "factory_id": "株式会社オーツカ_関ケ原工場",
+  "client_company": {
+    "name": "株式会社オーツカ",
+    "address": "岐阜県羽島郡笠松町門間1815-1",
+    "phone": "058-388-3121",
+    "responsible_person": {
+      "department": "関ケ原工場",
+      "name": "次長 柴田　稔",
+      "phone": "0584-43-5121"
+    },
+    "complaint_handler": {
+      "department": "関ケ原工場　総務部",
+      "name": "副部長 豊田 剛",
+      "phone": "058-388-3121"
+    }
+  },
+  "plant": {
+    "name": "関ケ原工場",
+    "address": "岐阜県不破郡関ケ原町今須3200",
+    "phone": "0584-43-5121"
+  },
+  "lines": [
+    {
+      "line_id": "Factory-30",
+      "assignment": {
+        "department": "第3製造課",
+        "line": "第5工場",
+        "supervisor": {
+          "department": "製造部",
+          "name": "チーフ　堀 修治",
+          "phone": "0584-43-5121"
+        }
+      },
+      "job": {
+        "description": "製造及び検索、それに付随する業務。",
+        "description2": "",
+        "hourly_rate": 1872.0
+      }
+    },
+    {
+      "line_id": "Factory-31",
+      "assignment": {
+        "department": "第3製造課",
+        "line": "第7工場",
+        "supervisor": {
+          "department": "製造部",
+          "name": "チーフ　堀 修治",
+          "phone": "0584-43-5121"
+        }
+      },
+      "job": {
+        "description": "製造及び検索、それに付随する業務。",
+        "description2": "",
+        "hourly_rate": 1872.0
+      }
+    },
+    {
+      "line_id": "Factory-32",
+      "assignment": {
+        "department": "第2製造課",
+        "line": "第2工場",
+        "supervisor": {
+          "department": "製造部",
+          "name": "チーフ　岸 隆裕",
+          "phone": "0584-43-5121"
+        }
+      },
+      "job": {
+        "description": "製造及び検索、それに付随する業務。",
+        "description2": "",
+        "hourly_rate": 1872.0
+      }
+    }
+  ],
+  "dispatch_company": {
+    "responsible_person": {
+      "department": "営業部",
+      "name": "課長　兼城　賢士",
+      "phone": "052-938-8840"
+    },
+    "complaint_handler": {
+      "department": "営業部",
+      "name": "取締役 部長　中山　欣英",
+      "phone": "052-938-8840"
+    }
+  },
+  "schedule": {
+    "work_hours": "昼勤：8時00分～17時00分 ・ 夜勤：20時00分～5時00分",
+    "break_time": "昼勤：12時00分～13時00分   夜勤：00時00分～01時00分",
+    "calendar": "月～金　（祝日、年末年始、夏季休業を除く。）　4勤2休シフト　　別紙ｶﾚﾝﾀﾞｰの通り",
+    "start_date": "2025-02-03 00:00:00",
+    "end_date": "2025-10-25 00:00:00",
+    "conflict_date": "2027-10-01 00:00:00",
+    "non_work_day_labor": "１ヶ月に２日の範囲内で命ずることができる。",
+    "overtime_labor": "5時間/日、42時間/月、320時間/年迄とする。但し、特別条項の申請により、80時間/月、720時間/年迄延長できる。申請は6回/年迄とする。",
+    "time_unit": "15.0"
+  },
+  "payment": {
+    "closing_date": "20日",
+    "payment_date": "翌月15日",
+    "bank_account": "碧海信用金庫　刈谷支店　普通　6072767　名義人　ユニバーサル企画(株)",
+    "worker_closing_date": "20日",
+    "worker_payment_date": "15日",
+    "worker_calendar": "土曜日・日曜日・年末年始（12月30日～1月7日)・GW(4月28日～5月5日)・夏季休暇（8月11日～8月18日)"
+  },
+  "agreement": {
+    "period": "2025-03-31 00:00:00",
+    "explainer": ""
+  }
+}
