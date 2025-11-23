@@ -25,7 +25,15 @@
       "Bash(timeout 300 bash -c 'while ! docker images | grep -q \"\"uns-claudejp-650-backend\"\"; do echo \"\"Esperando backend build...\"\"; sleep 15; done; echo \"\"Backend build completado!\"\"')",
       "Bash(powershell -Command \"& {Start-Process powershell -ArgumentList ''-NoProfile -ExecutionPolicy Bypass -File scripts/REINSTALAR_AUTO.bat'' -Wait -NoNewWindow}\")",
       "Bash(powershell -Command \"Start-Process cmd.exe -ArgumentList ''/c REINSTALAR_AUTO.bat'' -Wait -NoNewWindow\")",
-      "Bash(nul)"
+      "Bash(nul)",
+      "Bash(cat:*)",
+      "Bash(alembic history:*)",
+      "Bash(alembic upgrade:*)",
+      "Bash(python:*)",
+      "Bash(findstr:*)",
+      "Bash(test:*)",
+      "Bash(timeout:*)",
+      "Bash(ping:*)"
     ],
     "deny": [],
     "ask": []

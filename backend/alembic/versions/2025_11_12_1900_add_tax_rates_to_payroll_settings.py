@@ -1,7 +1,7 @@
 """add tax and insurance rates to payroll_settings
 
 Revision ID: add_tax_rates_payroll
-Revises: 43b6cf501eed
+Revises: 001
 Create Date: 2025-11-12 19:00:00.000000
 
 This migration adds tax and insurance rate fields to the payroll_settings table:
@@ -21,7 +21,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = 'add_tax_rates_payroll'
-down_revision = '43b6cf501eed'
+down_revision = '001'
 branch_labels = None
 depends_on = None
 

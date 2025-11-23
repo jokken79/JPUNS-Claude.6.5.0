@@ -1,7 +1,7 @@
 """Add database triggers for timer card consistency and auto-calculation
 
 Revision ID: 2025_11_12_2015
-Revises: 2025_11_12_2000
+Revises: add_timer_cards_indexes
 Create Date: 2025-11-12 20:15:00.000000
 
 This migration implements the following trigger-based consistency mechanisms:
@@ -30,7 +30,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '2025_11_12_2015'
-down_revision = '2025_11_12_2000'
+down_revision = 'add_timer_cards_indexes'
 branch_labels = None
 depends_on = None
 
