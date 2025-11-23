@@ -1,0 +1,164 @@
+================================================================================
+RESUMEN DE CAMBIOS - MIGRACIÓN DE PUERTOS v2
+================================================================================
+Fecha: 2025-11-23
+Motivo: Conflicto con aplicación usando puerto 3100
+Estado: COMPLETADO EXITOSAMENTE
+================================================================================
+
+CAMBIOS REALIZADOS:
+================================================================================
+
+1. docker-compose.yml
+   ✓ db: 5532:5432 → 5632:5432
+   ✓ redis: 6479:6379 → 6579:6379
+   ✓ backend: 8100:8000 → 8200:8000
+   ✓ frontend: 3100:3000 → 3200:3000
+   ✓ frontend-prod: 3100:3000 → 3200:3000
+   ✓ adminer: 8180:8080 → 8280:8080
+   ✓ otel-collector: 4417:4317, 4418:4318 → 4517:4317, 4518:4318
+   ✓ tempo: 3300:3200 → 3400:3200
+   ✓ prometheus: 9190:9090 → 9290:9090
+   ✓ grafana: 3101:3000 → 3201:3000
+   ✓ FRONTEND_URL: 3100 → 3200
+   ✓ NEXT_PUBLIC_GRAFANA_URL: 3101 → 3201
+
+2. .env.example (raíz)
+   ✓ PORT CONFIGURATION header actualizado
+   ✓ DATABASE_URL: localhost:5532 → localhost:5632
+   ✓ FRONTEND_URL: localhost:3100 → localhost:3200
+   ✓ BACKEND_CORS_ORIGINS: localhost:3100 → localhost:3200
+   ✓ OTEL_EXPORTER_OTLP_ENDPOINT: localhost:4417 → localhost:4517
+   ✓ NEXT_PUBLIC_OTEL_EXPORTER_URL: localhost:4418 → localhost:4518
+   ✓ NEXT_PUBLIC_GRAFANA_URL: localhost:3101 → localhost:3201
+
+3. backend/.env.example
+   ✓ PORT CONFIGURATION header actualizado
+   ✓ DATABASE_URL: localhost:5532 → localhost:5632
+   ✓ FRONTEND_URL: localhost:3100 → localhost:3200
+   ✓ BACKEND_CORS_ORIGINS: localhost:3100 → localhost:3200
+   ✓ OTEL_EXPORTER_OTLP_ENDPOINT: localhost:4317 → localhost:4517
+
+4. frontend/next.config.ts
+   ✓ resolveApiOrigin default: localhost:8100 → localhost:8200
+   ✓ connectSrc development: localhost:3100 → localhost:3200
+   ✓ connectSrc development: localhost:8100 → localhost:8200
+   ✓ connectSrc websocket: ws://localhost:3100 → ws://localhost:3200
+   ✓ connectSrc websocket: ws://localhost:3101 → ws://localhost:3201
+
+5. docker/conf.d/default.conf
+   ✓ CORS regex: localhost:3100 → localhost:3200
+   ✓ CORS regex: localhost:3101 → localhost:3201
+   ✓ CORS regex: localhost:8100 → localhost:8200
+   ✓ CORS regex: localhost:8180 → localhost:8280
+
+6. README.md
+   ✓ Frontend URL: localhost:3100 → localhost:3200
+   ✓ API Docs URL: localhost:8100 → localhost:8200
+   ✓ Adminer URL: localhost:8180 → localhost:8280
+   ✓ Grafana URL: localhost:3101 → localhost:3201
+   ✓ Prometheus URL: localhost:9190 → localhost:9290
+   ✓ Health check commands actualizados
+   ✓ Tabla de URLs actualizada
+
+7. PORT_CONFIGURATION_6.5.0.md
+   ✓ Tabla de puertos completamente actualizada
+   ✓ Guía de acceso a servicios actualizada
+   ✓ Comandos de migración actualizados
+   ✓ Comandos de verificación actualizados
+
+8. DOCUMENTACIÓN CREADA:
+   ✓ PORT_MIGRATION_COMPLETE_v2.md (English)
+   ✓ PUERTO_CONFIGURACION_ACTUALIZADO_v2.md (Español)
+   ✓ RESUMEN_CAMBIOS_PUERTOS_v2.txt (este archivo)
+
+================================================================================
+NUEVO MAPEO DE PUERTOS:
+================================================================================
+
+Servicio          | Anterior | Nuevo  | Contenedor | URL
+------------------|----------|--------|------------|---------------------------
+Frontend          | 3100     | 3200   | 3000       | http://localhost:3200
+Backend API       | 8100     | 8200   | 8000       | http://localhost:8200/api
+PostgreSQL        | 5532     | 5632   | 5432       | postgresql://localhost:5632
+Redis             | 6479     | 6579   | 6379       | redis://localhost:6579
+Adminer           | 8180     | 8280   | 8080       | http://localhost:8280
+Prometheus        | 9190     | 9290   | 9090       | http://localhost:9290
+Grafana           | 3101     | 3201   | 3000       | http://localhost:3201
+OTEL Collector    | 4417     | 4517   | 4317       | localhost:4517
+OTEL HTTP         | 4418     | 4518   | 4318       | http://localhost:4518
+Tempo             | 3300     | 3400   | 3200       | http://localhost:3400
+Nginx             | 80, 443  | 80,443 | 80, 443    | http://localhost
+
+================================================================================
+ARCHIVOS QUE NO SE MODIFICARON:
+================================================================================
+
+✓ docker/observability/grafana/provisioning/datasources/datasources.yaml
+  → Usa URLs internas de Docker (correcto)
+
+✓ docker/observability/*.yaml
+  → Configuración interna de observabilidad (correcto)
+
+✓ Scripts en scripts/ y otros archivos de documentación legacy
+  → Se actualizarán bajo demanda cuando sean necesarios
+
+================================================================================
+ACCIONES PENDIENTES PARA EL USUARIO:
+================================================================================
+
+[ ] 1. Actualizar archivo .env local con nuevos puertos
+[ ] 2. Actualizar backend/.env local con nuevos puertos
+[ ] 3. Reiniciar servicios Docker:
+        docker-compose down
+        docker-compose up -d --build
+[ ] 4. Verificar acceso a nuevas URLs
+[ ] 5. Actualizar marcadores del navegador
+[ ] 6. Actualizar herramientas de base de datos (DBeaver, etc.)
+[ ] 7. Actualizar scripts personales que usen URLs antiguas
+
+================================================================================
+COMANDOS DE VERIFICACIÓN:
+================================================================================
+
+# Verificar que puertos están libres ANTES de arrancar Docker:
+netstat -ano | findstr "3200 8200 5632 6579 8280 9290 3201 4517 4518 3400"
+
+# Verificar que puerto 3100 está ocupado por otra app:
+netstat -ano | findstr "3100"
+
+# DESPUÉS de arrancar Docker, verificar servicios:
+curl http://localhost:3200                    # Frontend
+curl http://localhost:8200/api/health         # Backend
+docker-compose exec db pg_isready -U uns_admin # PostgreSQL
+docker-compose exec redis redis-cli ping      # Redis
+
+================================================================================
+ROLLBACK (si es necesario):
+================================================================================
+
+git checkout HEAD~1 docker-compose.yml .env.example backend/.env.example \
+  frontend/next.config.ts docker/conf.d/default.conf README.md \
+  PORT_CONFIGURATION_6.5.0.md
+
+docker-compose down
+docker-compose up -d
+
+================================================================================
+NOTAS IMPORTANTES:
+================================================================================
+
+✓ NO quedan referencias a puertos 3100, 8100, 3101, 5532, 6479, 8180, 9190, 
+  4417, 4418, 3300 en archivos de configuración activos
+
+✓ Referencias restantes en archivos legacy/documentación son históricos y 
+  se actualizarán cuando sean relevantes
+
+✓ Archivos .env locales (no versionados) DEBEN actualizarse manualmente
+
+✓ El usuario debe verificar que NO tiene otros servicios usando los nuevos
+  puertos antes de arrancar Docker
+
+================================================================================
+FIN DEL RESUMEN
+================================================================================

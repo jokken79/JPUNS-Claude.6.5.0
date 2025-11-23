@@ -16,13 +16,14 @@ class Settings(BaseSettings):
     APP_VERSION: str = "6.5.0"
     COMPANY_NAME: str = "UNS-Kikaku"
     COMPANY_WEBSITE: str = "https://uns-kikaku.com"
-    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:3000")
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:3100")
 
     # Database - REQUIRED, no defaults
     DATABASE_URL: str
 
     # Redis Cache (Optional - app works without it)
-    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+    # NOTE: External port is 6479, internal Docker port is 6379
+    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6479/0")
 
     # Security - REQUIRED, no defaults
     SECRET_KEY: str
@@ -171,7 +172,7 @@ class Settings(BaseSettings):
     # CORS
     BACKEND_CORS_ORIGINS: list[str] | str = os.getenv(
         "BACKEND_CORS_ORIGINS",
-        "http://localhost,http://localhost:3000,http://127.0.0.1:3000",
+        "http://localhost,http://localhost:3100,http://127.0.0.1:3100",
     )
     ADDITIONAL_TRUSTED_HOSTS: list[str] | str = os.getenv("ADDITIONAL_TRUSTED_HOSTS", "")
     

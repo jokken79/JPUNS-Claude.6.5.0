@@ -97,9 +97,9 @@ docker compose up -d
 
 Una vez iniciados los servicios:
 
-- **Frontend:** http://localhost:3000
-- **API Docs:** http://localhost:8000/api/docs
-- **Adminer:** http://localhost:8080
+- **Frontend:** http://localhost:3200
+- **API Docs:** http://localhost:8200/api/docs
+- **Adminer:** http://localhost:8280
 
 **Credenciales por defecto:**
 ```
@@ -354,8 +354,8 @@ El sistema ejecuta **6 servicios** orquestados con Docker Compose:
 ### 6. **adminer** - Database UI (Gestión visual)
 ```
 ┌─────────────────────────────────────────┐
-│ Puerto: 8080                            │
-│ URL: http://localhost:8080              │
+│ Puerto: 8280                            │
+│ URL: http://localhost:8280              │
 │ Interfaz web para PostgreSQL            │
 │ Credenciales: POSTGRES_USER/POSTGRES_PW │
 └─────────────────────────────────────────┘
@@ -763,10 +763,10 @@ docker compose logs -f backend | grep ERROR
 docker compose exec backend env | grep -E "(DATABASE|FRONTEND|SECRET)"
 
 # Verificar API health
-curl http://localhost:8000/api/health
+curl http://localhost:8200/api/health
 
 # Verificar frontend
-curl http://localhost:3000
+curl http://localhost:3200
 
 # Verificar DB connection
 docker exec uns-claudejp-backend bash -c "python -c 'from app.core.database import engine; print(\"DB OK\" if engine else \"DB FAIL\")'"
@@ -800,13 +800,15 @@ cd scripts && RESTAURAR_DATOS.bat backup_20251108.sql
 
 | Servicio | URL | Descripción | Credenciales |
 |----------|-----|-------------|-------------|
-| **Frontend** | http://localhost:3000 | Aplicación Next.js (45+ páginas) | - |
-| **Backend API** | http://localhost:8000 | API REST FastAPI (24+ endpoints) | - |
-| **API Docs (Swagger)** | http://localhost:8000/api/docs | ⭐ Swagger UI interactivo | - |
-| **ReDoc** | http://localhost:8000/api/redoc | Documentación API alternativa | - |
-| **Adminer** | http://localhost:8080 | Gestión visual de PostgreSQL | `uns_admin` / `POSTGRES_PASSWORD` |
-| **Health Check** | http://localhost:8000/api/health | Estado del backend (JSON) | - |
-| **API Health (Full)** | http://localhost:8000/api/monitoring/health | Health check completo | - |
+| **Frontend** | http://localhost:3200 | Aplicación Next.js (45+ páginas) | - |
+| **Backend API** | http://localhost:8200 | API REST FastAPI (24+ endpoints) | - |
+| **API Docs (Swagger)** | http://localhost:8200/api/docs | ⭐ Swagger UI interactivo | - |
+| **ReDoc** | http://localhost:8200/api/redoc | Documentación API alternativa | - |
+| **Adminer** | http://localhost:8280 | Gestión visual de PostgreSQL | `uns_admin` / `POSTGRES_PASSWORD` |
+| **Health Check** | http://localhost:8200/api/health | Estado del backend (JSON) | - |
+| **API Health (Full)** | http://localhost:8200/api/monitoring/health | Health check completo | - |
+| **Grafana** | http://localhost:3201 | Dashboards de monitoreo | Ver `.env` |
+| **Prometheus** | http://localhost:9290 | Métricas del sistema | - |
 
 ### 🔐 Credenciales por Defecto
 
@@ -873,7 +875,7 @@ sudo usermod -aG docker $USER
 docker compose logs -f frontend
 
 # Verificar que backend esté corriendo
-curl http://localhost:8000/api/health
+curl http://localhost:8200/api/health
 
 # Reconstruir frontend
 docker compose up -d --build frontend
@@ -882,7 +884,7 @@ docker compose up -d --build frontend
 #### 🔴 Error 401 al hacer login
 ```bash
 # Verificar backend health
-curl http://localhost:8000/api/health
+curl http://localhost:8200/api/health
 
 # Verificar credenciales
 Usuario: admin

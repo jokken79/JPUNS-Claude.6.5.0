@@ -21,7 +21,9 @@
       "Bash(git remote set-url:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(python -c \"\ncontent = ''''''# Port Configuration Guide - JPUNS-Claude 6.5.0\n\n## Overview\n\nThis document describes the complete port configuration for JPUNS-Claude v6.5.0. All external ports have been reconfigured to avoid conflicts with other Docker applications.\n\n**Version:** 6.5.0  \n**Updated:** 2025-11-23  \n**Status:** Production Ready\n\n---\n\n## Port Mapping Reference\n\n### Complete Port Mapping Table\n\n| Service | Old Port | New Port | Internal Port | Access URL |\n|---------|----------|----------|---------------|------------|\n| **Frontend** | 3000 | **3100** | 3000 | http://localhost:3100 |\n| **Backend API** | 8000 | **8100** | 8000 | http://localhost:8100/api |\n| **PostgreSQL** | Not exposed | **5532** | 5432 | postgresql://localhost:5532/uns_claudejp |\n| **Redis** | Not exposed | **6479** | 6379 | redis://localhost:6479 |\n| **Adminer** | 8080 | **8180** | 8080 | http://localhost:8180 |\n| **Prometheus** | 9090 | **9190** | 9090 | http://localhost:9190 |\n| **Grafana** | 3001 | **3101** | 3000 | http://localhost:3101 |\n| **OpenTelemetry (gRPC)** | 4317 | **4417** | 4317 | http://localhost:4417 |\n| **OpenTelemetry (HTTP)** | 4318 | **4418** | 4318 | http://localhost:4418 |\n| **Tempo** | 3200 | **3300** | 3200 | http://localhost:3300 |\n| **Nginx** | 80, 443 | 80, 443 | 80, 443 | http://localhost |\n''''''\n\nwith open(''/d/JPUNS-Claude.6.0.0/PORT_CONFIGURATION_6.5.0.md'', ''w'', encoding=''utf-8'') as f:\n    f.write(content)\nprint(''File created successfully - Part 1'')\n\")",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []
