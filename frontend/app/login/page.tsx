@@ -49,27 +49,47 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      console.log('[LOGIN] Starting login process...');
+      
       // Step 1: Login and get token
+      console.log('[LOGIN] Calling authService.login()');
       const data = await authService.login(username, password);
+      console.log('[LOGIN] Login successful, got token:', data.access_token?.substring(0, 20) + '...');
 
-      // Step 2: Get current user with the token
+      // Step 2: Get current user with the token (pass token to ensure we use it)
+      console.log('[LOGIN] Fetching current user...');
       const user = await authService.getCurrentUser(data.access_token);
+      console.log('[LOGIN] Got user:', user);
 
       // Step 3: Save to store (uses localStorage internally)
+      console.log('[LOGIN] Saving to auth store...');
       login(data.access_token, user);
+      
+      // Ensure localStorage is synced before redirect
+      if (typeof window !== 'undefined') {
+        const authData = JSON.stringify({
+          token: data.access_token,
+          user,
+          isAuthenticated: true
+        });
+        localStorage.setItem('auth-storage', authData);
+        console.log('[LOGIN] Auth store updated and localStorage synced');
+      }
 
       toast.success('ログインに成功しました');
 
-      // Step 4: Navigate to dashboard
+      // Step 4: Navigate to dashboard IMMEDIATELY
+      console.log('[LOGIN] Redirecting to dashboard...');
       if (typeof window !== 'undefined') {
-        window.location.href = '/dashboard';
+        // Use replace to prevent back button issues
+        window.location.replace('/dashboard');
       }
     } catch (error: any) {
-      console.error('Login failed', error?.response?.status);
-      toast.error(error.response?.data?.detail || 'ユーザー名またはパスワードが正しくありません');
-    } finally {
+      console.error('[LOGIN] Login failed', error?.response?.status, error?.response?.data);
       setLoading(false);
+      toast.error(error.response?.data?.detail || 'ユーザー名またはパスワードが正しくありません');
     }
+    // Don't set loading to false on success since we're redirecting
   };
 
   // Calculate parallax offset (only after mount to prevent hydration mismatch)

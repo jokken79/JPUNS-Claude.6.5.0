@@ -65,11 +65,29 @@ export const useAuthStore = create<AuthState>()(
       isHydrated: false,
 
       login: (token, user) => {
+        console.log('[AUTH_STORE] Setting token and user, isAuthenticated=true');
+        
+        // Direct localStorage update for immediate persistence
+        if (typeof window !== 'undefined') {
+          const authData = {
+            token,
+            user,
+            isAuthenticated: true
+          };
+          localStorage.setItem('auth-storage', JSON.stringify({
+            state: authData,
+            version: 0
+          }));
+          console.log('[AUTH_STORE] Saved to localStorage:', { token: token ? token.substring(0, 20) + '...' : null, user: user?.username });
+        }
+        
+        // Also update the in-memory state
         set({ token, user, isAuthenticated: true });
         writeAuthCookie(token);
       },
 
       logout: () => {
+        console.log('[AUTH_STORE] Logging out');
         if (typeof window !== 'undefined') {
           localStorage.removeItem('auth-storage');
           // Clear all permission cache on logout
@@ -96,11 +114,20 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({
         token: state.token,
         user: state.user,
+        isAuthenticated: state.isAuthenticated,
       }),
       onRehydrateStorage: () => (state) => {
-        // Mark as hydrated after rehydration completes
         if (state) {
+          console.log('[AUTH_STORE] Rehydrating:', { 
+            token: state.token ? state.token.substring(0, 20) + '...' : null,
+            isAuthenticated: state.isAuthenticated,
+            user: state.user?.username
+          });
           state.setHydrated(true);
+          // Ensure isAuthenticated is set if token exists
+          if (state.token && !state.isAuthenticated) {
+            state.isAuthenticated = true;
+          }
         }
       },
     }

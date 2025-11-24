@@ -41,7 +41,8 @@ from pydantic import BaseModel, Field
 import uuid
 import json
 
-from fastapi import APIRouter, Depends, HTTPException, status, StreamingResponse
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user

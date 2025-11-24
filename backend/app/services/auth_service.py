@@ -17,7 +17,11 @@ from app.core.audit import update_audit_context
 from app.models.models import User, RefreshToken
 
 # Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(
+    schemes=["bcrypt", "pbkdf2_sha256", "sha256_crypt", "bcrypt_sha256", "des_crypt"],
+    deprecated="auto",
+    default="bcrypt"
+)
 
 # OAuth2 scheme (fallback for compatibility)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login", auto_error=False)
@@ -104,7 +108,13 @@ class AuthService:
         Note:
             Usa bcrypt para verificación segura resistente a timing attacks
         """
-        return pwd_context.verify(plain_password, hashed_password)
+        try:
+            import bcrypt
+            # Direct bcrypt verification only
+            return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+        except Exception as e:
+            print(f"DEBUG: Bcrypt verification failed: {e}")
+            return False
 
     @staticmethod
     def get_password_hash(password: str) -> str:
@@ -396,14 +406,31 @@ class AuthService:
             - Luego valida la contraseña con bcrypt
             - Retorna False (no None) para compatibilidad con validaciones
         """
-        user = db.query(User).filter(User.username == username).first()
+        try:
+            print(f"DEBUG: Authenticating user: {username}")
+            user = db.query(User).filter(User.username == username).first()
 
-        if not user:
-            return False
-        if not AuthService.verify_password(password, str(user.password_hash)):
-            return False
+            if not user:
+                print(f"DEBUG: User not found: {username}")
+                return False
+            
+            print(f"DEBUG: User found: {user.username}, hash: {user.password_hash}")
+            print(f"DEBUG: Password to verify: {password}")
+            
+            # Try to verify password
+            result = AuthService.verify_password(password, str(user.password_hash))
+            print(f"DEBUG: Password verification result: {result}")
+            
+            if not result:
+                print(f"DEBUG: Password verification failed for user: {username}")
+                return False
 
-        return user
+            print(f"DEBUG: Authentication successful for user: {username}")
+            return user
+        except Exception as e:
+            print(f"DEBUG: Authentication error: {str(e)}")
+            print(f"DEBUG: Error type: {type(e)}")
+            return False
 
     @staticmethod
     async def get_current_user(

@@ -327,7 +327,7 @@ class HybridOCRService:
                     # Usar método original como fallback
                     try:
                         if self.azure_available:
-                            photo_data = self.azure_service._extract_photo_from_document(image_data, document_type)
+                            photo_data = self._extract_photo_from_document(image_data, document_type)
                             if photo_data:
                                 results["combined_data"]["photo"] = photo_data
                     except Exception as e2:
@@ -462,7 +462,7 @@ class HybridOCRService:
 
         started = time.perf_counter()
         with trace_ocr_operation("azure.process_document", document_type, "azure"):
-            result = self.azure_service.process_document(temp_path, document_type)
+            result = self._process_azure_direct(image_data, document_type)
         duration = time.perf_counter() - started
         record_ocr_request(document_type=document_type, method="azure", duration_seconds=duration)
 
@@ -544,7 +544,7 @@ class HybridOCRService:
         """
         started = time.perf_counter()
         with trace_ocr_operation("easyocr.process_document", document_type, "easyocr"):
-            result = self.easyocr_service.process_document_with_easyocr(image_data, document_type)
+            result = self._process_easyocr_direct(image_data, document_type)
         duration = time.perf_counter() - started
         record_ocr_request(document_type=document_type, method="easyocr", duration_seconds=duration)
         return result
@@ -629,7 +629,7 @@ class HybridOCRService:
         try:
             started = time.perf_counter()
             with trace_ocr_operation("tesseract.process_document", document_type, "tesseract"):
-                result = self.tesseract_service.process_document(image_data, document_type)
+                result = self._process_tesseract_direct(image_data, document_type)
             duration = time.perf_counter() - started
             record_ocr_request(document_type=document_type, method="tesseract", duration_seconds=duration)
             return result
@@ -837,6 +837,198 @@ class HybridOCRService:
             return "Azure OCR"
         else:
             return "OCR secundario"
+
+    def _process_azure_direct(self, image_data: bytes, document_type: str) -> Dict[str, Any]:
+        """Process document directly with Azure Computer Vision OCR."""
+        try:
+            from app.core.config import settings
+            import requests
+            import base64
+            
+            if not (settings.AZURE_COMPUTER_VISION_ENDPOINT and settings.AZURE_COMPUTER_VISION_KEY):
+                return {"success": False, "error": "Azure OCR not configured"}
+            
+            # Convert image to base64
+            image_b64 = base64.b64encode(image_data).decode('utf-8')
+            
+            # Prepare Azure OCR request
+            endpoint = settings.AZURE_COMPUTER_VISION_ENDPOINT.rstrip('/') + '/vision/v3.2/ocr'
+            headers = {
+                'Ocp-Apim-Subscription-Key': settings.AZURE_COMPUTER_VISION_KEY,
+                'Content-Type': 'application/octet-stream'
+            }
+            params = {
+                'language': 'ja',
+                'detectOrientation': 'true'
+            }
+            
+            response = requests.post(endpoint, headers=headers, params=params, data=image_data, timeout=30)
+            
+            if response.status_code == 200:
+                result = response.json()
+                raw_text = self._extract_text_from_azure_result(result)
+                
+                # Extract structured data based on document type
+                extracted_data = self._extract_structured_data(raw_text, document_type)
+                
+                return {
+                    "success": True,
+                    "raw_text": raw_text,
+                    **extracted_data,
+                    "ocr_method": "azure"
+                }
+            else:
+                return {"success": False, "error": f"Azure OCR failed: {response.status_code}"}
+                
+        except Exception as e:
+            logger.error(f"Error in Azure OCR: {e}")
+            return {"success": False, "error": str(e)}
+
+    def _process_easyocr_direct(self, image_data: bytes, document_type: str) -> Dict[str, Any]:
+        """Process document directly with EasyOCR."""
+        try:
+            import easyocr
+            import numpy as np
+            from PIL import Image
+            
+            # Initialize EasyOCR reader
+            reader = easyocr.Reader(['ja', 'en'])
+            
+            # Convert bytes to PIL Image
+            image = Image.open(BytesIO(image_data))
+            image_np = np.array(image)
+            
+            # Process with EasyOCR
+            results = reader.readtext(image_np)
+            
+            # Extract text
+            raw_text = '\n'.join([result[1] for result in results])
+            
+            # Extract structured data
+            extracted_data = self._extract_structured_data(raw_text, document_type)
+            
+            return {
+                "success": True,
+                "raw_text": raw_text,
+                "detections": len(results),
+                **extracted_data,
+                "ocr_method": "easyocr"
+            }
+            
+        except Exception as e:
+            logger.error(f"Error in EasyOCR: {e}")
+            return {"success": False, "error": str(e)}
+
+    def _process_tesseract_direct(self, image_data: bytes, document_type: str) -> Dict[str, Any]:
+        """Process document directly with Tesseract OCR."""
+        try:
+            import pytesseract
+            from PIL import Image
+            
+            # Convert bytes to PIL Image
+            image = Image.open(BytesIO(image_data))
+            
+            # Process with Tesseract
+            raw_text = pytesseract.image_to_string(image, lang='jpn+eng')
+            
+            # Extract structured data
+            extracted_data = self._extract_structured_data(raw_text, document_type)
+            
+            return {
+                "success": True,
+                "raw_text": raw_text,
+                **extracted_data,
+                "ocr_method": "tesseract"
+            }
+            
+        except Exception as e:
+            logger.error(f"Error in Tesseract: {e}")
+            return {"success": False, "error": str(e)}
+
+    def _extract_text_from_azure_result(self, azure_result: Dict) -> str:
+        """Extract text from Azure OCR result."""
+        try:
+            lines = []
+            if 'regions' in azure_result:
+                for region in azure_result['regions']:
+                    if 'lines' in region:
+                        for line in region['lines']:
+                            if 'words' in line:
+                                line_text = ' '.join([word['text'] for word in line['words']])
+                                lines.append(line_text)
+            return '\n'.join(lines)
+        except Exception as e:
+            logger.error(f"Error extracting Azure text: {e}")
+            return ""
+
+    def _extract_structured_data(self, raw_text: str, document_type: str) -> Dict[str, Any]:
+        """Extract structured data based on document type."""
+        import re
+        
+        data = {}
+        
+        if document_type == "zairyu_card":
+            # Extract name
+            name_patterns = [
+                r'氏名[：:\s]*([^\n]+)',
+                r'名前[：:\s]*([^\n]+)',
+            ]
+            for pattern in name_patterns:
+                match = re.search(pattern, raw_text)
+                if match:
+                    data['name_kanji'] = match.group(1).strip()
+                    break
+            
+            # Extract birthday
+            birthday_patterns = [
+                r'生年月日[：:\s]*(\d{4}年\d{1,2}月\d{1,2}日)',
+                r'生年月日[：:\s]*(\d{4}/\d{1,2}/\d{1,2})',
+            ]
+            for pattern in birthday_patterns:
+                match = re.search(pattern, raw_text)
+                if match:
+                    data['birthday'] = match.group(1).strip()
+                    break
+            
+            # Extract nationality
+            nationality_patterns = [
+                r'国籍[：:\s]*([^\n]+)',
+                r'Nationality[：:\s]*([^\n]+)',
+            ]
+            for pattern in nationality_patterns:
+                match = re.search(pattern, raw_text)
+                if match:
+                    data['nationality'] = match.group(1).strip()
+                    break
+        
+        elif document_type == "rirekisho":
+            # Similar extraction for rirekisho
+            name_patterns = [
+                r'氏名[：:\s]*([^\n]+)',
+                r'名前[：:\s]*([^\n]+)',
+            ]
+            for pattern in name_patterns:
+                match = re.search(pattern, raw_text)
+                if match:
+                    data['name_kanji'] = match.group(1).strip()
+                    break
+        
+        return data
+
+    def _extract_photo_from_document(self, image_data: bytes, document_type: str) -> Optional[str]:
+        """Extract photo from document using basic image processing."""
+        try:
+            from PIL import Image
+            import io
+            
+            # For now, return the original image as base64
+            # In a real implementation, this would detect and crop the face
+            image_b64 = base64.b64encode(image_data).decode('utf-8')
+            return f"data:image/jpeg;base64,{image_b64}"
+            
+        except Exception as e:
+            logger.error(f"Error extracting photo: {e}")
+            return None
 
 
 # Instancia global del servicio

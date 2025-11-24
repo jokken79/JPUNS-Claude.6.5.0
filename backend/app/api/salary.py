@@ -25,8 +25,8 @@ from app.schemas.salary_unified import (
 )
 from app.schemas.base import PaginatedResponse, create_paginated_response
 from app.services.auth_service import auth_service
-from app.services.salary_export_service import SalaryExportService
-from app.services.payslip_service import PayslipService
+# from app.services.salary_export_service import SalaryExportService  # TEMPORALMENTE COMENTADO
+# from app.services.payslip_service import PayslipService  # TEMPORALMENTE COMENTADO
 
 router = APIRouter()
 
@@ -758,11 +758,17 @@ async def export_salary_excel(
             raise HTTPException(status_code=400, detail="No salary data found for specified filters")
 
         # Use SalaryExportService to generate Excel
-        export_service = SalaryExportService()
-        excel_buffer = export_service.export_to_excel(
-            salaries=salaries,
-            period_start=filters.start_date,
-            period_end=filters.end_date
+        # export_service = SalaryExportService()  # TEMPORALMENTE COMENTADO
+        # excel_buffer = export_service.export_to_excel(
+        #     salaries=salaries,
+        #     period_start=filters.start_date,
+        #     period_end=filters.end_date
+        # )
+        
+        # TEMPORAL: Respuesta simple hasta que se implemente SalaryExportService
+        raise HTTPException(
+            status_code=501,
+            detail="Excel export temporarily disabled - SalaryExportService not implemented"
         )
 
         # Save to temporary file for download

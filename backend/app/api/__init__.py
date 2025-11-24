@@ -15,19 +15,19 @@ API Modules (24 routers):
 - dashboard: Statistics and analytics
 - database: Database management utilities
 - employees: Employee (派遣社員) management
-- factories: Factory/client (派遣先) site management
+- factories: Factory/client (派遣允E site management
 - import_export: Data import/export utilities
 - monitoring: System health monitoring
 - notifications: Email/LINE notification management
 - pages: Page management
 - payroll: Payroll processing and calculations
 - reports: PDF report generation
-- requests: Leave request (申請) workflow
+- requests: Leave request (申諁E workflow
 - resilient_import: Resilient data import utilities
 - role_permissions: Role-based access control (RBAC)
-- salary: Salary (給与) calculations and management
+- salary: Salary (給丁E calculations and management
 - settings: Application settings management
-- timer_cards: Attendance (タイムカード) tracking with shift types
+- timer_cards: Attendance (タイムカーチE tracking with shift types
 - yukyu: Yukyu (有給休暇 - Paid Vacation) management
 
 Each module contains a 'router' variable (APIRouter instance).
@@ -37,6 +37,7 @@ Each module contains a 'router' variable (APIRouter instance).
 # Using relative imports to avoid circular import issues
 from . import (
     admin,
+    ai_agents,
     apartments_v2,
     audit,
     auth,
@@ -64,6 +65,7 @@ from . import (
 
 __all__ = [
     "admin",
+    "ai_agents",
     "apartments_v2",
     "audit",
     "auth",

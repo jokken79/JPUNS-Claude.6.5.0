@@ -72,7 +72,31 @@ const getAuthToken = (): string | null => {
   if (typeof window === 'undefined') {
     return null;
   }
-  return useAuthStore.getState().token;
+  const state = useAuthStore.getState();
+  const token = state.token;
+  
+  // Also check localStorage in case state is not synced yet
+  if (!token && typeof localStorage !== 'undefined') {
+    try {
+      const authData = localStorage.getItem('auth-storage');
+      if (authData) {
+        const parsed = JSON.parse(authData);
+        if (parsed.token) {
+          console.log('[AXIOS] Found token in localStorage');
+          return parsed.token;
+        }
+      }
+    } catch (e) {
+      console.error('[AXIOS] Error parsing auth-storage:', e);
+    }
+  }
+  
+  if (token) {
+    console.log('[AXIOS] getAuthToken: token found');
+  } else {
+    console.log('[AXIOS] getAuthToken: NO TOKEN');
+  }
+  return token;
 };
 
 // Request interceptor to add auth token
@@ -80,10 +104,13 @@ api.interceptors.request.use(
   (config: any) => {
     const token = getAuthToken();
 
-    // Only add token if not already provided in the request config
-    if (token && !config.headers?.Authorization && !config.headers?.authorization) {
+    // Always ensure Authorization header is set if we have a token
+    if (token) {
       config.headers = config.headers ?? {};
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('[AXIOS] Request to:', config.url, '| Auth header set');
+    } else {
+      console.log('[AXIOS] Request to:', config.url, '| NO token available');
     }
 
     // Ajustar baseURL para SSR si se define un endpoint interno (Docker, etc.)
@@ -106,11 +133,23 @@ api.interceptors.request.use(
 
 // Response interceptor to handle auth errors
 api.interceptors.response.use(
-  (response: any) => response,
+  (response: any) => {
+    console.log('[AXIOS] Response OK:', response.config.url, '| Status:', response.status);
+    return response;
+  },
   async (error: any) => {
     // Log detallado para depurar errores de red y respuesta
     if (error.response) {
-      console.error('Response error:', error.response.status);
+      console.error('[AXIOS] Response error:', error.response.status, '| URL:', error.config?.url);
+      
+      // Handle 401 Unauthorized
+      if (error.response.status === 401) {
+        console.error('[AXIOS] 401 Unauthorized - logging out user');
+        useAuthStore.getState().logout();
+        if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
+      }
     } else if (error.request) {
       const url = (() => {
         try {
@@ -121,14 +160,9 @@ api.interceptors.response.use(
           return undefined;
         }
       })();
-      console.error('Network error:', error.message, '| code:', error.code, '| url:', url);
-    }
-
-    if (error.response?.status === 401) {
-      useAuthStore.getState().logout();
-      if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
+      console.error('[AXIOS] Network error:', error.message, '| code:', error.code, '| url:', url);
+    } else {
+      console.error('[AXIOS] Error:', error.message);
     }
 
     return Promise.reject(error);

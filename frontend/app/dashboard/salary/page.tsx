@@ -63,20 +63,20 @@ export default function SalaryPage() {
       if (searchTerm) params.search = searchTerm;
       const response = await salaryService.getSalaries<SalaryCalculation[]>(params);
       return {
-        items: response,
-        total: response.length,
+        items: Array.isArray(response) ? response : [],
+        total: Array.isArray(response) ? response.length : 0,
       };
     },
   });
 
-  const salaries = data?.items || [];
+  const salaries = Array.isArray(data?.items) ? data.items : [];
   const total = data?.total || 0;
   const totalPages = Math.ceil(total / pageSize);
 
   // Calculate totals
-  const totalGross = salaries.reduce((sum: number, s: SalaryCalculation) => sum + Number(s.gross_salary || 0), 0);
-  const totalNet = salaries.reduce((sum: number, s: SalaryCalculation) => sum + Number(s.net_salary || 0), 0);
-  const totalProfit = salaries.reduce((sum: number, s: SalaryCalculation) => sum + Number(s.company_profit || 0), 0);
+  const totalGross = Array.isArray(salaries) ? salaries.reduce((sum: number, s: SalaryCalculation) => sum + Number(s.gross_salary || 0), 0) : 0;
+  const totalNet = Array.isArray(salaries) ? salaries.reduce((sum: number, s: SalaryCalculation) => sum + Number(s.net_salary || 0), 0) : 0;
+  const totalProfit = Array.isArray(salaries) ? salaries.reduce((sum: number, s: SalaryCalculation) => sum + Number(s.company_profit || 0), 0) : 0;
 
   const formatCurrency = (amount: number) => {
     return `¥${amount.toLocaleString('ja-JP')}`;

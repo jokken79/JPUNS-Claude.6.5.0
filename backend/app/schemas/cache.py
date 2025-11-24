@@ -61,5 +61,5 @@ class CachedResponse(BaseModel):
     """Response returned from cache"""
 
     response: Any = Field(..., description="The cached AI response")
-    _from_cache: bool = Field(default=True, description="Indicator this came from cache")
+    from_cache: bool = Field(default=True, description="Indicator this came from cache")
     cache_metadata: Optional[CacheMetadata] = Field(None, description="Cache information")
