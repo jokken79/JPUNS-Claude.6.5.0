@@ -172,7 +172,7 @@ class Settings(BaseSettings):
     # CORS
     BACKEND_CORS_ORIGINS: list[str] | str = os.getenv(
         "BACKEND_CORS_ORIGINS",
-        "http://localhost,http://localhost:3100,http://127.0.0.1:3100",
+        "http://localhost,http://localhost:3200,http://127.0.0.1:3200",
     )
     ADDITIONAL_TRUSTED_HOSTS: list[str] | str = os.getenv("ADDITIONAL_TRUSTED_HOSTS", "")
     

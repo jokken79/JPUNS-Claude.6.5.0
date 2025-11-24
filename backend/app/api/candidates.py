@@ -527,7 +527,7 @@ async def get_candidate(
     Get candidate by ID with eager loaded relationships
     """
     service = CandidateService(db)
-    candidate = await service.get_candidate_by_id(candidate_id)
+    candidate = await service.get_candidate(candidate_id)
     return candidate
 
 

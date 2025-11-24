@@ -202,6 +202,7 @@ class Candidate(Base, SoftDeleteMixin):
     # Primary Key & IDs
     id = Column(Integer, primary_key=True, index=True)
     rirekisho_id = Column(String(20), unique=True, nullable=False, index=True)  # 履歴書ID
+    applicant_id = Column(String(50), index=True)  # 応募者ID (Applicant ID for forms)
 
     # 受付日・来日 (Reception & Arrival Dates)
     reception_date = Column(Date)  # 受付日

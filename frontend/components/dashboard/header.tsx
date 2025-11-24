@@ -85,13 +85,13 @@ export function Header() {
 
   const allNavItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, permissionKey: 'dashboard' },
-    { href: '/candidates', label: 'Candidatos', icon: Users, permissionKey: 'candidates' },
-    { href: '/employees', label: 'Empleados', icon: Users, permissionKey: 'employees' },
-    { href: '/factories', label: 'Fábricas', icon: Building2, permissionKey: 'factories' },
-    { href: '/timercards', label: 'Asistencia', icon: Clock, permissionKey: 'timer_cards' },
-    { href: '/salary', label: 'Nómina', icon: DollarSign, permissionKey: 'salary' },
-    { href: '/requests', label: 'Solicitudes', icon: FileText, permissionKey: 'requests' },
-    { href: '/admin/control-panel', label: 'Panel Control', icon: Shield, permissionKey: 'control_panel' },
+    { href: '/dashboard/candidates', label: 'Candidatos', icon: Users, permissionKey: 'candidates' },
+    { href: '/dashboard/employees', label: 'Empleados', icon: Users, permissionKey: 'employees' },
+    { href: '/dashboard/factories', label: 'Fábricas', icon: Building2, permissionKey: 'factories' },
+    { href: '/dashboard/timercards', label: 'Asistencia', icon: Clock, permissionKey: 'timer_cards' },
+    { href: '/dashboard/salary', label: 'Nómina', icon: DollarSign, permissionKey: 'salary' },
+    { href: '/dashboard/requests', label: 'Solicitudes', icon: FileText, permissionKey: 'requests' },
+    { href: '/dashboard/admin/control-panel', label: 'Panel Control', icon: Shield, permissionKey: 'control_panel' },
   ];
 
   // Filter navigation items based on permissions
@@ -153,7 +153,7 @@ export function Header() {
             {navItems
               .filter(item => {
                 // Filter Panel Control to show only to admins
-                if (item.href === '/admin/control-panel') {
+                if (item.href === '/dashboard/admin/control-panel') {
                   return isAdmin;
                 }
                 return true;
@@ -178,7 +178,7 @@ export function Header() {
                           isActive ? "text-primary" : "text-muted-foreground"
                         )} />
                         <span className="flex-1">{item.label}</span>
-                        {item.href === '/admin/control-panel' && (
+                        {item.href === '/dashboard/admin/control-panel' && (
                           <Shield className="h-4 w-4 text-warning" />
                         )}
                       </Link>

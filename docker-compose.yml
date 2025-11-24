@@ -355,7 +355,7 @@ services:
     build:
       context: ./frontend
       dockerfile: ../docker/Dockerfile.frontend
-      target: runner
+      target: production
     container_name: uns-claudejp-650-frontend-prod
     restart: always
     env_file: .env
