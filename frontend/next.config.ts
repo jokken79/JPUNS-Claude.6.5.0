@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const resolveApiOrigin = (): string => {
-  const candidate = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8200";
+  const candidate = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
   // If it's a relative URL (like /api), return 'self' for CSP purposes
   // The proxy will handle the actual routing
@@ -14,8 +14,8 @@ const resolveApiOrigin = (): string => {
     const url = new URL(candidate);
     return url.origin;
   } catch (error) {
-    console.warn(`Invalid NEXT_PUBLIC_API_URL '${candidate}', falling back to http://localhost:8200`);
-    return "http://localhost:8200";
+    console.warn(`Invalid NEXT_PUBLIC_API_URL '${candidate}', falling back to http://localhost:8000`);
+    return "http://localhost:8000";
   }
 };
 
@@ -23,11 +23,11 @@ const apiOrigin = resolveApiOrigin();
 const connectSrc = new Set<string>(["'self'", apiOrigin]);
 
 if (process.env.NODE_ENV !== "production") {
-  connectSrc.add("http://localhost:3200");
-  connectSrc.add("http://localhost:8200");
+  connectSrc.add("http://localhost:3000");
+  connectSrc.add("http://localhost:8000");
   connectSrc.add("http://backend:8000");  // Docker internal hostname
-  connectSrc.add("ws://localhost:3200");
-  connectSrc.add("ws://localhost:3201");
+  connectSrc.add("ws://localhost:3000");
+  connectSrc.add("ws://localhost:8000");
 }
 
 const scriptSrc = process.env.NODE_ENV === 'production'
