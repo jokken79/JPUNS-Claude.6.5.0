@@ -82,7 +82,7 @@ jobs:
       - name: Install Frontend Dependencies
         if: matrix.component == 'frontend'
         working-directory: ./frontend
-        run: npm ci --prefer-offline --no-audit
+        run: npm ci --legacy-peer-deps --prefer-offline --no-audit
       
       - name: Run ESLint (Frontend)
         if: matrix.component == 'frontend'
@@ -185,7 +185,7 @@ jobs:
       - name: Install Frontend Dependencies
         if: matrix.component == 'frontend'
         working-directory: ./frontend
-        run: npm ci --prefer-offline --no-audit
+        run: npm ci --legacy-peer-deps --prefer-offline --no-audit
       
       - name: Run Vitest Unit Tests (Frontend)
         if: matrix.component == 'frontend'
@@ -335,7 +335,7 @@ jobs:
       
       - name: Install Frontend Dependencies
         working-directory: ./frontend
-        run: npm ci --prefer-offline --no-audit
+        run: npm ci --legacy-peer-deps --prefer-offline --no-audit
       
       - name: Install Playwright Browsers
         working-directory: ./frontend
@@ -419,7 +419,7 @@ jobs:
       
       - name: Install Frontend Dependencies
         working-directory: ./frontend
-        run: npm ci --prefer-offline --no-audit
+        run: npm ci --legacy-peer-deps --prefer-offline --no-audit
       
       - name: Build Frontend (Production)
         working-directory: ./frontend

@@ -25,7 +25,7 @@
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^3.10.0",
     "@opentelemetry/api": "^1.9.0",
-    "@opentelemetry/api-logs": "^0.207.0",
+    "@opentelemetry/api-logs": "0.57.2",
     "@opentelemetry/context-zone": "^2.2.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.55.0",
     "@opentelemetry/instrumentation-fetch": "^0.207.0",
@@ -79,6 +79,9 @@
     "tailwind-merge": "^2.6.0",
     "zod": "^3.25.76",
     "zustand": "^5.0.8"
+  },
+  "overrides": {
+    "@opentelemetry/api-logs": "0.57.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
